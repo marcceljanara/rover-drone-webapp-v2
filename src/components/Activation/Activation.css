@@ -1,0 +1,33 @@
+.activation-container {
+    padding: 20px;
+    text-align: center;
+}
+
+.button-container {
+    margin-top: 20px;
+}
+
+.toggle-button {
+    background-color: lightgray;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.toggle-button.active {
+    background-color: green; /* Warna tombol ON */
+}
+
+.toggle-button:not(.active) {
+    background-color: red; /* Warna tombol OFF */
+}
+
+.notification {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #333;
+    font-weight: bold;
+}

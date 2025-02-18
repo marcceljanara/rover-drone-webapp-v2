@@ -1,0 +1,126 @@
+.penyewaan-container {  
+  padding: 20px;  
+  background: linear-gradient(135deg, #BCFFDB 30%, #E6FFCF 52%, #C6F3C8 91%);  
+  border-radius: 1rem;  
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  
+  max-width: 800px;  
+  margin: auto;  
+  height: 80vh; /* Mengatur tinggi kontainer */  
+  overflow-y: auto; /* Menambahkan scrollbar vertikal jika konten melebihi tinggi */  
+  color: #000000; /* Warna teks default */  
+  font-family: Arial, sans-serif; /* Font default */  
+}  
+  
+h1, h2, h3 {  
+  color: #00796b; /* Warna teks */  
+  margin-bottom: 10px;  
+}  
+  
+p {  
+  color: #000000; /* Warna teks untuk paragraf */  
+  line-height: 1.6; /* Jarak antar baris */  
+}  
+  
+ul {  
+  list-style-type: none; /* Menghilangkan bullet */  
+  padding: 0;  
+  margin: 10px 0; /* Margin untuk daftar */  
+}  
+  
+li {  
+  margin-bottom: 5px; /* Jarak antar item daftar */  
+}  
+  
+.form-container {  
+  margin-top: 20px;  
+  background-color: #FFFFFF; /* Warna latar belakang form */  
+  padding: 5px; /* Mengurangi padding untuk memperkecil ukuran */  
+  border-radius: 5px;  
+  width: 200px; /* Mengatur lebar box form */  
+}  
+  
+label {  
+  display: block;  
+  margin: 5px 0 2px; /* Mengurangi margin untuk memperkecil ukuran */  
+  color: #000000; /* Warna teks label */  
+}  
+  
+input[type="date"] {  
+  padding: 5px; /* Mengurangi padding untuk memperkecil ukuran */  
+  border: 1px solid #ccc;  
+  border-radius: 5px;  
+  width: 100px; /* Mengatur lebar input tanggal */  
+  margin-right: 5px; /* Mengurangi margin untuk menghemat ruang */  
+  background-color: #FFFFFF; /* Warna latar belakang input */  
+}  
+  
+.buttons {  
+  margin-top: 10px; /* Mengurangi margin untuk menghemat ruang */  
+}  
+  
+.sewa-button, .batal-button {  
+  padding: 10px 20px;  
+  border: none;  
+  border-radius: 5px;  
+  cursor: pointer;  
+  margin-right: 5px; /* Margin antara tombol */  
+}  
+  
+.sewa-button {  
+  background-color: #65B741; /* Warna tombol sewa */  
+  color: #FFFFFF; /* Warna teks tombol */  
+}  
+  
+.batal-button {  
+  background-color: #EE1D52; /* Warna tombol batal */  
+  color: #FFFFFF; /* Warna teks tombol */  
+}  
+  
+.image-container {  
+  text-align: center;  
+  margin: 20px 0;  
+}  
+  
+.rover-image {  
+  width: 400px; /* Mengatur lebar gambar */  
+  height: auto; /* Menjaga rasio aspek gambar */  
+}  
+  
+@media (max-width: 768px) {  
+  h1 {  
+    font-size: 22px;  
+  }  
+  
+  h2 {  
+    font-size: 18px;  
+  }  
+  
+  h3 {  
+    font-size: 16px;  
+  }  
+  
+  p {  
+    font-size: 14px;  
+  }  
+  
+  li {  
+    font-size: 14px;  
+  }  
+  
+  label {  
+    font-size: 12px;  
+  }  
+  
+  input[type="date"] {  
+    font-size: 12px;  
+    width: 80px; /* Lebar lebih kecil untuk perangkat kecil */  
+  }  
+  
+  .sewa-button, .batal-button {  
+    font-size: 12px;  
+  }  
+  
+  .rover-image {  
+    width: 100px; /* Lebar lebih kecil untuk perangkat kecil */  
+  }  
+}  
