@@ -10,6 +10,7 @@ const Navbar = () => {
   const [notificationMessage, setNotificationMessage] = useState("");
 
   const handleLoginClick = () => {
+    setShowSignUpForm(false); // Pastikan hanya login yang muncul
     setShowLoginForm(true);
     setLoginClicked(true);
   };
@@ -26,6 +27,12 @@ const Navbar = () => {
 
   const closeSignUpForm = () => {
     setShowSignUpForm(false);
+  };
+
+  const closeAllForms = () => {
+    setShowLoginForm(false);
+    setShowSignUpForm(false);
+    setLoginClicked(false);
   };
 
   const showSuccessNotification = (message) => {
@@ -92,7 +99,7 @@ const Navbar = () => {
       </div>
 
       {(showLoginForm || showSignUpForm) && (
-        <div className="login-overlay active" onClick={closeLoginForm}></div>
+        <div className="login-overlay active" onClick={closeAllForms}></div>
       )}
 
       {showNotification && (
