@@ -7,9 +7,9 @@
   top: 0;
   width: 100%;  
   padding: 0 2rem;
-  background-color: transparent; /* Pastikan background transparan */
-  border: none; /* Menghilangkan border */
-  box-shadow: none; /* Menghilangkan bayangan jika ada */
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 .n-left {
@@ -31,7 +31,7 @@
 .n-name {
   font-size: 1.3rem;
   font-weight: bold;
-  color: black; /* Pastikan warna teks terlihat */
+  color: black;
 }
 
 .n-list {
@@ -42,14 +42,14 @@
   display: flex;
   gap: 2rem;
   margin-right: 4rem;
-  align-items: center; /* Menjaga item sejajar secara vertikal */
-  list-style: none; /* Menghilangkan bullet points */
-  padding: 0; /* Menghilangkan padding */
+  align-items: center;
+  list-style: none;
+  padding: 0;
 }
 
 .n-list > ul li {
-  display: flex; /* Menggunakan flex untuk item list */
-  align-items: center; /* Menjaga item sejajar secara vertikal */
+  display: flex;
+  align-items: center;
 }
 
 .n-list > ul :hover {
@@ -57,41 +57,41 @@
   cursor: pointer;
 }
 
-/* Gaya untuk tombol Login */
+/* Tombol Login */
 .n-button {
-  background-color: #808080; /* Warna latar belakang abu-abu */
-  color: white; /* Warna teks */
-  border: none; /* Tanpa border */
-  padding: 10px 20px; /* Padding untuk tombol */
-  border-radius: 25px; /* Sudut melengkung untuk efek bulat */
-  cursor: pointer; /* Pointer saat hover */
-  transition: background-color 0.3s; /* Transisi untuk efek hover */
+  background-color: #808080;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .n-button.clicked {
-  background-color: #f80808; /* Warna latar belakang abu-abu gelap saat diklik */
+  background-color: #f80808;
 }
 
 .n-button:hover {
-  background-color: #f80808; /* Warna latar belakang saat hover */
+  background-color: #f80808;
 }
 
-/* Gaya untuk tombol Contact */
+/* Tombol Contact */
 .contact-button {
-  background-color: #0e6419; /* Warna latar belakang biru */
-  color: white; /* Warna teks */
-  border: none; /* Tanpa border */
-  padding: 10px 20px; /* Padding untuk tombol */
-  border-radius: 25px; /* Sudut melengkung untuk efek bulat */
-  cursor: pointer; /* Pointer saat hover */
-  transition: background-color 0.3s; /* Transisi untuk efek hover */
+  background-color: #0e6419;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .contact-button:hover {
-  background-color: #0e6419; /* Warna latar belakang biru lebih gelap saat hover */
+  background-color: #0e6419;
 }
 
-/* Styling untuk wrapper login form */
+/* FORM LOGIN & SIGN UP */
 .login-form {
   position: fixed;
   top: 50%;
@@ -106,7 +106,7 @@
   z-index: 1000;
 }
 
-/* Close button untuk form login */
+/* Tombol X */
 .login-form .close-btn {
   position: absolute;
   top: 10px;
@@ -128,24 +128,23 @@
   background: #d32f2f;
 }
 
-/* Background overlay saat box login ditampilkan */
+/* Overlay Latar Form Login */
 .login-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Background hitam transparan */
-  z-index: 999; /* Letakkan di bawah login-form */
-  display: none; /* Sembunyikan overlay secara default */
+  background-color: rgba(0, 100, 0, 0.8); /* Hijau gelap transparan */
+  z-index: 999;
+  display: none;
 }
 
-/* Tampilkan overlay saat aktif */
 .login-overlay.active {
   display: block;
 }
 
-/* Heading untuk login */
+/* Isi Form Login */
 .login-form h2 {
   font-size: 24px;
   color: #333;
@@ -153,7 +152,6 @@
   text-align: center;
 }
 
-/* Form input styling */
 .login-form .form-group {
   margin-bottom: 15px;
 }
@@ -182,7 +180,6 @@
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
 }
 
-/* Checkbox styling */
 .login-form input[type="checkbox"] {
   margin-right: 10px;
 }
@@ -192,7 +189,6 @@
   color: #666;
 }
 
-/* Submit button */
 .login-form .login-btn {
   width: 100%;
   background-color: #007bff;
@@ -209,7 +205,6 @@
   background-color: #0056b3;
 }
 
-/* Links styling */
 .login-form p {
   font-size: 12px;
   color: #777;
@@ -226,35 +221,19 @@
   text-decoration: underline;
 }
 
-/* Responsive adjustments */
+/* Responsive */
 @media screen and (max-width: 480px) {
   .n-list {
-    display: flex; /* Ubah dari none ke flex */
-    flex-direction: column; /* Atur agar item ditampilkan secara vertikal */
+    display: flex;
+    flex-direction: column;
   }
+
   .n-name {
     font-size: 1rem;
   }
+
   .n-button {
-    display: block; /* Ubah dari none ke block */
-    margin-top: 1rem; /* Tambahkan margin untuk pemisahan */
+    display: block;
+    margin-top: 1rem;
   }
-}
-
-
-/* Background overlay saat box login ditampilkan */
-.login-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 100, 0, 0.8); /* Background hijau gelap transparan */
-  z-index: 999; /* Letakkan di bawah login-form */
-  display: none; /* Sembunyikan overlay secara default */
-}
-
-/* Tampilkan overlay saat aktif */
-.login-overlay.active {
-  display: block;
 }
