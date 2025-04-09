@@ -9,8 +9,13 @@ const Navbar = () => {
   const [showVerify, setShowVerify] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState("");
+  const [notificationType, setNotificationType] = useState("success"); // atau 'error'
+
 
   const [registeredEmail, setRegisteredEmail] = useState("");
+  const [resendCooldown, setResendCooldown] = useState(0);
+
+
 
   const handleLoginClick = () => {
     setShowSignUpForm(false);
@@ -41,13 +46,15 @@ const Navbar = () => {
     setLoginClicked(false);
   };
 
-  const showSuccessNotification = (message) => {
+  const showSuccessNotification = (message, type = "success") => {
     setNotificationMessage(message);
+    setNotificationType(type); // <--- ini dia
     setShowNotification(true);
     setTimeout(() => {
       setShowNotification(false);
     }, 3000);
   };
+  
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
@@ -71,6 +78,7 @@ const Navbar = () => {
         },
         body: JSON.stringify({ fullname, username, email, password })
       });
+      console.log(response.body);
 
       if (!response.ok) {
         throw new Error("Pendaftaran gagal.");
@@ -85,26 +93,81 @@ const Navbar = () => {
       showSuccessNotification("✅ Sign Up berhasil! Silakan verifikasi email Anda.");
     } catch (error) {
       console.error("Sign Up Error:", error);
-      showSuccessNotification("❌ Terjadi kesalahan saat Sign Up.");
+      showSuccessNotification(error.body.message, 'error');
     }
   };
 
-  const handleVerifySubmit = (e) => {
+  const handleVerifySubmit = async (e) => {
     e.preventDefault();
+  
     const otp = e.target.otp.value;
-    if (otp.trim().length >= 4) {
-      alert("✅ OTP berhasil diverifikasi!");
-      setShowVerify(false);
-      setShowLoginForm(true);
-    } else {
-      alert("❌ OTP tidak valid. Harap isi dengan benar.");
+  
+    try {
+      const response = await fetch("https://dev-api.xsmartagrichain.com/v1/users/verify-otp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: registeredEmail,
+          otp
+        })
+      });
+  
+      if (response.status === 200) {
+        showSuccessNotification("✅ OTP berhasil diverifikasi!");
+        setShowVerify(false);
+        setShowLoginForm(true);
+      } else {
+        const errorData = await response.json();
+        console.error("Verifikasi gagal:", errorData);
+        showSuccessNotification("❌ OTP salah atau sudah kadaluarsa.", 'error');
+      }
+    } catch (error) {
+      console.error("Error saat verifikasi OTP:", error);
+      showSuccessNotification("❌ Terjadi kesalahan jaringan saat verifikasi.", 'error');
     }
   };
 
-  const handleResendOTP = (e) => {
+  const handleResendOTP = async (e) => {
     e.preventDefault();
-    alert(`📩 OTP telah dikirim ulang ke email: ${registeredEmail}`);
+    
+    if (resendCooldown > 0) return;
+  
+    try {
+      const response = await fetch("https://dev-api.xsmartagrichain.com/v1/users/resend-otp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email: registeredEmail })
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(data.message || "Gagal mengirim ulang OTP.");
+      }
+  
+      showSuccessNotification("✅ " + data.message);
+      setResendCooldown(60);
+  
+      const interval = setInterval(() => {
+        setResendCooldown(prev => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+  
+    } catch (error) {
+      console.error("Resend OTP error:", error);
+      showSuccessNotification(error.message, 'error');
+    }
   };
+  
 
   return (
     <div className="n-wrapper" id="Navbar">
@@ -149,7 +212,9 @@ const Navbar = () => {
       )}
 
       {showNotification && (
-        <div className="notification">{notificationMessage}</div>
+        <div className={`notification ${notificationType}`}>
+          {notificationMessage}
+        </div>
       )}
 
       {/* SIGN IN */}
@@ -162,7 +227,7 @@ const Navbar = () => {
           <form onSubmit={handleLoginSubmit}>
             <div className="form-group">
               <label htmlFor="email">Email</label>
-              <input type="text" id="email" name="email" required />
+              <input type="email" id="email" name="email" required />
             </div>
             <div className="form-group">
               <label htmlFor="password">Password</label>
@@ -199,7 +264,7 @@ const Navbar = () => {
             </div>
             <div className="form-group">
               <label htmlFor="email-signup">Email</label>
-              <input type="text" id="email-signup" name="email-signup" required />
+              <input type="email" id="email-signup" name="email-signup" required />
             </div>
             <div className="form-group">
               <label htmlFor="password-signup">Password</label>
@@ -220,15 +285,12 @@ const Navbar = () => {
           <button className="close-btn" onClick={closeAllForms}>
             &times;
           </button>
-          <h2>Let’s Go To Verify</h2>
+          <h2>Silahkan lakukan verifikasi akun</h2>
           <form onSubmit={handleVerifySubmit}>
             <label htmlFor="otp">OTP</label>
             <input type="text" id="otp" name="otp" maxLength="6" required />
             <ul className="otp-hints">
-              <li>Use 6 or more characters</li>
-              <li>Use a number (e.g. 1234)</li>
-              <li>Use upper and lower case letters (e.g. Aa)</li>
-              <li>Use a symbol (e.g. !@#$)</li>
+              <li>Masukkan 6 digit angka yang diterima email</li>
             </ul>
             <button type="submit" className="login-btn">Verify</button>
             <p className="terms">
@@ -236,9 +298,12 @@ const Navbar = () => {
               <a href="#">Terms of use</a> and <a href="#">Privacy Policy</a>.
             </p>
             <p className="resend">
-              Not received OTP?{" "}
-              <a href="#" onClick={handleResendOTP}>Resend</a>
-            </p>
+            Not received OTP?{" "}
+            <a href="#" onClick={handleResendOTP} style={{ pointerEvents: resendCooldown > 0 ? 'none' : 'auto', opacity: resendCooldown > 0 ? 0.5 : 1 }}>
+              {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : "Resend"}
+            </a>
+          </p>
+
           </form>
         </div>
       )}
