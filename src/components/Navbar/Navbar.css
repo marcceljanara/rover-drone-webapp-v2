@@ -164,6 +164,7 @@
 }
 
 .login-form input[type="text"],
+.login-form input[type="email"],
 .login-form input[type="password"] {
   width: 100%;
   padding: 10px;
@@ -220,6 +221,29 @@
 .login-form p a:hover {
   text-decoration: underline;
 }
+
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  z-index: 9999;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease-in-out;
+}
+
+.notification.success {
+  background-color: #4caf50; /* Hijau */
+}
+
+.notification.error {
+  background-color: #f44336; /* Merah */
+}
+
 
 /* Responsive */
 @media screen and (max-width: 480px) {
