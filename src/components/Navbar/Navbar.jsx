@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Navbar.css";
 import { Link } from "react-scroll";
 
@@ -9,19 +9,34 @@ const Navbar = () => {
   const [showVerify, setShowVerify] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState("");
-  const [notificationType, setNotificationType] = useState("success"); // atau 'error'
-
-
+  const [notificationType, setNotificationType] = useState("success");
   const [registeredEmail, setRegisteredEmail] = useState("");
   const [resendCooldown, setResendCooldown] = useState(0);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   const handleLoginClick = () => {
-    setShowSignUpForm(false);
-    setShowVerify(false);
-    setShowLoginForm(true);
-    setLoginClicked(true);
+    if (isLoggedIn) {
+      handleLogout(); // Klik ulang jadi Log Out
+    } else {
+      setShowSignUpForm(false);
+      setShowVerify(false);
+      setShowLoginForm(true);
+      setLoginClicked(true);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    setIsLoggedIn(false);
+    showSuccessNotification("🔒 Anda telah berhasil keluar.");
   };
 
   const closeLoginForm = () => {
@@ -48,56 +63,43 @@ const Navbar = () => {
 
   const showSuccessNotification = (message, type = "success") => {
     setNotificationMessage(message);
-    setNotificationType(type); // <--- ini dia
+    setNotificationType(type);
     setShowNotification(true);
     setTimeout(() => {
       setShowNotification(false);
     }, 3000);
   };
-  
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
-  
     const email = e.target.email.value;
     const password = e.target.password.value;
-  
+
     try {
       const response = await fetch("https://dev-api.xsmartagrichain.com/v1/authentications", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ email, password })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
       });
-  
+
       const data = await response.json();
-  
-      if (!response.ok) {
-        throw new Error(data.message || "Login gagal.");
-      }
-  
-      // Simpan token ke localStorage
+      if (!response.ok) throw new Error(data.message || "Login gagal.");
+
       localStorage.setItem("accessToken", data.data.accessToken);
       localStorage.setItem("refreshToken", data.data.refreshToken);
-  
-      // Tampilkan notifikasi sukses
+
       showSuccessNotification("✅ Login berhasil! Selamat datang kembali.");
-  
-      // Tutup form login
       setShowLoginForm(false);
       setLoginClicked(false);
-  
+      setIsLoggedIn(true);
     } catch (error) {
       console.error("Login Error:", error);
       showSuccessNotification(`❌ ${error.message}`, "error");
     }
   };
-  
 
   const handleSignUpSubmit = async (e) => {
     e.preventDefault();
-
     const fullname = e.target.fullname.value;
     const username = e.target.username.value;
     const email = e.target["email-signup"].value;
@@ -106,19 +108,12 @@ const Navbar = () => {
     try {
       const response = await fetch("https://dev-api.xsmartagrichain.com/v1/users/register", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ fullname, username, email, password })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fullname, username, email, password }),
       });
-      console.log(response.body);
 
-      if (!response.ok) {
-        throw new Error("Pendaftaran gagal.");
-      }
-
+      if (!response.ok) throw new Error("Pendaftaran gagal.");
       const data = await response.json();
-      console.log("Register response:", data);
 
       setShowSignUpForm(false);
       setShowVerify(true);
@@ -126,67 +121,54 @@ const Navbar = () => {
       showSuccessNotification("✅ Sign Up berhasil! Silakan verifikasi email Anda.");
     } catch (error) {
       console.error("Sign Up Error:", error);
-      showSuccessNotification(error.body.message, 'error');
+      showSuccessNotification(error.body?.message || "❌ Pendaftaran gagal.", "error");
     }
   };
 
   const handleVerifySubmit = async (e) => {
     e.preventDefault();
-  
     const otp = e.target.otp.value;
-  
+
     try {
       const response = await fetch("https://dev-api.xsmartagrichain.com/v1/users/verify-otp", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          email: registeredEmail,
-          otp
-        })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: registeredEmail, otp }),
       });
-  
+
       if (response.status === 200) {
         showSuccessNotification("✅ OTP berhasil diverifikasi!");
         setShowVerify(false);
         setShowLoginForm(true);
       } else {
         const errorData = await response.json();
-        console.error("Verifikasi gagal:", errorData);
-        showSuccessNotification("❌ OTP salah atau sudah kadaluarsa.", 'error');
+        showSuccessNotification("❌ OTP salah atau kadaluarsa.", "error");
       }
     } catch (error) {
-      console.error("Error saat verifikasi OTP:", error);
-      showSuccessNotification("❌ Terjadi kesalahan jaringan saat verifikasi.", 'error');
+      console.error("Error verifikasi OTP:", error);
+      showSuccessNotification("❌ Terjadi kesalahan jaringan saat verifikasi.", "error");
     }
   };
 
   const handleResendOTP = async (e) => {
     e.preventDefault();
-    
     if (resendCooldown > 0) return;
-  
+
     try {
       const response = await fetch("https://dev-api.xsmartagrichain.com/v1/users/resend-otp", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ email: registeredEmail })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: registeredEmail }),
       });
-  
+
       const data = await response.json();
-  
-      if (!response.ok) {
-        throw new Error(data.message || "Gagal mengirim ulang OTP.");
-      }
-  
+      if (!response.ok) throw new Error(data.message || "Gagal mengirim ulang OTP.");
+
       showSuccessNotification("✅ " + data.message);
       setResendCooldown(60);
-  
+
       const interval = setInterval(() => {
-        setResendCooldown(prev => {
+        setResendCooldown((prev) => {
           if (prev <= 1) {
             clearInterval(interval);
             return 0;
@@ -194,13 +176,11 @@ const Navbar = () => {
           return prev - 1;
         });
       }, 1000);
-  
     } catch (error) {
       console.error("Resend OTP error:", error);
-      showSuccessNotification(error.message, 'error');
+      showSuccessNotification(error.message, "error");
     }
   };
-  
 
   return (
     <div className="n-wrapper" id="Navbar">
@@ -226,11 +206,8 @@ const Navbar = () => {
               </Link>
             </li>
             <li>
-              <button
-                className={`button n-button ${loginClicked ? "clicked" : ""}`}
-                onClick={handleLoginClick}
-              >
-                Login
+              <button className={`button n-button ${loginClicked ? "clicked" : ""}`} onClick={handleLoginClick}>
+                {isLoggedIn ? "Log Out" : "Login"}
               </button>
             </li>
           </ul>
@@ -245,17 +222,12 @@ const Navbar = () => {
       )}
 
       {showNotification && (
-        <div className={`notification ${notificationType}`}>
-          {notificationMessage}
-        </div>
+        <div className={`notification ${notificationType}`}>{notificationMessage}</div>
       )}
 
-      {/* SIGN IN */}
       {showLoginForm && (
         <div className="login-form">
-          <button className="close-btn" onClick={closeLoginForm}>
-            &times;
-          </button>
+          <button className="close-btn" onClick={closeLoginForm}>&times;</button>
           <h2>Sign In</h2>
           <form onSubmit={handleLoginSubmit}>
             <div className="form-group">
@@ -279,12 +251,9 @@ const Navbar = () => {
         </div>
       )}
 
-      {/* SIGN UP */}
       {showSignUpForm && (
         <div className="login-form">
-          <button className="close-btn" onClick={closeSignUpForm}>
-            &times;
-          </button>
+          <button className="close-btn" onClick={closeSignUpForm}>&times;</button>
           <h2>Sign Up</h2>
           <form onSubmit={handleSignUpSubmit}>
             <div className="form-group">
@@ -312,12 +281,9 @@ const Navbar = () => {
         </div>
       )}
 
-      {/* VERIFY OTP */}
       {showVerify && (
         <div className="login-form verify-form">
-          <button className="close-btn" onClick={closeAllForms}>
-            &times;
-          </button>
+          <button className="close-btn" onClick={closeAllForms}>&times;</button>
           <h2>Silahkan lakukan verifikasi akun</h2>
           <form onSubmit={handleVerifySubmit}>
             <label htmlFor="otp">OTP</label>
@@ -331,12 +297,18 @@ const Navbar = () => {
               <a href="#">Terms of use</a> and <a href="#">Privacy Policy</a>.
             </p>
             <p className="resend">
-            Not received OTP?{" "}
-            <a href="#" onClick={handleResendOTP} style={{ pointerEvents: resendCooldown > 0 ? 'none' : 'auto', opacity: resendCooldown > 0 ? 0.5 : 1 }}>
-              {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : "Resend"}
-            </a>
-          </p>
-
+              Not received OTP?{" "}
+              <a
+                href="#"
+                onClick={handleResendOTP}
+                style={{
+                  pointerEvents: resendCooldown > 0 ? "none" : "auto",
+                  opacity: resendCooldown > 0 ? 0.5 : 1,
+                }}
+              >
+                {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : "Resend"}
+              </a>
+            </p>
           </form>
         </div>
       )}
