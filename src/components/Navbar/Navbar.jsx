@@ -165,11 +165,11 @@ const Navbar = () => {
           <h2>Sign Up</h2>
           <form onSubmit={handleSignUpSubmit}>
             <div className="form-group">
-              <label htmlFor="fullname">Full Name</label>
+              <label htmlFor="fullname">Nama Lengkap</label>
               <input type="text" id="fullname" name="fullname" required />
             </div>
             <div className="form-group">
-              <label htmlFor="username">Username</label>
+              <label htmlFor="username">Nama Pengguna</label>
               <input type="text" id="username" name="username" required />
             </div>
             <div className="form-group">
