@@ -169,6 +169,10 @@ const Navbar = () => {
               <input type="text" id="fullname" name="fullname" required />
             </div>
             <div className="form-group">
+              <label htmlFor="username">Username</label>
+              <input type="text" id="username" name="username" required />
+            </div>
+            <div className="form-group">
               <label htmlFor="email-signup">Email</label>
               <input type="text" id="email-signup" name="email-signup" required />
             </div>
