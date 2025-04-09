@@ -56,11 +56,44 @@ const Navbar = () => {
   };
   
 
-  const handleLoginSubmit = (e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    showSuccessNotification("✅ Login berhasil! Selamat datang kembali.");
-    setShowLoginForm(false);
+  
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+  
+    try {
+      const response = await fetch("https://dev-api.xsmartagrichain.com/v1/authentications", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, password })
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(data.message || "Login gagal.");
+      }
+  
+      // Simpan token ke localStorage
+      localStorage.setItem("accessToken", data.data.accessToken);
+      localStorage.setItem("refreshToken", data.data.refreshToken);
+  
+      // Tampilkan notifikasi sukses
+      showSuccessNotification("✅ Login berhasil! Selamat datang kembali.");
+  
+      // Tutup form login
+      setShowLoginForm(false);
+      setLoginClicked(false);
+  
+    } catch (error) {
+      console.error("Login Error:", error);
+      showSuccessNotification(`❌ ${error.message}`, "error");
+    }
   };
+  
 
   const handleSignUpSubmit = async (e) => {
     e.preventDefault();
