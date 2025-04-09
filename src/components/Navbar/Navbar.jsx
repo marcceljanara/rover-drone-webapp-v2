@@ -10,11 +10,13 @@ const Navbar = () => {
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState("");
 
+  const [registeredEmail, setRegisteredEmail] = useState("");
+
   const handleLoginClick = () => {
     setShowSignUpForm(false);
+    setShowVerify(false);
     setShowLoginForm(true);
     setLoginClicked(true);
-    setShowVerify(false);
   };
 
   const closeLoginForm = () => {
@@ -24,8 +26,8 @@ const Navbar = () => {
 
   const handleSignUpClick = () => {
     setShowLoginForm(false);
-    setShowSignUpForm(true);
     setShowVerify(false);
+    setShowSignUpForm(true);
   };
 
   const closeSignUpForm = () => {
@@ -53,28 +55,55 @@ const Navbar = () => {
     setShowLoginForm(false);
   };
 
-  const handleSignUpSubmit = (e) => {
+  const handleSignUpSubmit = async (e) => {
     e.preventDefault();
-    showSuccessNotification("✅ Sign up berhasil! Silakan verifikasi akun.");
-    setShowSignUpForm(false);
-    setShowVerify(true); // Langsung masuk ke verify setelah sign up
+
+    const fullname = e.target.fullname.value;
+    const username = e.target.username.value;
+    const email = e.target["email-signup"].value;
+    const password = e.target["password-signup"].value;
+
+    try {
+      const response = await fetch("https://dev-api.xsmartagrichain.com/v1/users/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ fullname, username, email, password })
+      });
+
+      if (!response.ok) {
+        throw new Error("Pendaftaran gagal.");
+      }
+
+      const data = await response.json();
+      console.log("Register response:", data);
+
+      setShowSignUpForm(false);
+      setShowVerify(true);
+      setRegisteredEmail(email);
+      showSuccessNotification("✅ Sign Up berhasil! Silakan verifikasi email Anda.");
+    } catch (error) {
+      console.error("Sign Up Error:", error);
+      showSuccessNotification("❌ Terjadi kesalahan saat Sign Up.");
+    }
   };
 
   const handleVerifySubmit = (e) => {
     e.preventDefault();
     const otp = e.target.otp.value;
     if (otp.trim().length >= 4) {
-      showSuccessNotification("✅ OTP berhasil diverifikasi!");
+      alert("✅ OTP berhasil diverifikasi!");
       setShowVerify(false);
-      setShowLoginForm(true); // Setelah verifikasi berhasil, masuk ke login
+      setShowLoginForm(true);
     } else {
-      alert("❌ Masukkan OTP yang valid.");
+      alert("❌ OTP tidak valid. Harap isi dengan benar.");
     }
   };
 
   const handleResendOTP = (e) => {
     e.preventDefault();
-    alert("🔄 OTP berhasil dikirim ulang!");
+    alert(`📩 OTP telah dikirim ulang ke email: ${registeredEmail}`);
   };
 
   return (
@@ -110,11 +139,7 @@ const Navbar = () => {
             </li>
           </ul>
         </div>
-        <a
-          href="https://wa.me/6282178452180"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a href="https://wa.me/6282178452180" target="_blank" rel="noopener noreferrer">
           <button className="button n-button contact-button">Contact</button>
         </a>
       </div>
