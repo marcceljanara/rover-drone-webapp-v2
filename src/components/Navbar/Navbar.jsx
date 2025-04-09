@@ -51,30 +51,30 @@ const Navbar = () => {
     e.preventDefault();
     showSuccessNotification("✅ Login berhasil! Selamat datang kembali.");
     setShowLoginForm(false);
-    setShowVerify(true);
   };
 
   const handleSignUpSubmit = (e) => {
     e.preventDefault();
-    showSuccessNotification("Sign up berhasil! Silakan login.");
+    showSuccessNotification("✅ Sign up berhasil! Silakan verifikasi akun.");
     setShowSignUpForm(false);
-    setShowLoginForm(true);
+    setShowVerify(true); // Langsung masuk ke verify setelah sign up
   };
 
   const handleVerifySubmit = (e) => {
     e.preventDefault();
     const otp = e.target.otp.value;
     if (otp.trim().length >= 4) {
-      alert("OTP Verified Successfully!");
+      showSuccessNotification("✅ OTP berhasil diverifikasi!");
       setShowVerify(false);
+      setShowLoginForm(true); // Setelah verifikasi berhasil, masuk ke login
     } else {
-      alert("Please enter a valid OTP.");
+      alert("❌ Masukkan OTP yang valid.");
     }
   };
 
   const handleResendOTP = (e) => {
     e.preventDefault();
-    alert("OTP Resent Successfully!");
+    alert("🔄 OTP berhasil dikirim ulang!");
   };
 
   return (
