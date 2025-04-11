@@ -1,45 +1,134 @@
 import React, { useState } from 'react';
-import './Activation.css'; // Import file CSS
+import './Activation.css';
+
+const initialData = Array.from({ length: 18 }, (_, i) => ({
+  id: `device-${i + 1}`,
+  rentalId: 'null',
+  status: 'inactive',
+  lastIssue: 'null',
+  lastActive: '00 Hari 00:00:00',
+}));
+
+const statusOptions = ['active', 'inactive', 'maintenance', 'error'];
+const itemsPerPage = 5;
 
 const Activation = () => {
-  // State untuk mengatur status tombol
-  const [isActive, setIsActive] = useState(false);
-  const [notification, setNotification] = useState('');
+  const [data, setData] = useState(initialData);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [editingId, setEditingId] = useState(null);
 
-  // Fungsi untuk mengubah status tombol
-  const toggleActivation = (status) => {
-    setIsActive(status);
-    setNotification(status ? 'System is ON' : 'System is OFF');
-    
-    // Menghapus notifikasi setelah 1 detik
-    setTimeout(() => {
-      setNotification('');
-    }, 1000);
+  const handleEdit = (id) => setEditingId(id);
+
+  const handleStatusChange = (id, newStatus) => {
+    setData(
+      data.map((item) => (item.id === id ? { ...item, status: newStatus } : item))
+    );
+    setEditingId(null);
   };
 
+  const handleDelete = (id) => {
+    const updatedData = data.filter((item) => item.id !== id);
+    setData(updatedData);
+    if ((currentPage - 1) * itemsPerPage >= updatedData.length) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleAdd = () => {
+    const newId = `device-${data.length + 1}`;
+    const newItem = {
+      id: newId,
+      rentalId: 'null',
+      status: 'inactive',
+      lastIssue: 'null',
+      lastActive: '00 Hari 00:00:00',
+    };
+    setData([...data, newItem]);
+  };
+
+  const filteredData = data.filter((item) =>
+    item.id.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentData = filteredData.slice(startIndex, startIndex + itemsPerPage);
+
   return (
-    <div className="activation-container">
-      <h1>Activation Page</h1>
-      <p>This is the Activation page content.</p>
-      
-      {/* Tombol ON dan OFF */}
-      <div className="button-container">
-        <button 
-          className={`toggle-button ${isActive ? 'active' : ''}`} 
-          onClick={() => toggleActivation(true)} // Set status ON
-        >
-          ON
-        </button>
-        <button 
-          className={`toggle-button ${!isActive ? 'active' : ''}`} 
-          onClick={() => toggleActivation(false)} // Set status OFF
-        >
-          OFF
-        </button>
+    <div className="container">
+      <h2>Kelola Data Drone Rover</h2>
+      <div className="search-add-bar">
+        <input
+          type="text"
+          placeholder="Cari Drone Rover"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <button className="add-btn" onClick={handleAdd}>+ Tambah Penyewaan</button>
       </div>
 
-      {/* Notifikasi */}
-      {notification && <div className="notification">{notification}</div>}
+      <table className="data-table">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Rental Id</th>
+            <th>Status</th>
+            <th>Last Reported Issue</th>
+            <th>last active</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {currentData.map((item) => (
+            <tr key={item.id}>
+              <td>{item.id}</td>
+              <td>{item.rentalId}</td>
+              <td>
+                {editingId === item.id ? (
+                  <select
+                    value={item.status}
+                    onChange={(e) => handleStatusChange(item.id, e.target.value)}
+                  >
+                    {statusOptions.map((opt) => (
+                      <option key={opt} value={opt}>{opt}</option>
+                    ))}
+                  </select>
+                ) : (
+                  item.status
+                )}
+              </td>
+              <td>{item.lastIssue}</td>
+              <td>{item.lastActive}</td>
+              <td>
+                <button className="edit-btn" onClick={() => handleEdit(item.id)}>Edit</button>
+                <button className="delete-btn" onClick={() => handleDelete(item.id)}>Hapus</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <div className="footer">
+        <span>
+          Showing {startIndex + 1} - {Math.min(startIndex + itemsPerPage, filteredData.length)} of {filteredData.length}
+        </span>
+        <div className="pagination">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+          >
+            ◀
+          </button>
+          <span className="page-number">Page {String(currentPage).padStart(2, '0')}</span>
+          <button
+            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+          >
+            ▶
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
