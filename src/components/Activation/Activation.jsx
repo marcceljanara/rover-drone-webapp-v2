@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Activation.css';
 
 const initialData = Array.from({ length: 18 }, (_, i) => ({
@@ -17,18 +18,17 @@ const Activation = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [editingId, setEditingId] = useState(null);
+  const navigate = useNavigate();
 
   const handleEdit = (id) => setEditingId(id);
 
   const handleStatusChange = (id, newStatus) => {
-    setData(
-      data.map((item) => (item.id === id ? { ...item, status: newStatus } : item))
-    );
+    setData(data.map(item => item.id === id ? { ...item, status: newStatus } : item));
     setEditingId(null);
   };
 
   const handleDelete = (id) => {
-    const updatedData = data.filter((item) => item.id !== id);
+    const updatedData = data.filter(item => item.id !== id);
     setData(updatedData);
     if ((currentPage - 1) * itemsPerPage >= updatedData.length) {
       setCurrentPage(currentPage - 1);
@@ -75,14 +75,19 @@ const Activation = () => {
             <th>Rental Id</th>
             <th>Status</th>
             <th>Last Reported Issue</th>
-            <th>last active</th>
+            <th>Last Active</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
           {currentData.map((item) => (
             <tr key={item.id}>
-              <td>{item.id}</td>
+              <td
+                className="clickable-id"
+                onClick={() => navigate(`/device/${item.id}`)}
+              >
+                {item.id}
+              </td>
               <td>{item.rentalId}</td>
               <td>
                 {editingId === item.id ? (
@@ -114,19 +119,9 @@ const Activation = () => {
           Showing {startIndex + 1} - {Math.min(startIndex + itemsPerPage, filteredData.length)} of {filteredData.length}
         </span>
         <div className="pagination">
-          <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-          >
-            ◀
-          </button>
+          <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>◀</button>
           <span className="page-number">Page {String(currentPage).padStart(2, '0')}</span>
-          <button
-            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-            disabled={currentPage === totalPages}
-          >
-            ▶
-          </button>
+          <button onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>▶</button>
         </div>
       </div>
     </div>

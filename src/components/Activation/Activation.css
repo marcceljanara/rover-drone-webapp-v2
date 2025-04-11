@@ -47,7 +47,8 @@
     font-size: 14px;
   }
   
-  .edit-btn, .delete-btn {
+  .edit-btn,
+  .delete-btn {
     font-size: 12px;
     padding: 4px 10px;
     margin: 0 2px;
@@ -62,7 +63,7 @@
   }
   
   .delete-btn {
-    background-color: #f50057;
+    background-color: #f44336;
     color: white;
   }
   
@@ -88,5 +89,45 @@
   .page-number {
     font-weight: bold;
     margin: 0 8px;
+  }
+  
+  .clickable-id {
+    color: #2e7d32;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  
+  .activation-container {
+    padding: 40px;
+    background-color: #f0fff0;
+    text-align: center;
+  }
+  
+  .button-container {
+    margin-top: 20px;
+  }
+  
+  .toggle-button {
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #ddd;
+  }
+  
+  .toggle-button.active {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .notification {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #c8e6c9;
+    color: #2e7d32;
+    border-radius: 5px;
+    display: inline-block;
   }
   
