@@ -1,50 +1,135 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Activation.css';
-
-const initialData = Array.from({ length: 18 }, (_, i) => ({
-  id: `device-${i + 1}`,
-  rentalId: 'null',
-  status: 'inactive',
-  lastIssue: 'null',
-  lastActive: '00 Hari 00:00:00',
-}));
 
 const statusOptions = ['active', 'inactive', 'maintenance', 'error'];
 const itemsPerPage = 5;
 
 const Activation = () => {
-  const [data, setData] = useState(initialData);
+  const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [editingId, setEditingId] = useState(null);
   const navigate = useNavigate();
 
-  const handleEdit = (id) => setEditingId(id);
+  const fetchDevices = async () => {
+    const accessToken = localStorage.getItem('accessToken');
 
-  const handleStatusChange = (id, newStatus) => {
-    setData(data.map(item => item.id === id ? { ...item, status: newStatus } : item));
-    setEditingId(null);
-  };
+    try {
+      const response = await fetch('https://dev-api.xsmartagrichain.com/v1/devices', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
 
-  const handleDelete = (id) => {
-    const updatedData = data.filter(item => item.id !== id);
-    setData(updatedData);
-    if ((currentPage - 1) * itemsPerPage >= updatedData.length) {
-      setCurrentPage(currentPage - 1);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Gagal memuat data perangkat');
+      }
+
+      const result = await response.json();
+      const devices = result.data.devices.map((device) => ({
+        id: device.id,
+        rentalId: device.rental_id ?? 'null',
+        status: device.status,
+        lastIssue: device.last_reported_issue ?? 'null',
+        lastActive: device.last_active,
+      }));
+
+      setData(devices);
+    } catch (error) {
+      console.error('Error saat mengambil data perangkat:', error.message);
+      alert(`Gagal memuat data: ${error.message}`);
     }
   };
 
-  const handleAdd = () => {
-    const newId = `device-${data.length + 1}`;
-    const newItem = {
-      id: newId,
-      rentalId: 'null',
-      status: 'inactive',
-      lastIssue: 'null',
-      lastActive: '00 Hari 00:00:00',
-    };
-    setData([...data, newItem]);
+  useEffect(() => {
+    fetchDevices();
+  }, []);
+
+  const handleEdit = (id) => setEditingId(id);
+
+  const handleStatusChange = async (id, newStatus) => {
+    const accessToken = localStorage.getItem('accessToken');
+  
+    try {
+      const response = await fetch(`https://dev-api.xsmartagrichain.com/v1/devices/${id}/status`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Gagal mengubah status perangkat');
+      }
+  
+      const result = await response.json();
+      alert(result.message || 'Status perangkat berhasil diubah');
+  
+      setEditingId(null);
+      await fetchDevices(); // reload data
+    } catch (error) {
+      console.error('Gagal mengubah status perangkat:', error.message);
+      alert(`Error: ${error.message}`);
+    }
+  };
+  
+
+  const handleDelete = async (id) => {
+    const accessToken = localStorage.getItem('accessToken');
+  
+    try {
+      const response = await fetch(`https://dev-api.xsmartagrichain.com/v1/devices/${id}`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Gagal menghapus perangkat');
+      }
+  
+      const result = await response.json();
+      alert(result.message || 'Perangkat berhasil dihapus');
+  
+      await fetchDevices(); // reload data setelah penghapusan berhasil
+    } catch (error) {
+      console.error('Gagal menghapus perangkat:', error.message);
+      alert(`Error: ${error.message}`);
+    }
+  };
+  
+
+  const handleAdd = async () => {
+    const accessToken = localStorage.getItem('accessToken');
+
+    try {
+      const response = await fetch('https://dev-api.xsmartagrichain.com/v1/devices', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Gagal menambahkan perangkat');
+      }
+
+      alert('Perangkat berhasil ditambahkan');
+      await fetchDevices(); // refresh data setelah tambah
+    } catch (error) {
+      console.error('Gagal menambahkan perangkat:', error.message);
+      alert(`Error: ${error.message}`);
+    }
   };
 
   const filteredData = data.filter((item) =>
@@ -57,7 +142,7 @@ const Activation = () => {
 
   return (
     <div className="container">
-      <h2>Kelola Data Drone Rover</h2>
+      <h2>Kelola Perangkat Rover Drone</h2>
       <div className="search-add-bar">
         <input
           type="text"
@@ -65,7 +150,7 @@ const Activation = () => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <button className="add-btn" onClick={handleAdd}>+ Tambah Penyewaan</button>
+        <button className="add-btn" onClick={handleAdd}>+ Tambah Perangkat</button>
       </div>
 
       <table className="data-table">
@@ -90,19 +175,27 @@ const Activation = () => {
               </td>
               <td>{item.rentalId}</td>
               <td>
-                {editingId === item.id ? (
-                  <select
-                    value={item.status}
-                    onChange={(e) => handleStatusChange(item.id, e.target.value)}
-                  >
-                    {statusOptions.map((opt) => (
-                      <option key={opt} value={opt}>{opt}</option>
-                    ))}
-                  </select>
-                ) : (
-                  item.status
-                )}
-              </td>
+                  {editingId === item.id ? (
+                    <select
+                      value={item.status}
+                      onChange={(e) => handleStatusChange(item.id, e.target.value)}
+                      onBlur={() => setEditingId(null)}
+                      className="status-dropdown"
+                    >
+                      <option value="" disabled>Pilih status</option>
+                      {statusOptions.map((opt) => (
+                        <option key={opt} value={opt}>{opt.charAt(0).toUpperCase() + opt.slice(1)}</option>
+                      ))}
+                    </select>
+                  ) : (
+                    <span
+                      className={`status-badge status-${item.status}`}
+                      onClick={() => handleEdit(item.id)}
+                    >
+                      {item.status}
+                    </span>
+                  )}
+                </td>
               <td>{item.lastIssue}</td>
               <td>{item.lastActive}</td>
               <td>

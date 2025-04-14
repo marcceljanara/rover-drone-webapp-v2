@@ -130,4 +130,21 @@
     border-radius: 5px;
     display: inline-block;
   }
+
+  .status-badge {
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-transform: capitalize;
+  }
+  .status-active { background: #d4f5e3; color: #0f8e44; }
+  .status-inactive { background: #f0f0f0; color: #888; }
+  .status-maintenance { background: #fff5d0; color: #e5a100; }
+  .status-error { background: #ffe5e5; color: #e50000; }
+  .status-dropdown {
+    padding: 4px;
+    border-radius: 6px;
+  }
+  
   
