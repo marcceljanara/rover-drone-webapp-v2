@@ -40,10 +40,36 @@ const DeviceDetail = () => {
     fetchDeviceDetails();
   }, [id]);
 
-  const handleToggle = (status) => {
-    setIsOn(status);
-    alert(`Device ${id} is now ${status ? 'ON' : 'OFF'}`);
+  const handleToggle = async (status) => {
+    const accessToken = localStorage.getItem('accessToken');
+    const endpoint = `https://dev-api.xsmartagrichain.com/v1/devices/${id}/control`;
+  
+    try {
+      const response = await fetch(endpoint, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          action: status ? 'on' : 'off',
+          command: 'power',
+        }),
+      });
+  
+      const result = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(result.message || 'Gagal mengontrol perangkat');
+      }
+  
+      setIsOn(status);
+      await fetchDeviceDetails(); // <-- panggil ulang agar data di-refresh
+    } catch (error) {
+      alert(`Error: ${error.message}`);
+    }
   };
+  
 
   const handleChangeTopic = async (type) => {
     const accessToken = localStorage.getItem('accessToken');
@@ -87,7 +113,9 @@ const DeviceDetail = () => {
             </div>
             <div className="detail-item">
               <strong>Status:</strong>
-              <div className="detail-value">{device.status}</div>
+              <div className={`status-badge ${device.status?.toLowerCase() || 'unknown'}`}>
+                {device.status}
+              </div>
             </div>
             <div className="detail-item">
               <strong>Rental ID:</strong>
@@ -115,11 +143,6 @@ const DeviceDetail = () => {
                 <button onClick={() => handleChangeTopic('control')}>Change</button>
               </div>
             </div>
-
-            <div className="detail-item">
-              <strong>Reserved Until:</strong>
-              <div className="detail-value">{device.reserved_until || 'Tidak tersedia'}</div>
-            </div>
             <div className="detail-item">
               <strong>Created At:</strong>
               <div className="detail-value">{new Date(device.created_at).toLocaleString()}</div>
@@ -131,20 +154,19 @@ const DeviceDetail = () => {
 
         <div className="toggle-buttons">
           <button
-            className="on-btn"
+            className={`on-btn ${isOn ? 'active' : ''}`}
             onClick={() => handleToggle(true)}
-            style={{ backgroundColor: isOn ? 'lime' : '' }}
           >
             ON
           </button>
           <button
-            className="off-btn"
+            className={`off-btn ${!isOn ? 'active' : ''}`}
             onClick={() => handleToggle(false)}
-            style={{ backgroundColor: !isOn ? 'red' : '' }}
           >
             OFF
           </button>
         </div>
+
       </div>
       <RightSide />
     </div>
