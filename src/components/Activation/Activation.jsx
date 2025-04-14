@@ -169,7 +169,7 @@ const Activation = () => {
             <tr key={item.id}>
               <td
                 className="clickable-id"
-                onClick={() => navigate(`/device/${item.id}`)}
+                onClick={() => navigate(`/devices/${item.id}`)}
               >
                 {item.id}
               </td>

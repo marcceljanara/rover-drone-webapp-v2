@@ -48,14 +48,14 @@ function App() {
               <RightSide />  
             </div>  
           } />  
-          <Route path="/activation" element={  
+          <Route path="/devices" element={  
             <div className="AppGlass">  
               <Sidebar />  
               <Activation />  
               <RightSide />  
             </div>  
           } />  
-          <Route path="/device/:id" element={<DeviceDetail />} /> {/* ✅ Rute baru */}
+          <Route path="/devices/:id" element={<DeviceDetail />} /> {/* ✅ Rute baru */}
         </Routes>  
       </Router>  
     </div>  

@@ -23,9 +23,9 @@ export const SidebarData = [
     link: "/non-fungible-token",
   },
   {
-    heading: "Activation",
+    heading: "Perangkat",
     icon: UilRocket,
-    link: "/activation",
+    link: "/devices",
   },
   {
     heading: "Penyewaan", // New menu item
