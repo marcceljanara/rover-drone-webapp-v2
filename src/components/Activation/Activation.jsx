@@ -10,6 +10,8 @@ const Activation = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [editingId, setEditingId] = useState(null);
+  const [notification, setNotification] = useState(null); // State untuk notifikasi
+  const [glowingButton, setGlowingButton] = useState(null); // State untuk efek glow
   const navigate = useNavigate();
 
   const fetchDevices = async () => {
@@ -69,7 +71,8 @@ const Activation = () => {
       }
   
       const result = await response.json();
-      alert(result.message || 'Status perangkat berhasil diubah');
+      setNotification(result.message || 'Status perangkat berhasil diubah'); // Tampilkan notifikasi
+      setTimeout(() => setNotification(null), 3000); // Sembunyikan notifikasi setelah 3 detik
   
       setEditingId(null);
       await fetchDevices(); // reload data
@@ -78,7 +81,6 @@ const Activation = () => {
       alert(`Error: ${error.message}`);
     }
   };
-  
 
   const handleDelete = async (id) => {
     const accessToken = localStorage.getItem('accessToken');
@@ -97,7 +99,8 @@ const Activation = () => {
       }
   
       const result = await response.json();
-      alert(result.message || 'Perangkat berhasil dihapus');
+      setNotification(result.message || 'Perangkat berhasil dihapus'); // Tampilkan notifikasi
+      setTimeout(() => setNotification(null), 3000); // Sembunyikan notifikasi setelah 3 detik
   
       await fetchDevices(); // reload data setelah penghapusan berhasil
     } catch (error) {
@@ -105,7 +108,6 @@ const Activation = () => {
       alert(`Error: ${error.message}`);
     }
   };
-  
 
   const handleAdd = async () => {
     const accessToken = localStorage.getItem('accessToken');
@@ -124,7 +126,8 @@ const Activation = () => {
         throw new Error(errorData.message || 'Gagal menambahkan perangkat');
       }
 
-      alert('Perangkat berhasil ditambahkan');
+      setNotification('Perangkat berhasil ditambahkan'); // Tampilkan notifikasi
+      setTimeout(() => setNotification(null), 3000); // Sembunyikan notifikasi setelah 3 detik
       await fetchDevices(); // refresh data setelah tambah
     } catch (error) {
       console.error('Gagal menambahkan perangkat:', error.message);
@@ -132,8 +135,16 @@ const Activation = () => {
     }
   };
 
+  const handleGlow = (buttonType) => {
+    setGlowingButton(buttonType);
+    setTimeout(() => setGlowingButton(null), 1000); // Remove glow after 1 second
+  };
+
+  // Perbaikan filter pencarian
   const filteredData = data.filter((item) =>
-    item.id.toLowerCase().includes(searchTerm.toLowerCase())
+    item.id.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.status.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.lastIssue.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -150,8 +161,18 @@ const Activation = () => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <button className="add-btn" onClick={handleAdd}>+ Tambah Perangkat</button>
+        <button
+          className={`add-btn ${glowingButton === 'add' ? 'glow' : ''}`}
+          onClick={() => {
+            handleAdd();
+            handleGlow('add');
+          }}
+        >
+          + Tambah Perangkat
+        </button>
       </div>
+
+      {notification && <div className="notification">{notification}</div>} {/* Notifikasi */}
 
       <table className="data-table">
         <thead>
@@ -175,38 +196,55 @@ const Activation = () => {
               </td>
               <td>{item.rentalId}</td>
               <td>
-                  {editingId === item.id ? (
-                    <select
-                      value={item.status}
-                      onChange={(e) => handleStatusChange(item.id, e.target.value)}
-                      onBlur={() => setEditingId(null)}
-                      className="status-dropdown"
-                    >
-                      <option value="" disabled>Pilih status</option>
-                      {statusOptions.map((opt) => (
-                        <option key={opt} value={opt}>{opt.charAt(0).toUpperCase() + opt.slice(1)}</option>
-                      ))}
-                    </select>
-                  ) : (
-                    <span
-                      className={`status-badge status-${item.status}`}
-                      onClick={() => handleEdit(item.id)}
-                    >
-                      {item.status}
-                    </span>
-                  )}
-                </td>
+                {editingId === item.id ? (
+                  <select
+                    value={item.status}
+                    onChange={(e) => handleStatusChange(item.id, e.target.value)}
+                    onBlur={() => setEditingId(null)}
+                    className="status-dropdown"
+                  >
+                    <option value="" disabled>Pilih status</option>
+                    {statusOptions.map((opt) => (
+                      <option key={opt} value={opt}>{opt.charAt(0).toUpperCase() + opt.slice(1)}</option>
+                    ))}
+                  </select>
+                ) : (
+                  <span
+                    className={`status-badge status-${item.status}`}
+                    onClick={() => handleEdit(item.id)}
+                  >
+                    {item.status}
+                  </span>
+                )}
+              </td>
               <td>{item.lastIssue}</td>
               <td>{item.lastActive}</td>
               <td>
-                <button className="edit-btn" onClick={() => handleEdit(item.id)}>Edit</button>
-                <button className="delete-btn" onClick={() => handleDelete(item.id)}>Hapus</button>
+                <button
+                  className={`edit-btn ${glowingButton === 'edit' ? 'glow' : ''}`}
+                  onClick={() => {
+                    handleEdit(item.id);
+                    handleGlow('edit');
+                  }}
+                >
+                  Edit
+                </button>
+                <button
+                  className={`delete-btn ${glowingButton === 'delete' ? 'glow' : ''}`}
+                  onClick={() => {
+                    handleDelete(item.id);
+                    handleGlow('delete');
+                  }}
+                >
+                  Hapus
+                </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
 
+      {/* Footer Pagination */}
       <div className="footer">
         <span>
           Showing {startIndex + 1} - {Math.min(startIndex + itemsPerPage, filteredData.length)} of {filteredData.length}

@@ -35,8 +35,10 @@ h2 {
 .data-table {
   width: 100%;
   border-collapse: collapse;
-  background-color: #e8f5e9;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #f0fff0;
+  box-shadow: none;
+  margin: 0;
+  padding: 0;
 }
 
 .data-table th,
@@ -70,10 +72,29 @@ h2 {
 .footer {
   display: flex;
   justify-content: space-between;
-  margin-top: 10px;
-  font-size: 13px;
-  color: #4CAF50;
   align-items: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: #4CAF50;
+  padding: 0 40px; /* Tambahkan padding global */
+}
+
+.data-range {
+  margin-left: 120px; /* Geser tulisan "Showing ..." lebih jauh ke kanan */
+  color: #4CAF50;
+  font-weight: 500;
+}
+
+.pagination-wrapper {
+  display: flex;
+  align-items: center;
+  margin-right: 120px; /* Geser elemen pagination lebih jauh ke kiri */
+}
+
+.page-number {
+  font-weight: bold;
+  margin-right: 20px; /* Jarak antara page number dan tombol */
+  color: #4CAF50;
 }
 
 .pagination button {
@@ -83,67 +104,41 @@ h2 {
   border-radius: 50%;
   padding: 4px 10px;
   cursor: pointer;
-  margin: 0 5px;
+  margin: 0 4px;
+  font-size: 14px;
+  transition: background-color 0.2s, color 0.2s;
 }
 
-.page-number {
-  font-weight: bold;
-  margin: 0 8px;
-}
-
-.clickable-id {
-  color: #2e7d32;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-.activation-container {
-  padding: 40px;
-  background-color: #f0fff0;
-  text-align: center;
-}
-
-.button-container {
-  margin-top: 20px;
-}
-
-.toggle-button {
-  padding: 10px 20px;
-  margin: 5px;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-  background-color: #ddd;
-}
-
-.toggle-button.active {
+.pagination button:hover {
   background-color: #4CAF50;
   color: white;
 }
 
-.notification {
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #c8e6c9;
-  color: #2e7d32;
-  border-radius: 5px;
-  display: inline-block;
+/* Efek glow untuk tombol */
+.glow {
+  box-shadow: 0 0 10px 10px rgba(76, 175, 80, 0.5);
+  transition: box-shadow 0.3s ease-in-out;
 }
 
+/* Warna status */
 .status-badge {
-  cursor: pointer;
   padding: 4px 8px;
-  border-radius: 8px;
+  border-radius: 4px;
   font-weight: bold;
-  text-transform: capitalize;
-}
-.status-active { background: #d4f5e3; color: #0f8e44; }
-.status-inactive { background: #f0f0f0; color: #888; }
-.status-maintenance { background: #fff5d0; color: #e5a100; }
-.status-error { background: #ffe5e5; color: #e50000; }
-.status-dropdown {
-  padding: 4px;
-  border-radius: 6px;
 }
 
+.status-active {
+  color: #4CAF50; /* Hijau */
+}
+
+.status-inactive {
+  color: #f44336; /* Merah */
+}
+
+.status-maintenance {
+  color: #FF9800; /* Oranye */
+}
+
+.status-error {
+  color: #FF5722; /* Merah Marun */
+}
