@@ -10,6 +10,7 @@ import Pengajuan from './components/Penyewaan/Pengajuan'; // ✅ Ganti ini
 import Penyewaan from './components/Penyewaan/Penyewaan'; // ✅ Tetap ini
 import Activation from './components/Activation/Activation';
 import DeviceDetail from './components/Activation/DeviceDetail';
+import DetailPenyewaan from './components/Penyewaan/DetailPenyewaan';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -60,6 +61,14 @@ function App() {
             <div className="AppGlass">
               <Sidebar />
               <Penyewaan />
+              <RightSide />
+            </div>
+          } />
+
+          <Route path="/penyewaan/:id" element={
+            <div className="AppGlass">
+              <Sidebar />
+              <DetailPenyewaan />
               <RightSide />
             </div>
           } />

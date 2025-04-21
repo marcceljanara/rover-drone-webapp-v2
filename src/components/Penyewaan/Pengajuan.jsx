@@ -1,27 +1,102 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Penyewaan.css';
-
-const dummyData = [
-  {
-    id: 'rental-abcdef',
-    start_date: '2025-03-09T10:00:00+07:00',
-    end_date: '2026-03-09T10:00:00+07:00',
-    rental_status: 'active',
-    cost: 500000,
-  },
-  {
-    id: 'rental-ghijkl',
-    start_date: '2024-12-01T10:00:00+07:00',
-    end_date: '2025-12-01T10:00:00+07:00',
-    rental_status: 'inactive',
-    cost: 450000,
-  },
-];
+import './Pengajuan.css';
 
 function KelolaPenyewaan() {
-  const [data] = useState(dummyData);
+  const [data, setData] = useState([]);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [notification, setNotification] = useState('');
+  const [showNotification, setShowNotification] = useState(false);
   const navigate = useNavigate();
+  const role = localStorage.getItem('role');
+  const token = localStorage.getItem('accessToken');
+
+  useEffect(() => {
+    const fetchRentals = async () => {
+      if (!token) {
+        setError('Token tidak ditemukan. Silakan login terlebih dahulu.');
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch('https://dev-api.xsmartagrichain.com/v1/rentals', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.message || 'Terjadi kesalahan saat memuat data penyewaan.');
+        }
+
+        setData(result.data.rentals || []);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRentals();
+  }, [token]);
+
+  useEffect(() => {
+    if (showNotification) {
+      const timer = setTimeout(() => setShowNotification(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showNotification]);
+
+  const handleAction = async (id) => {
+    if (!token) return;
+
+    try {
+      const url =
+        role === 'admin'
+          ? `https://dev-api.xsmartagrichain.com/v1/rentals/${id}`
+          : `https://dev-api.xsmartagrichain.com/v1/rentals/${id}/cancel`;
+
+      const options = {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: role === 'user' ? JSON.stringify({ rentalStatus: 'cancelled' }) : null,
+      };
+
+      const response = await fetch(url, options);
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Terjadi kesalahan saat mengubah status sewa.');
+      }
+
+      setNotification(result.message);
+      setShowNotification(true);
+
+      if (role === 'user') {
+        setData((prev) =>
+          prev.map((rental) =>
+            rental.id === id ? { ...rental, rental_status: 'cancelled' } : rental
+          )
+        );
+      } else if (role === 'admin') {
+        setData((prev) => prev.filter((rental) => rental.id !== id));
+      }
+    } catch (err) {
+      setNotification(err.message);
+      setShowNotification(true);
+    }
+  };
 
   return (
     <div className="container">
@@ -29,40 +104,77 @@ function KelolaPenyewaan() {
 
       <div className="search-add-bar">
         <input type="text" placeholder="Cari ID Penyewaan" />
-        <button
-          className="add-btn"
-          onClick={() => navigate('/penyewaan/lanjutan')}
-        >
-          + Ajukan Penyewaan Baru
-        </button>
+        {role === 'user' && (
+          <button
+            className="add-btn"
+            onClick={() => navigate('/penyewaan/lanjutan')}
+          >
+            + Ajukan Penyewaan Baru
+          </button>
+        )}
       </div>
 
-      <table className="data-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Tanggal Mulai</th>
-            <th>Tanggal Berakhir</th>
-            <th>Status</th>
-            <th>Biaya (Rp)</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((item) => (
-            <tr key={item.id}>
-              <td>{item.id}</td>
-              <td>{new Date(item.start_date).toLocaleDateString()}</td>
-              <td>{new Date(item.end_date).toLocaleDateString()}</td>
-              <td>
-                <span className={`status-badge status-${item.rental_status}`}>
-                  {item.rental_status}
-                </span>
-              </td>
-              <td>{item.cost.toLocaleString('id-ID')}</td>
+      {loading ? (
+        <p>Memuat data...</p>
+      ) : error ? (
+        <div className="notification error">{error}</div>
+      ) : (
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Tanggal Mulai</th>
+              <th>Tanggal Berakhir</th>
+              <th>Status</th>
+              <th>Biaya (Rp)</th>
+              <th>Aksi</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {data.map((item) => (
+              <tr key={item.id}>
+                <td
+                  className="clickable-id"
+                  onClick={() => navigate(`/penyewaan/${item.id}`)}
+                >
+                  {item.id}
+              </td>
+                <td>{new Date(item.start_date).toLocaleDateString()}</td>
+                <td>{new Date(item.end_date).toLocaleDateString()}</td>
+                <td>
+                  <span className={`status-badge status-${item.rental_status}`}>
+                    {item.rental_status}
+                  </span>
+                </td>
+                <td>{item.cost.toLocaleString('id-ID')}</td>
+                <td>
+                  {(role === 'admin' || role === 'user') && (
+                    <button
+                      className={`action-btn ${role}`}
+                      onClick={() => handleAction(item.id)}
+                    >
+                      {role === 'admin' ? 'Hapus Sewa' : 'Batalkan'}
+                    </button>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      {showNotification && (
+        <div
+          className={`${
+            notification.toLowerCase().includes('gagal') ||
+            notification.toLowerCase().includes('error')
+              ? 'error-notification'
+              : 'notification'
+          }`}
+        >
+          {notification}
+        </div>
+      )}
     </div>
   );
 }
