@@ -48,9 +48,9 @@ const Intro = () => {
             Blockchain dan Drone Rover dari Universitas Lampung
           </span>
         </div>
-        <Link to="/dashboard" className="i-button" style={{ textDecoration: 'none' }}>
-          <button className="button">Dashboard</button>
-        </Link>
+          <Link to="/dashboard" className="i-button" style={{ textDecoration: 'none' }}>
+            <button className="button">Dashboard</button>
+          </Link>
 
         {/* social icons */}
         <div className="i-icons">

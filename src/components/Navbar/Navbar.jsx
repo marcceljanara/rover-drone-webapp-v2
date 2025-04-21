@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
+
 import "./Navbar.css";
 import { Link } from "react-scroll";
 
@@ -14,14 +16,32 @@ const Navbar = () => {
   const [resendCooldown, setResendCooldown] = useState(0);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (token) setIsLoggedIn(true);
-  }, []);
+  // Cek token saat pertama kali komponen di-render
+useEffect(() => {
+  const token = localStorage.getItem("accessToken");
+
+  if (token) {
+    try {
+      const decoded = jwtDecode(token);
+      const currentTime = Date.now() / 1000; // waktu sekarang (dalam detik)
+
+      if (decoded.exp < currentTime) {
+        // Token kadaluarsa
+        handleLogout(); // keluarin user
+      } else {
+        setIsLoggedIn(true);
+      }
+    } catch (error) {
+      console.error("Token invalid:", error);
+      handleLogout();
+    }
+  }
+}, []);
+
 
   const handleLoginClick = () => {
     if (isLoggedIn) {
-      handleLogout();
+      handleLogout(); // Klik ulang jadi Log Out
     } else {
       setShowSignUpForm(false);
       setShowVerify(false);
@@ -63,7 +83,9 @@ const Navbar = () => {
     setNotificationMessage(message);
     setNotificationType(type);
     setShowNotification(true);
-    setTimeout(() => setShowNotification(false), 3000);
+    setTimeout(() => {
+      setShowNotification(false);
+    }, 3000);
   };
 
   const handleLoginSubmit = async (e) => {
@@ -84,10 +106,24 @@ const Navbar = () => {
       }
 
       const data = await response.json();
-      localStorage.setItem("accessToken", data.data.accessToken);
-      localStorage.setItem("refreshToken", data.data.refreshToken);
+      const accessToken = data.data.accessToken;
+      const refreshToken = data.data.refreshToken;
+      
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+      
+      // Simpan role ke localStorage
+      try {
+        const decoded = jwtDecode(accessToken);
+        const role = decoded.role;
+        if (role) {
+          localStorage.setItem("role", role);
+        }
+      } catch (err) {
+        console.error("Gagal decode token:", err);
+      }
 
-      showSuccessNotification("✅ Login berhasil! Selamat datang kembali.");
+      showSuccessNotification(`✅ Login berhasil! Selamat datang kembali ${localStorage.getItem('role')}`);
       setShowLoginForm(false);
       setLoginClicked(false);
       setIsLoggedIn(true);
@@ -195,9 +231,21 @@ const Navbar = () => {
       <div className="n-right">
         <div className="n-list">
           <ul>
-            <li><Link activeClass="active" to="Navbar" spy={true} smooth={true}>Home</Link></li>
-            <li><Link to="services" spy={true} smooth={true}>Services</Link></li>
-            <li><Link to="works" spy={true} smooth={true}>Experience</Link></li>
+            <li>
+              <Link activeClass="active" to="Navbar" spy={true} smooth={true}>
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link to="services" spy={true} smooth={true}>
+                Services
+              </Link>
+            </li>
+            <li>
+              <Link to="works" spy={true} smooth={true}>
+                Experience
+              </Link>
+            </li>
             <li>
               <button className={`button n-button ${loginClicked ? "clicked" : ""}`} onClick={handleLoginClick}>
                 {isLoggedIn ? "Log Out" : "Login"}
@@ -215,52 +263,74 @@ const Navbar = () => {
       )}
 
       {showNotification && (
-        <div className={`notification-slide ${notificationType}`}>
-          {notificationMessage}
-        </div>
+        <div className={`notification ${notificationType}`}>{notificationMessage}</div>
       )}
 
-      {/* Login Form */}
       {showLoginForm && (
         <div className="login-form">
           <button className="close-btn" onClick={closeLoginForm}>&times;</button>
           <h2>Sign In</h2>
           <form onSubmit={handleLoginSubmit}>
-            <div className="form-group"><label htmlFor="email">Email</label><input type="email" id="email" name="email" required /></div>
-            <div className="form-group"><label htmlFor="password">Password</label><input type="password" id="password" name="password" required /></div>
-            <div className="form-group"><input type="checkbox" id="remember-me" name="remember-me" /><label htmlFor="remember-me">Remember me</label></div>
+            <div className="form-group">
+              <label htmlFor="email">Email</label>
+              <input type="email" id="email" name="email" required />
+            </div>
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <input type="password" id="password" name="password" required />
+            </div>
+            <div className="form-group">
+              <input type="checkbox" id="remember-me" name="remember-me" />
+              <label htmlFor="remember-me">Remember me</label>
+            </div>
             <button type="submit" className="login-btn">Sign In</button>
           </form>
-          <p>Don't have an account? <a href="#" onClick={handleSignUpClick}>Sign up</a></p>
+          <p>
+            Don't have an account?{" "}
+            <a href="#" onClick={handleSignUpClick}>Sign up</a>
+          </p>
         </div>
       )}
 
-      {/* Sign Up Form */}
       {showSignUpForm && (
         <div className="login-form">
           <button className="close-btn" onClick={closeSignUpForm}>&times;</button>
           <h2>Sign Up</h2>
           <form onSubmit={handleSignUpSubmit}>
-            <div className="form-group"><label htmlFor="fullname">Full Name</label><input type="text" id="fullname" name="fullname" required /></div>
-            <div className="form-group"><label htmlFor="username">Username</label><input type="text" id="username" name="username" required /></div>
-            <div className="form-group"><label htmlFor="email-signup">Email</label><input type="email" id="email-signup" name="email-signup" required /></div>
-            <div className="form-group"><label htmlFor="password-signup">Password</label><input type="password" id="password-signup" name="password-signup" required /></div>
+            <div className="form-group">
+              <label htmlFor="fullname">Full Name</label>
+              <input type="text" id="fullname" name="fullname" required />
+            </div>
+            <div className="form-group">
+              <label htmlFor="username">Username</label>
+              <input type="text" id="username" name="username" required />
+            </div>
+            <div className="form-group">
+              <label htmlFor="email-signup">Email</label>
+              <input type="email" id="email-signup" name="email-signup" required />
+            </div>
+            <div className="form-group">
+              <label htmlFor="password-signup">Password</label>
+              <input type="password" id="password-signup" name="password-signup" required />
+            </div>
             <button type="submit" className="login-btn">Sign Up</button>
           </form>
         </div>
       )}
 
-      {/* OTP Form */}
       {showVerify && (
         <div className="login-form">
           <button className="close-btn" onClick={closeAllForms}>&times;</button>
           <h2>Verifikasi Email</h2>
           <form onSubmit={handleVerifySubmit}>
-            <div className="form-group"><label htmlFor="otp">Kode OTP</label><input type="text" id="otp" name="otp" required /></div>
+            <div className="form-group">
+              <label htmlFor="otp">Kode OTP</label>
+              <input type="text" id="otp" name="otp" required />
+            </div>
             <button type="submit" className="login-btn">Verifikasi</button>
           </form>
           <button className="resend-otp" onClick={handleResendOTP} disabled={resendCooldown > 0}>
-            {resendCooldown > 0 ? `Kirim ulang dalam ${resendCooldown}s` : "Kirim Ulang OTP"}
+            Resend OTP {resendCooldown > 0 ? `(${resendCooldown}s)` : ""}
           </button>
         </div>
       )}

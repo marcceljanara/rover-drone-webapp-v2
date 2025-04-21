@@ -71,7 +71,31 @@
   height: 100%;  
   background: var(--pink);  
   margin-right: calc(1rem - 8px);  
-}  
+} 
+
+.role-badge {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0.5rem 1rem;
+  background-color: #ffe8f1;
+  color: var(--black);
+  font-weight: 600;
+  border-radius: 12px;
+  font-size: 13px;
+  text-align: center;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+  width: fit-content;
+  max-width: 80%;
+}
+
+@media screen and (max-width: 1200px) {
+  .role-badge {
+    display: none;
+  }
+}
+
   
 /* Tablets */  
 @media screen and (max-width: 1200px) {  

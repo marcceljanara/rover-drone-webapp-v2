@@ -67,7 +67,10 @@ const Sidebar = () => {
           <span>    
             Ro<span>o</span>ne    
           </span>    
-        </div>    
+        </div>
+      <div className="role-badge">
+          Role: {localStorage.getItem("role") || "guest"}
+      </div>
     
         <div className="menu">    
           {SidebarData.map((item, index) => {    
