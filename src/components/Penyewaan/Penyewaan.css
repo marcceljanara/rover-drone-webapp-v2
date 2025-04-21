@@ -10,7 +10,7 @@ body {
 }
 
 .penyewaan-container {
-  padding: 20px;
+  padding: 60px 20px 20px 20px; /* Tambahkan padding top lebih besar */
   background: none;
   border-radius: 1rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -200,6 +200,39 @@ table tbody tr:hover {
   visibility: hidden;
   pointer-events: none;
 }
+
+/* Tombol terpilih - lebih menonjol */
+.sewa-button.selected {
+  background-color: #388E3C; /* hijau lebih tua */
+  color: #ffffff;
+  border: 2px solid #2e7d32;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transform: scale(1.02);
+  font-weight: bold;
+  transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s, border 0.3s;
+}
+
+.back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: transparent;
+  color: #00796b;
+  border: 2px solid #00796b;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  z-index: 100;
+}
+
+.back-button:hover {
+  background-color: #00796b;
+  color: #ffffff;
+}
+
+
 
 /* ANIMASI NOTIFIKASI */
 @keyframes slideFade {

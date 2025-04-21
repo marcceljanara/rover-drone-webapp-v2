@@ -28,6 +28,7 @@ useEffect(() => {
       if (decoded.exp < currentTime) {
         // Token kadaluarsa
         handleLogout(); // keluarin user
+        window.location.reload()
       } else {
         setIsLoggedIn(true);
       }
@@ -152,7 +153,6 @@ useEffect(() => {
         throw new Error(data.message || "Pendaftaran gagal.");
       }
 
-      const data = await response.json();
       setShowSignUpForm(false);
       setShowVerify(true);
       setRegisteredEmail(email);
@@ -179,7 +179,6 @@ useEffect(() => {
         setShowVerify(false);
         setShowLoginForm(true);
       } else {
-        const errorData = await response.json();
         showSuccessNotification("❌ OTP salah atau kadaluarsa.", "error");
       }
     } catch (error) {

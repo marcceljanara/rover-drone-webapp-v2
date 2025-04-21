@@ -1,5 +1,6 @@
 /* istanbul ignore file */
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Penyewaan.css';
 import roverImage from '../../imgs/rover2.png';
 
@@ -31,19 +32,10 @@ function calculateRentalCost(interval) {
 
 const Penyewaan = () => {
   const [duration, setDuration] = useState(null);
-  const [showPrice, setShowPrice] = useState(false);
   const [notification, setNotification] = useState('');
   const [showNotification, setShowNotification] = useState(false);
-  const [jumlahRover, setJumlahRover] = useState(null);
-  const [rentalDetails, setRentalDetails] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setJumlahRover(5); // Contoh jumlah rover yang tersedia
-    }, 1000);
-  }, []);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (showNotification) {
@@ -54,7 +46,6 @@ const Penyewaan = () => {
 
   const handlePilih = (dur) => {
     setDuration(dur);
-    setShowPrice(true);
   };
 
   const handleSewa = async () => {
@@ -64,10 +55,7 @@ const Penyewaan = () => {
       return;
     }
 
-    const rentalIndex = [6, 12, 24, 36].indexOf(duration) + 1;
-    const rentalId = `RNT-${rentalIndex.toString().padStart(4, '0')}`;
-    const token = localStorage.getItem('token');
-
+    const token = localStorage.getItem('accessToken');
     if (!token) {
       setNotification('Token tidak tersedia. Silakan login terlebih dahulu.');
       setShowNotification(true);
@@ -75,47 +63,43 @@ const Penyewaan = () => {
     }
 
     setLoading(true);
-    setError(null);
 
     try {
-      const response = await fetch(`https://dev-api.xsmartagrichain.com/v1/rentals/${rentalId}`, {
-        method: 'GET',
+      const response = await fetch('https://dev-api.xsmartagrichain.com/v1/rentals', {
+        method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
           'Accept': 'application/json',
-        }
+        },
+        body: JSON.stringify({ interval: duration }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(data.message || 'Terjadi kesalahan saat menyewa.');
       }
 
-      const data = await response.json();
       if (data.status === 'success') {
-        setRentalDetails(data.data.rental);
-        setNotification('Sewa berhasil!');
-        setShowNotification(true);
+        setNotification(data.message);
       } else {
-        setNotification('Gagal mendapatkan detail penyewaan.');
-        setShowNotification(true);
+        setNotification(data.message || 'Gagal menyewa.');
       }
     } catch (err) {
-      setError(err.message);
-      setNotification('Terjadi kesalahan saat mengambil detail penyewaan.');
-      setShowNotification(true);
+      setNotification(err.message);
     } finally {
+      setShowNotification(true);
       setLoading(false);
     }
   };
 
-  const handleBatal = () => {
-    setDuration(null);
-    setShowPrice(false);
-    setRentalDetails(null);
-  };
-
   return (
-    <div className="penyewaan-container">
+      <div className="penyewaan-container">
+        <button className="back-button" onClick={() => navigate('/penyewaan')}>
+        ⬅ Kembali
+      </button>
+
       <h1>“SAATNYA LAHAN ANDA DIAWASI OLEH TEKNOLOGI MASA DEPAN!” 🚀</h1>
       <h2>“BOSAN RUGI? CAPEK KERJA MANUAL? BANGKITKAN PRODUKTIVITAS DENGAN DRONE ROVER KAMI!”</h2>
       <p>
@@ -124,46 +108,8 @@ const Penyewaan = () => {
       <div className="image-container">
         <img src={roverImage} alt="Drone Rover" className="rover-image" />
       </div>
-      <h3>🌾 Bayangkan Ini...</h3>
-      <ul>
-        <li>👉 Dalam hitungan menit, Anda tahu kondisi setiap tanaman di lahan ribuan hektar.</li>
-        <li>👉 Lahan sulit? Tak masalah! Medan terberat ditembus tanpa hambatan.</li>
-        <li>👉 Hama muncul? Drone rover mendeteksi lebih awal – aksi cepat, rugi minimal!</li>
-      </ul>
-      <h3>💡 KEUNTUNGAN YANG TAK TERBANTAHKAN 💡</h3>
-      <ul>
-        <li>🔍 "Tahu Sebelum Terlambat" - Deteksi hama, kekeringan, dan masalah lahan sebelum menimbulkan kerugian besar.</li>
-        <li>💰 “Lebih Hemat, Lebih Cepat, Lebih Pintar” - Sewa hanya saat butuh!</li>
-        <li>🌐 "Pantau dari Mana Saja, Kapan Saja!" - Data real-time langsung di gadget Anda.</li>
-        <li>🚜 “Tembus Semua Medan” - Drone ini siap menjangkau tempat yang manusia tak bisa.</li>
-      </ul>
-      <h3>🔥 “STOP KEHILANGAN WAKTU & UANG!” 🔥</h3>
-      <ul>
-        <li>✅ Produktivitas naik hingga 40% lebih baik.</li>
-        <li>✅ Hemat biaya tenaga kerja hingga 50%.</li>
-        <li>✅ Tindakan cepat, hasil maksimal!</li>
-      </ul>
-      <h3>Cocok untuk:</h3>
-      <ul>
-        <li>✔️ Pemantauan lahan sawit, tebu, atau pertanian modern</li>
-        <li>✔️ Survei proyek besar & inspeksi</li>
-        <li>✔️ Solusi pertanian berkelanjutan & efisien</li>
-      </ul>
-      <h3>💎 "BERINVESTASI PADA TEKNOLOGI = BERINVESTASI PADA KESUKSESAN ANDA!" 💎</h3>
-      <p>
-        ⏳ TUNGGU APA LAGI? Waktu adalah uang, dan drone rover ini adalah solusi bisnis masa depan.<br />
-        📞 Hubungi kami sekarang juga!<br />
-        📊 Dapatkan presentasi GRATIS & layanan terbaik untuk Anda.<br />
-        “Jangan biarkan peluang ini lewat. Masa depan perkebunan Anda dimulai HARI INI!” 🚀
-      </p>
 
       <h3>Formulir Penyewaan</h3>
-      {jumlahRover !== null ? (
-        <p>Jumlah Rover Drone yang tersedia saat ini: {jumlahRover}</p>
-      ) : (
-        <p>Loading...</p>
-      )}
-
       <div className="form-container">
         <table>
           <thead>
@@ -177,7 +123,7 @@ const Penyewaan = () => {
             </tr>
           </thead>
           <tbody>
-            {[6, 12, 24, 36].map((dur, index) => {
+            {[6, 12, 24, 36].map((dur) => {
               const { finalCost, rentalDays, discount, discountPercentage } = calculateRentalCost(dur);
               const daily = (finalCost / rentalDays).toFixed(2);
 
@@ -210,21 +156,6 @@ const Penyewaan = () => {
           {loading ? 'Memuat...' : 'Sewa'}
         </button>
       </div>
-
-      {rentalDetails && (
-        <div className="rental-details">
-          <h2>Detail Penyewaan</h2>
-          <p><strong>User ID:</strong> {rentalDetails.user_id}</p>
-          <p><strong>Start Date:</strong> {new Date(rentalDetails.start_date).toLocaleString('id-ID')}</p>
-          <p><strong>End Date:</strong> {new Date(rentalDetails.end_date).toLocaleString('id-ID')}</p>
-          <p><strong>Rental Status:</strong> {rentalDetails.rental_status}</p>
-          <p><strong>Cost:</strong> Rp{rentalDetails.cost.toLocaleString('id-ID')}</p>
-          <p><strong>Reserved Until:</strong> {new Date(rentalDetails.reserved_until).toLocaleString('id-ID')}</p>
-          <p><strong>Created At:</strong> {new Date(rentalDetails.created_at).toLocaleString('id-ID')}</p>
-          <p><strong>Updated At:</strong> {new Date(rentalDetails.updated_at).toLocaleString('id-ID')}</p>
-          <button onClick={handleBatal} className="cancel-button">Batal</button>
-        </div>
-      )}
 
       {showNotification && (
         <div className="notification">
