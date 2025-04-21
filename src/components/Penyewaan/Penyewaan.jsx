@@ -35,7 +35,9 @@ const Penyewaan = () => {
   const [notification, setNotification] = useState('');
   const [showNotification, setShowNotification] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [availableDevices, setAvailableDevices] = useState(null);
   const navigate = useNavigate();
+  const token = localStorage.getItem('accessToken');
 
   useEffect(() => {
     if (showNotification) {
@@ -43,6 +45,25 @@ const Penyewaan = () => {
       return () => clearTimeout(timer);
     }
   }, [showNotification]);
+
+  useEffect(() => {
+    const fetchAvailableDevices = async () => {
+      try {
+        const response = await fetch('https://dev-api.xsmartagrichain.com/v1/devices?scope=available', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          }});
+        const data = await response.json();
+        setAvailableDevices(data.data.devices.length);
+      } catch (error) {
+        console.error('Gagal memuat data perangkat:', error);
+        setAvailableDevices('Gagal dimuat');
+      }
+    };
+  
+    fetchAvailableDevices();
+  }, []);
 
   const handlePilih = (dur) => {
     setDuration(dur);
@@ -55,7 +76,6 @@ const Penyewaan = () => {
       return;
     }
 
-    const token = localStorage.getItem('accessToken');
     if (!token) {
       setNotification('Token tidak tersedia. Silakan login terlebih dahulu.');
       setShowNotification(true);
@@ -110,6 +130,13 @@ const Penyewaan = () => {
       </div>
 
       <h3>Formulir Penyewaan</h3>
+      <div className="device-status">
+        <span className="device-label">📦 Jumlah Perangkat Tersedia:</span>
+        <span className="device-value">
+          {availableDevices === null ? 'Memuat...' : availableDevices}
+        </span>
+      </div>
+
       <div className="form-container">
         <table>
           <thead>
