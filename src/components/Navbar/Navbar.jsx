@@ -14,6 +14,7 @@ const Navbar = () => {
   const [resendCooldown, setResendCooldown] = useState(0);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  // Cek token saat pertama kali komponen di-render
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     if (token) {
@@ -82,9 +83,12 @@ const Navbar = () => {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Login gagal.");
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || "Login gagal.");
+      }
 
+      const data = await response.json();
       localStorage.setItem("accessToken", data.data.accessToken);
       localStorage.setItem("refreshToken", data.data.refreshToken);
 
@@ -112,16 +116,19 @@ const Navbar = () => {
         body: JSON.stringify({ fullname, username, email, password }),
       });
 
-      if (!response.ok) throw new Error("Pendaftaran gagal.");
-      const data = await response.json();
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || "Pendaftaran gagal.");
+      }
 
+      const data = await response.json();
       setShowSignUpForm(false);
       setShowVerify(true);
       setRegisteredEmail(email);
       showSuccessNotification("✅ Sign Up berhasil! Silakan verifikasi email Anda.");
     } catch (error) {
       console.error("Sign Up Error:", error);
-      showSuccessNotification(error.body?.message || "❌ Pendaftaran gagal.", "error");
+      showSuccessNotification(error.message || "❌ Pendaftaran gagal.", "error");
     }
   };
 
@@ -161,9 +168,12 @@ const Navbar = () => {
         body: JSON.stringify({ email: registeredEmail }),
       });
 
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Gagal mengirim ulang OTP.");
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || "Gagal mengirim ulang OTP.");
+      }
 
+      const data = await response.json();
       showSuccessNotification("✅ " + data.message);
       setResendCooldown(60);
 
@@ -257,11 +267,11 @@ const Navbar = () => {
           <h2>Sign Up</h2>
           <form onSubmit={handleSignUpSubmit}>
             <div className="form-group">
-              <label htmlFor="fullname">Nama Lengkap</label>
+              <label htmlFor="fullname">Full Name</label>
               <input type="text" id="fullname" name="fullname" required />
             </div>
             <div className="form-group">
-              <label htmlFor="username">Nama Pengguna</label>
+              <label htmlFor="username">Username</label>
               <input type="text" id="username" name="username" required />
             </div>
             <div className="form-group">
@@ -274,42 +284,23 @@ const Navbar = () => {
             </div>
             <button type="submit" className="login-btn">Sign Up</button>
           </form>
-          <p>
-            Already have an account?{" "}
-            <a href="#" onClick={handleLoginClick}>Sign in</a>
-          </p>
         </div>
       )}
 
       {showVerify && (
-        <div className="login-form verify-form">
+        <div className="login-form">
           <button className="close-btn" onClick={closeAllForms}>&times;</button>
-          <h2>Silahkan lakukan verifikasi akun</h2>
+          <h2>Verifikasi Email</h2>
           <form onSubmit={handleVerifySubmit}>
-            <label htmlFor="otp">OTP</label>
-            <input type="text" id="otp" name="otp" maxLength="6" required />
-            <ul className="otp-hints">
-              <li>Masukkan 6 digit angka yang diterima email</li>
-            </ul>
-            <button type="submit" className="login-btn">Verify</button>
-            <p className="terms">
-              By creating an account, you agree to the{" "}
-              <a href="#">Terms of use</a> and <a href="#">Privacy Policy</a>.
-            </p>
-            <p className="resend">
-              Not received OTP?{" "}
-              <a
-                href="#"
-                onClick={handleResendOTP}
-                style={{
-                  pointerEvents: resendCooldown > 0 ? "none" : "auto",
-                  opacity: resendCooldown > 0 ? 0.5 : 1,
-                }}
-              >
-                {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : "Resend"}
-              </a>
-            </p>
+            <div className="form-group">
+              <label htmlFor="otp">Kode OTP</label>
+              <input type="text" id="otp" name="otp" required />
+            </div>
+            <button type="submit" className="login-btn">Verifikasi</button>
           </form>
+          <button className="resend-otp" onClick={handleResendOTP} disabled={resendCooldown > 0}>
+            Resend OTP {resendCooldown > 0 ? `(${resendCooldown}s)` : ""}
+          </button>
         </div>
       )}
     </div>
