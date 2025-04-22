@@ -1,24 +1,86 @@
-// src/pages/DetailPenyewaan.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './Penyewaan.css';
 
 function DetailPenyewaan() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const accessToken = localStorage.getItem('accessToken');
 
-  // Dummy data
-  const rental = {
-    id: id,
-    user_id: 'user-12345',
-    start_date: '2025-03-09T10:00:00+07:00',
-    end_date: '2026-03-09T10:00:00+07:00',
-    rental_status: 'active',
-    cost: 500000,
-    reserved_until: '2025-03-09T10:30:00+07:00',
-    created_at: '2025-03-09T09:55:00+07:00',
-    updated_at: '2025-03-09T10:05:00+07:00',
-  };
+  const [rental, setRental] = useState(null);
+  const [error, setError] = useState('');
+  const [timeLeft, setTimeLeft] = useState('');
+
+  useEffect(() => {
+    let interval;
+
+    const fetchRental = async () => {
+      try {
+        const response = await fetch(`https://dev-api.xsmartagrichain.com/v1/rentals/${id}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        const res = await response.json();
+
+        if (!response.ok) {
+          throw new Error(res.message || 'Gagal mengambil detail penyewaan');
+        }
+
+        const rentalData = res.data.rental;
+        setRental(rentalData);
+
+        // Parse reserved_until to Date and ensure the time is in UTC
+        const reservedUntil = new Date(rentalData.reserved_until).getTime();
+        const now = new Date().getTime();
+
+        // Jika waktu sekarang sudah melewati reservedUntil, langsung tampilkan "Batas waktu pembayaran habis"
+        if (now > reservedUntil) {
+          setTimeLeft('Batas waktu pembayaran habis');
+          return; // Jangan jalankan countdown jika waktu sudah habis
+        }
+
+        const updateCountdown = () => {
+          const distance = reservedUntil - new Date().getTime();
+          if (distance <= 0) {
+            setTimeLeft('Batas waktu pembayaran habis');
+            clearInterval(interval); // Stop the interval when the time is up
+          } else {
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            setTimeLeft(`${minutes}m ${seconds}s`);
+          }
+        };
+
+        // Jalankan langsung satu kali di awal
+        updateCountdown();
+
+        // Buat interval jika waktu masih ada
+        interval = setInterval(updateCountdown, 1000);
+
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    fetchRental();
+
+    return () => clearInterval(interval); // Pastikan interval dibersihkan saat komponen tidak aktif lagi
+  }, [id, accessToken]);
+
+  if (error) {
+    return (
+      <div className="container">
+        <p style={{ color: 'red' }}>{error}</p>
+        <button onClick={() => navigate(-1)} className="back-btn">Kembali</button>
+      </div>
+    );
+  }
+
+  if (!rental) {
+    return <div className="container">Memuat detail penyewaan...</div>;
+  }
 
   return (
     <div className="container">
@@ -31,6 +93,12 @@ function DetailPenyewaan() {
               <td>{value}</td>
             </tr>
           ))}
+          <tr>
+            <td><strong>Sisa Waktu Pembayaran</strong></td>
+            <td style={{ color: timeLeft === 'Batas waktu pembayaran habis' ? 'red' : 'black' }}>
+              {timeLeft}
+            </td>
+          </tr>
         </tbody>
       </table>
       <button onClick={() => navigate(-1)} className="back-btn">Kembali</button>
