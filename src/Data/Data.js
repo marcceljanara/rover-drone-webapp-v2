@@ -28,21 +28,39 @@ export const SidebarData = [
 ];
 
 // Recent Update Card Data
-export const UpdatesData = [
-  {
-    img: img1,
-    name: "I Nengah Marccel JBC TE21",
-    noti: "has update the program",
-    time: "4 days ago",
-  },
-  {
-    img: img2,
-    name: "M. Salman Abdurohman",
-    noti: "has update the program",
-    time: "1 days ago",
-  },
+export const useGithubCommits = () => {
+  const [updatesData, setUpdatesData] = useState([]);
 
-];
+  useEffect(() => {
+    const fetchCommits = async () => {
+      try {
+        const response = await fetch('https://api.github.com/repos/marcceljanara/rover-drone-webapp/commits?per_page=2');
+        const commits = await response.json();
+
+        const formattedData = commits.map((commit) => {
+          const authorName = commit.commit.author.name;
+          const img = authorName === "Marccel Janara" ? img1 : img2;
+
+          return {
+            img,
+            name: authorName,
+            noti: commit.commit.message,
+            time: new Date(commit.commit.author.date).toLocaleString(),
+          };
+        });
+
+        setUpdatesData(formattedData);
+      } catch (error) {
+        console.error('Gagal mengambil data dari GitHub:', error);
+      }
+    };
+
+    fetchCommits();
+  }, []);
+
+  return updatesData;
+};
+
 
 // Component for fetching and updating cards data
 export const CardsDataComponent = () => {

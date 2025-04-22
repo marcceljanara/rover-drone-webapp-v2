@@ -1,8 +1,9 @@
 import React from "react";
 import "./Updates.css";
-import { UpdatesData } from "../../Data/Data";
+import { useGithubCommits } from "../../Data/Data";
 
 const Updates = () => {
+  const UpdatesData = useGithubCommits();
   return (
     <div className="Updates">
       {UpdatesData.map((update) => {
