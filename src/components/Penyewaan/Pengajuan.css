@@ -72,5 +72,9 @@
     color: #0056b3;
   }
   
-  
+  button:disabled {
+    background-color: #ccc !important;
+    color: #666 !important;
+    border: none;
+  }
   

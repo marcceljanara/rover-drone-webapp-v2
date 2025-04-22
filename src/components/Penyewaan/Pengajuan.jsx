@@ -98,6 +98,40 @@ function KelolaPenyewaan() {
     }
   };
 
+  const handleComplete = async (id) => {
+    if (!token) return;
+  
+    try {
+      const response = await fetch(`https://dev-api.xsmartagrichain.com/v1/rentals/${id}/status`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ rentalStatus: 'completed' }),
+      });
+  
+      const result = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(result.message || 'Terjadi kesalahan saat menyelesaikan sewa.');
+      }
+  
+      setNotification(result.message);
+      setShowNotification(true);
+  
+      setData((prev) =>
+        prev.map((rental) =>
+          rental.id === id ? { ...rental, rental_status: 'completed' } : rental
+        )
+      );
+    } catch (err) {
+      setNotification(err.message);
+      setShowNotification(true);
+    }
+  };
+  
+
   return (
     <div className="container">
       <h2>Kelola Penyewaan Rover Drone</h2>
@@ -149,14 +183,42 @@ function KelolaPenyewaan() {
                 <td>{item.cost.toLocaleString('id-ID')}</td>
                 <td>
                   {(role === 'admin' || role === 'user') && (
-                    <button
-                      className={`action-btn ${role}`}
-                      onClick={() => handleAction(item.id)}
-                    >
-                      {role === 'admin' ? 'Hapus Sewa' : 'Batalkan'}
-                    </button>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      {role === 'admin' && (
+                        <button
+                          className="action-btn admin"
+                          onClick={() => handleComplete(item.id)}
+                          disabled={item.rental_status !== 'active'}
+                          style={{
+                            cursor: item.rental_status !== 'active' ? 'not-allowed' : 'pointer',
+                            opacity: item.rental_status !== 'active' ? 0.5 : 1,
+                          }}
+                        >
+                          Selesaikan
+                        </button>
+                      )}
+                      <button
+                        className={`action-btn ${role}`}
+                        onClick={() => handleAction(item.id)}
+                        disabled={role === 'user' && item.rental_status !== 'pending'}
+                        style={{
+                          cursor:
+                            role === 'user' && item.rental_status !== 'pending'
+                              ? 'not-allowed'
+                              : 'pointer',
+                          opacity:
+                            role === 'user' && item.rental_status !== 'pending'
+                              ? 0.5
+                              : 1,
+                        }}
+                      >
+                        {role === 'admin' ? 'Hapus Sewa' : 'Batalkan'}
+                      </button>
+                    </div>
                   )}
                 </td>
+
+
               </tr>
             ))}
           </tbody>
