@@ -329,7 +329,7 @@ useEffect(() => {
             <button type="submit" className="login-btn">Verifikasi</button>
           </form>
           <button className="resend-otp" onClick={handleResendOTP} disabled={resendCooldown > 0}>
-            Resend OTP {resendCooldown > 0 ? `(${resendCooldown}s)` : ""}
+            Resend OoTP {resendCooldown > 0 ? `(${resendCooldown}s)` : ""}
           </button>
         </div>
       )}
