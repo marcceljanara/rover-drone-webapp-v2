@@ -156,9 +156,10 @@ table tbody tr:hover {
 /* NOTIFIKASI Sukses */
 .notification {
   position: fixed;
-  top: 20px;
-  right: 20px;
-  background-color: #4CAF50;
+  top: 20px; /* Jaga jarak dari atas */
+  left: 50%; /* Pindahkan ke tengah horizontal */
+  transform: translateX(-50%); /* Pindahkan setengah lebar elemen ke kiri untuk benar-benar berada di tengah */
+  background-color: #4CAF50; /* Warna hijau untuk notifikasi sukses */
   color: #FFFFFF;
   padding: 10px 20px;
   border-radius: 5px;
@@ -167,8 +168,8 @@ table tbody tr:hover {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-  transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
-  animation: slideFade 0.5s ease forwards;
+  transition: opacity 0.5s ease-in-out, visibility 10s ease-in-out;
+  animation: slideFade 1s ease forwards;
 }
 
 .notification.fade-out {
