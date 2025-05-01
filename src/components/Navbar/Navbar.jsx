@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
-
 import "./Navbar.css";
 import { Link } from "react-scroll";
 
@@ -15,34 +14,33 @@ const Navbar = () => {
   const [registeredEmail, setRegisteredEmail] = useState("");
   const [resendCooldown, setResendCooldown] = useState(0);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Cek token saat pertama kali komponen di-render
-useEffect(() => {
-  const token = localStorage.getItem("accessToken");
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
 
-  if (token) {
-    try {
-      const decoded = jwtDecode(token);
-      const currentTime = Date.now() / 1000; // waktu sekarang (dalam detik)
-
-      if (decoded.exp < currentTime) {
-        // Token kadaluarsa
-        handleLogout(); // keluarin user
-        window.location.reload()
-      } else {
-        setIsLoggedIn(true);
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        const currentTime = Date.now() / 1000;
+        if (decoded.exp < currentTime) {
+          handleLogout();
+          window.location.reload();
+        } else {
+          setIsLoggedIn(true);
+        }
+      } catch (error) {
+        console.error("Token invalid:", error);
+        handleLogout();
       }
-    } catch (error) {
-      console.error("Token invalid:", error);
-      handleLogout();
     }
-  }
-}, []);
+  }, []);
 
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   const handleLoginClick = () => {
     if (isLoggedIn) {
-      handleLogout(); // Klik ulang jadi Log Out
+      handleLogout();
     } else {
       setShowSignUpForm(false);
       setShowVerify(false);
@@ -109,11 +107,10 @@ useEffect(() => {
       const data = await response.json();
       const accessToken = data.data.accessToken;
       const refreshToken = data.data.refreshToken;
-      
+
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
-      
-      // Simpan role ke localStorage
+
       try {
         const decoded = jwtDecode(accessToken);
         const role = decoded.role;
@@ -124,7 +121,7 @@ useEffect(() => {
         console.error("Gagal decode token:", err);
       }
 
-      showSuccessNotification(`✅ Login berhasil! Selamat datang kembali ${localStorage.getItem('role')}`);
+      showSuccessNotification(`✅ Login berhasil! Selamat datang kembali ${localStorage.getItem("role")}`);
       setShowLoginForm(false);
       setLoginClicked(false);
       setIsLoggedIn(true);
@@ -227,24 +224,17 @@ useEffect(() => {
       <div className="n-left">
         <div className="n-name">Roone</div>
       </div>
-      <div className="n-right">
+
+      <div className="hamburger" onClick={toggleMenu}>
+        ☰
+      </div>
+
+      <div className={`n-right ${isMenuOpen ? "open" : ""}`}>
         <div className="n-list">
           <ul>
-            <li>
-              <Link activeClass="active" to="Navbar" spy={true} smooth={true}>
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link to="services" spy={true} smooth={true}>
-                Services
-              </Link>
-            </li>
-            <li>
-              <Link to="works" spy={true} smooth={true}>
-                Experience
-              </Link>
-            </li>
+            <li><Link activeClass="active" to="Navbar" spy={true} smooth={true}>Home</Link></li>
+            <li><Link to="services" spy={true} smooth={true}>Services</Link></li>
+            <li><Link to="works" spy={true} smooth={true}>Experience</Link></li>
             <li>
               <button className={`button n-button ${loginClicked ? "clicked" : ""}`} onClick={handleLoginClick}>
                 {isLoggedIn ? "Log Out" : "Login"}
@@ -253,7 +243,7 @@ useEffect(() => {
           </ul>
         </div>
         <a href="https://wa.me/6282178452180" target="_blank" rel="noopener noreferrer">
-          <button className="button n-button contact-button">Contact</button>
+          <button className="button n-button contact-button">kontak</button>
         </a>
       </div>
 
@@ -270,24 +260,15 @@ useEffect(() => {
           <button className="close-btn" onClick={closeLoginForm}>&times;</button>
           <h2>Sign In</h2>
           <form onSubmit={handleLoginSubmit}>
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <input type="email" id="email" name="email" required />
-            </div>
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <input type="password" id="password" name="password" required />
-            </div>
+            <div className="form-group"><label>Email</label><input type="email" name="email" required /></div>
+            <div className="form-group"><label>Password</label><input type="password" name="password" required /></div>
             <div className="form-group">
               <input type="checkbox" id="remember-me" name="remember-me" />
               <label htmlFor="remember-me">Remember me</label>
             </div>
             <button type="submit" className="login-btn">Sign In</button>
           </form>
-          <p>
-            Don't have an account?{" "}
-            <a href="#" onClick={handleSignUpClick}>Sign up</a>
-          </p>
+          <p>Don't have an account? <a href="#" onClick={handleSignUpClick}>Sign up</a></p>
         </div>
       )}
 
@@ -296,40 +277,26 @@ useEffect(() => {
           <button className="close-btn" onClick={closeSignUpForm}>&times;</button>
           <h2>Sign Up</h2>
           <form onSubmit={handleSignUpSubmit}>
-            <div className="form-group">
-              <label htmlFor="fullname">Full Name</label>
-              <input type="text" id="fullname" name="fullname" required />
-            </div>
-            <div className="form-group">
-              <label htmlFor="username">Username</label>
-              <input type="text" id="username" name="username" required />
-            </div>
-            <div className="form-group">
-              <label htmlFor="email-signup">Email</label>
-              <input type="email" id="email-signup" name="email-signup" required />
-            </div>
-            <div className="form-group">
-              <label htmlFor="password-signup">Password</label>
-              <input type="password" id="password-signup" name="password-signup" required />
-            </div>
-            <button type="submit" className="login-btn">Sign Up</button>
+            <div className="form-group"><label>Full Name</label><input type="text" name="fullname" required /></div>
+            <div className="form-group"><label>Username</label><input type="text" name="username" required /></div>
+            <div className="form-group"><label>Email</label><input type="email" name="email-signup" required /></div>
+            <div className="form-group"><label>Password</label><input type="password" name="password-signup" required /></div>
+            <button type="submit" className="login-btn">Register</button>
           </form>
         </div>
       )}
 
       {showVerify && (
         <div className="login-form">
-          <button className="close-btn" onClick={closeAllForms}>&times;</button>
+          <button className="close-btn" onClick={() => setShowVerify(false)}>&times;</button>
           <h2>Verifikasi Email</h2>
+          <p>Masukkan kode OTP yang dikirim ke email Anda.</p>
           <form onSubmit={handleVerifySubmit}>
-            <div className="form-group">
-              <label htmlFor="otp">Kode OTP</label>
-              <input type="text" id="otp" name="otp" required />
-            </div>
+            <div className="form-group"><input type="text" name="otp" placeholder="Masukkan OTP" required /></div>
             <button type="submit" className="login-btn">Verifikasi</button>
           </form>
-          <button className="resend-otp" onClick={handleResendOTP} disabled={resendCooldown > 0}>
-            Resend OTP {resendCooldown > 0 ? `(${resendCooldown}s)` : ""}
+          <button onClick={handleResendOTP} disabled={resendCooldown > 0}>
+            Kirim Ulang OTP {resendCooldown > 0 ? `(${resendCooldown}s)` : ""}
           </button>
         </div>
       )}
