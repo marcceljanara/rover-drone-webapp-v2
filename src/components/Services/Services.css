@@ -1,80 +1,183 @@
+/* ------------ LAYOUT UTAMA ------------ */
 .services {
-  padding: 0 3rem 0 3rem;
+  padding: 3rem;
   display: flex;
-  height: 30rem;
-  margin-bottom: 8rem;
-  margin-top: 3rem;
-  margin-bottom: 13rem;
-  /* scroll view */
-  padding-top: 1rem;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-top: 5rem;
+  margin-bottom: 5rem;
+  flex-wrap: wrap;
+  position: relative;
 }
-/* left side */
+
+/* ------------ LEFT SIDE ------------ */
 .awesome {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  position: relative;
-  margin-top: 10rem;
-  /* gap: 20px; */
+  justify-content: center;
+  gap: 1rem;
+}
+
+.awesome > :nth-child(1),
+.awesome > :nth-child(2) {
+  font-size: 2.5rem;
+  font-weight: bold;
 }
 
 .awesome > :nth-child(1) {
   color: var(--black);
-  font-size: 2.5rem;
-  font-weight: bold;
 }
 .awesome > :nth-child(2) {
   color: var(--orange);
-  font-size: 2.5rem;
-  font-weight: bold;
 }
 .awesome > :nth-child(3) {
   color: var(--gray);
-  font-size: 14px;
-  margin-top: 1rem;
-}
-.s-button {
-  width: 8rem;
-  height: 2rem;
-  margin-top: 1rem;
-  padding: 10px 20px; /* Sesuaikan padding agar teks berada di tengah */
-  text-align: center; /* Pusatkan teks secara horizontal */
-}
-/* right sided */
-.cards {
-  left: 9rem;
-  position: relative;
-}
-.cards > * {
-  position: absolute;
+  font-size: 1rem;
+  line-height: 1.5;
 }
 
-/* blur */
+.s-button {
+  width: fit-content;
+  padding: 0.5rem 1.5rem;
+  font-size: 1rem;
+}
+
+/* ------------ RIGHT SIDE ------------ */
+.cards {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  position: relative;
+}
+
+/* Awalnya semua card disembunyikan (sampai terdeteksi via Intersection Observer) */
+.cards > * {
+  position: static;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  opacity: 0;
+}
+
+/* Animasi hover */
+.cards > *:hover {
+  transform: translateY(-10px);
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* ------------ ANIMATION KEYFRAMES ------------ */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Kelas akan ditambahkan dari React berdasarkan index card */
+.visible-left {
+  animation: slideInLeft 0.8s ease-out forwards;
+}
+
+.visible-right {
+  animation: slideInRight 0.8s ease-out forwards;
+}
+
+/* ------------ BLUR EFFECT ------------ */
+.s-blur1,
 .s-blur2 {
-  left: 14rem;
-  top: 8rem;
+  position: absolute;
+  width: 15rem;
+  height: 10rem;
+  border-radius: 50%;
+  filter: blur(72px);
+  z-index: -1;
 }
 
 .s-blur1 {
   top: 13rem;
   left: -18rem;
+  background: #abf1ff94;
 }
 
-@media screen and (max-width: 480px) {
+.s-blur2 {
+  top: 8rem;
+  left: 14rem;
+  background: var(--purple);
+}
+
+/* ------------ FOOTER PLACEHOLDER ------------ */
+.services-footer-placeholder {
+  height: 40vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: var(--gray);
+}
+
+/* ------------ RESPONSIVE: TABLET ------------ */
+@media screen and (max-width: 768px) {
   .services {
-    margin-top: 30rem;
     flex-direction: column;
-    gap: 5rem;
-    height: 66rem;
-    padding: 0;
-    display: none;
+    align-items: center;
+    padding: 2rem 1rem;
+  }
+
+  .awesome {
+    align-items: center;
+    text-align: center;
   }
 
   .cards {
-    display: flex;
     flex-direction: column;
-    gap: 17rem;
+    gap: 2rem;
+    margin-top: 2rem;
   }
+
   .cards > * {
-    position: static;
+    width: 100%;
+  }
+
+  .s-blur1,
+  .s-blur2 {
+    display: none;
+  }
+}
+
+/* ------------ RESPONSIVE: MOBILE ------------ */
+@media screen and (max-width: 480px) {
+  .awesome > :nth-child(1),
+  .awesome > :nth-child(2) {
+    font-size: 2rem;
+  }
+
+  .awesome > :nth-child(3) {
+    font-size: 0.9rem;
+  }
+
+  .s-button {
+    font-size: 0.9rem;
+    padding: 0.4rem 1rem;
+  }
+
+  .cards > * {
+    width: 90%;
   }
 }
