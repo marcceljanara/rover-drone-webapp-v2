@@ -31,21 +31,19 @@ function DetailPenyewaan() {
         const rentalData = res.data.rental;
         setRental(rentalData);
 
-        // Parse reserved_until to Date and ensure the time is in UTC
         const reservedUntil = new Date(rentalData.reserved_until).getTime();
         const now = new Date().getTime();
 
-        // Jika waktu sekarang sudah melewati reservedUntil, langsung tampilkan "Batas waktu pembayaran habis"
         if (now > reservedUntil) {
           setTimeLeft('Batas waktu pembayaran habis');
-          return; // Jangan jalankan countdown jika waktu sudah habis
+          return;
         }
 
         const updateCountdown = () => {
           const distance = reservedUntil - new Date().getTime();
           if (distance <= 0) {
             setTimeLeft('Batas waktu pembayaran habis');
-            clearInterval(interval); // Stop the interval when the time is up
+            clearInterval(interval);
           } else {
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
@@ -53,10 +51,7 @@ function DetailPenyewaan() {
           }
         };
 
-        // Jalankan langsung satu kali di awal
         updateCountdown();
-
-        // Buat interval jika waktu masih ada
         interval = setInterval(updateCountdown, 1000);
 
       } catch (err) {
@@ -65,14 +60,13 @@ function DetailPenyewaan() {
     };
 
     fetchRental();
-
-    return () => clearInterval(interval); // Pastikan interval dibersihkan saat komponen tidak aktif lagi
+    return () => clearInterval(interval);
   }, [id, accessToken]);
 
   if (error) {
     return (
       <div className="container">
-        <p style={{ color: 'red' }}>{error}</p>
+        <p className="error-text">{error}</p>
         <button onClick={() => navigate(-1)} className="back-btn">Kembali</button>
       </div>
     );
@@ -85,22 +79,22 @@ function DetailPenyewaan() {
   return (
     <div className="container">
       <h2>Detail Penyewaan</h2>
-      <table className="data-table">
-        <tbody>
-          {Object.entries(rental).map(([key, value]) => (
-            <tr key={key}>
-              <td><strong>{key}</strong></td>
-              <td>{value}</td>
+      <div className="table-wrapper">
+        <table className="data-table">
+          <tbody>
+            {Object.entries(rental).map(([key, value]) => (
+              <tr key={key}>
+                <td><strong>{key}</strong></td>
+                <td>{String(value)}</td>
+              </tr>
+            ))}
+            <tr>
+              <td><strong>Sisa Waktu Pembayaran</strong></td>
+              <td style={{ color: timeLeft === 'Batas waktu pembayaran habis' ? 'red' : 'black' }}>{timeLeft}</td>
             </tr>
-          ))}
-          <tr>
-            <td><strong>Sisa Waktu Pembayaran</strong></td>
-            <td style={{ color: timeLeft === 'Batas waktu pembayaran habis' ? 'red' : 'black' }}>
-              {timeLeft}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </div>
       <button onClick={() => navigate(-1)} className="back-btn">Kembali</button>
     </div>
   );

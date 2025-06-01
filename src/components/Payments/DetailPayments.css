@@ -1,0 +1,204 @@
+/* Container Detail Pembayaran */
+.detail-container {
+  max-width: 700px;
+  margin: 40px auto;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 128, 0, 0.15);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+/* Heading */
+.detail-container h2 {
+  text-align: center;
+  color: #2e7d32;
+  margin-bottom: 25px;
+}
+
+/* Daftar Detail */
+.detail-container ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 25px 0;
+}
+
+.detail-container li {
+  padding: 12px 0;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 16px;
+}
+
+.detail-container li strong {
+  display: inline-block;
+  width: 180px;
+  color: #555;
+}
+
+/* Pesan Error */
+.detail-container .error {
+  color: red;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Tombol Aksi Umum */
+.detail-container button {
+  display: block;
+  margin: 0 auto;
+  padding: 10px 24px;
+  background-color: #43a047;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.detail-container button:hover {
+  background-color: #388e3c;
+  transform: translateY(-2px);
+}
+
+/* Grup Tombol Aksi */
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+  gap: 10px;
+}
+
+/* Tombol Sekunder */
+.btn-secondary {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background-color: #388e3c;
+}
+
+/* Tombol Bahaya (Hapus) */
+.btn-danger {
+  background-color: #e53935;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-danger:hover {
+  background-color: #c62828;
+}
+
+/* Pop-up Konfirmasi */
+.confirm-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.confirm-modal-content {
+  background: white;
+  padding: 25px 20px;
+  border-radius: 12px;
+  text-align: center;
+  width: 320px;
+  animation: popIn 0.3s ease-out;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Tombol di Modal Konfirmasi */
+.confirm-modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.confirm-modal-buttons button {
+  flex: 1;
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.confirm-modal-buttons .btn-danger {
+  background-color: #e53935;
+  color: white;
+}
+
+.confirm-modal-buttons .btn-secondary {
+  background-color: #4caf50;
+  color: white;
+}
+
+.confirm-modal-buttons button:hover {
+  opacity: 0.85;
+}
+
+/* Animasi Modal */
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Responsif Mobile */
+@media screen and (max-width: 500px) {
+  .detail-container {
+    padding: 20px;
+  }
+
+  .detail-container li strong {
+    width: 120px;
+  }
+
+  .detail-container li {
+    font-size: 14px;
+  }
+
+  .confirm-modal-content {
+    width: 90%;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .action-buttons button {
+    width: 100%;
+  }
+}
+
+/* Loading Text */
+.loading-text {
+  text-align: center;
+  font-style: italic;
+  color: #777;
+  margin-bottom: 15px;
+}

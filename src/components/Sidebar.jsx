@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import "./Sidebar.css";
-import Logo from "../imgs/rover2.png"; // ✅ ganti logo
+import Logo from "../imgs/rover2.png";
 import {
   UilSignOutAlt,
   UilBars,
@@ -10,41 +10,48 @@ import {
   UilChart,
   UilUsdCircle,
   UilCar,
+  UilMoneyBill,
+  UilFileAlt,
+  UilUsersAlt
 } from "@iconscout/react-unicons";
-import { motion } from "framer-motion";
 
-// Sidebar menu items
 export const SidebarData = [
   { heading: "Dashboard", icon: UilEstate, link: "/dashboard" },
   { heading: "Power Data", icon: UilChart, link: "/power-data" },
   { heading: "Non Fungible Token", icon: UilUsdCircle, link: "/non-fungible-token" },
   { heading: "Perangkat", icon: UilRocket, link: "/devices" },
   { heading: "Penyewaan", icon: UilCar, link: "/penyewaan" },
+  { heading: "Pembayaran", icon: UilMoneyBill, link: "/payments" },
+  { heading: "Laporan Keuangan", icon: UilFileAlt, link: "/reports" },
+  { heading: "Manajemen Pengguna", icon: UilUsersAlt, link: "/admin" }
 ];
 
 const Sidebar = () => {
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(window.innerWidth > 768);
   const location = useLocation();
 
-  const sidebarVariants = {
-    true: { left: "0" },
-    false: { left: "-60%" },
-  };
+  useEffect(() => {
+    const handleResize = () => {
+      setExpanded(window.innerWidth > 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <>
-      <div
-        className="bars"
-        style={expanded ? { left: "60%" } : { left: "5%" }}
-        onClick={() => setExpanded(!expanded)}
-      >
+      {/* Hamburger Icon */}
+      <div className="bars" onClick={() => setExpanded(prev => !prev)}>
         <UilBars />
       </div>
 
-      <motion.div
+      {/* Sidebar Menu */}
+      <div
         className="sidebar"
-        variants={sidebarVariants}
-        animate={window.innerWidth <= 768 ? `${expanded}` : ""}
+        style={{
+          left: expanded ? "0" : window.innerWidth <= 768 ? "-100%" : "0",
+          position: window.innerWidth <= 768 ? "fixed" : "relative",
+        }}
       >
         <div className="logo">
           <img src={Logo} alt="logo" />
@@ -65,8 +72,9 @@ const Sidebar = () => {
                 to={item.link}
                 key={index}
                 className={location.pathname === item.link ? "menuItem active" : "menuItem"}
-                onClick={() => setExpanded(false)}
-                style={{ textDecoration: "none" }}
+                onClick={() => {
+                  if (window.innerWidth <= 768) setExpanded(false);
+                }}
               >
                 <Icon />
                 <span>{item.heading}</span>
@@ -74,14 +82,20 @@ const Sidebar = () => {
             );
           })}
 
-          <div className="menuItem">
-            <NavLink to="/" className="menuItemLink" onClick={() => setExpanded(false)}>
+          <div className="menuItem signout-section">
+            <NavLink
+              to="/"
+              className="menuItemLink"
+              onClick={() => {
+                if (window.innerWidth <= 768) setExpanded(false);
+              }}
+            >
               <UilSignOutAlt />
               <span>Sign Out</span>
             </NavLink>
           </div>
         </div>
-      </motion.div>
+      </div>
     </>
   );
 };

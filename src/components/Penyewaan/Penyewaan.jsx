@@ -115,8 +115,8 @@ const Penyewaan = () => {
   };
 
   return (
-      <div className="penyewaan-container">
-        <button className="back-button" onClick={() => navigate('/penyewaan')}>
+    <div className="penyewaan-container">
+      <button className="back-button" onClick={() => navigate('/penyewaan')}>
         ⬅ Kembali
       </button>
 
@@ -125,6 +125,7 @@ const Penyewaan = () => {
       <p>
         Lupakan waktu terbuang, kerja manual yang melelahkan, dan hasil yang tak optimal. Kini hadir DRONE ROVER CANGGIH: teknologi pintar yang menjelajah setiap sudut lahan Anda dengan akurasi tanpa tanding!
       </p>
+
       <div className="image-container">
         <img src={roverImage} alt="Drone Rover" className="rover-image" />
       </div>

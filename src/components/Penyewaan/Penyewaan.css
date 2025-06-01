@@ -1,74 +1,122 @@
-/* Reset margin dan padding default */
+/* ========== RESET & BODY ========== */
 body {
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
   background: linear-gradient(135deg, #BCFFDB 30%, #E6FFCF 52%, #C6F3C8 91%);
-  color: #000000;
+  color: #000;
   height: 100vh;
   overflow-y: auto;
 }
 
+/* ========== CONTAINER ========== */
 .penyewaan-container {
-  padding: 60px 20px 20px 20px; /* Tambahkan padding top lebih besar */
+  padding: 60px 20px 20px;
   background: none;
   border-radius: 1rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   max-width: 800px;
   margin: 40px auto;
-  color: #000000;
+  color: #000;
   position: relative;
-}
-
-h1, h2, h3 {
-  color: #00796b;
-  margin-bottom: 10px;
-}
-
-p {
-  color: #000000;
-  line-height: 1.6;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 10px 0;
-}
-
-li {
-  margin-bottom: 5px;
 }
 
 .form-container {
   margin-top: 20px;
-  background: none;
   padding: 10px;
-  border-radius: 5px;
   width: 100%;
+  overflow-x: auto;
 }
 
+/* ========== TYPOGRAPHY ========== */
+h1, h2, h3 {
+  color: #00796b;
+  margin-bottom: 10px;
+}
+p, li {
+  color: #000;
+  line-height: 1.6;
+  font-size: 16px;
+}
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+}
+li {
+  margin-bottom: 5px;
+}
+
+/* ========== TABEL DESKTOP ========== */
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 10px;
+  margin-top: 1rem;
 }
-
+thead {
+  background-color: #f2f2f2;
+}
 th, td {
   padding: 10px;
   text-align: left;
   border-bottom: 1px solid #ddd;
 }
-
-th {
-  background-color: #f2f2f2;
-}
-
-table tbody tr:hover {
+tbody tr:hover {
   background-color: #eafaf1;
   transition: background-color 0.3s ease-in-out;
 }
 
+/* ========== TABEL RESPONSIF (Mobile) ========== */
+@media (max-width: 1024px) {
+  table, thead, tbody, tr, td {
+    display: block;
+    width: 100%;
+  }
+
+  thead {
+    display: none;
+  }
+
+  tr {
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 8px;
+    background: #fafafa;
+  }
+
+  td {
+    position: relative;
+    padding-left: 50%;
+    text-align: left;
+    border: none;
+    border-bottom: 1px solid #eee;
+  }
+
+  td:last-child {
+    border-bottom: none;
+  }
+
+  td::before {
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    width: 45%;
+    white-space: nowrap;
+    font-weight: bold;
+    color: #333;
+    font-size: 14px;
+  }
+
+  td:nth-of-type(1)::before { content: "Durasi"; }
+  td:nth-of-type(2)::before { content: "Harga Total"; }
+  td:nth-of-type(3)::before { content: "Harga Per Hari"; }
+  td:nth-of-type(4)::before { content: "Diskon (%)"; }
+  td:nth-of-type(5)::before { content: "Diskon (Rp)"; }
+  td:nth-of-type(6)::before { content: "Aksi"; }
+}
+
+/* ========== BUTTONS ========== */
 .sewa-button, .batal-button {
   padding: 10px 20px;
   border: none;
@@ -76,24 +124,21 @@ table tbody tr:hover {
   cursor: pointer;
   margin-right: 5px;
   transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;
+  font-size: 15px;
 }
 
 .sewa-button {
   background-color: #65B741;
-  color: #FFFFFF;
+  color: #fff;
 }
-
 .sewa-button:hover {
   background-color: #4CAF50;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-
 .sewa-button:active {
   background-color: #45a049;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   transform: scale(0.98);
 }
-
 .sewa-button.disabled,
 .sewa-button[disabled] {
   background-color: #a5d6a7;
@@ -101,50 +146,43 @@ table tbody tr:hover {
   opacity: 0.6;
   pointer-events: none;
 }
-
-.sewa-button.disabled:hover,
-.sewa-button[disabled]:hover {
-  background-color: #a5d6a7;
-  box-shadow: none;
-}
-
 .sewa-button.selected {
-  background-color: #4CAF50;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: #388E3C;
+  border: 2px solid #2e7d32;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  font-weight: bold;
+  transform: scale(1.02);
 }
 
 .batal-button {
   background-color: #EE1D52;
-  color: #FFFFFF;
+  color: #fff;
 }
-
 .batal-button:hover {
   background-color: #d32f2f;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-
 .batal-button:active {
   background-color: #c62828;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   transform: scale(0.98);
 }
-
 .batal-button:disabled {
   opacity: 0.6;
   pointer-events: none;
 }
 
+/* ========== IMAGE ========== */
 .image-container {
   text-align: center;
   margin: 20px 0;
 }
-
 .rover-image {
   width: 400px;
   height: auto;
   max-width: 100%;
 }
 
+/* ========== HARGA RINGKASAN ========== */
 .price-container {
   text-align: center;
   margin-top: 20px;
@@ -153,85 +191,68 @@ table tbody tr:hover {
   border-radius: 5px;
 }
 
-/* NOTIFIKASI Sukses */
-.notification {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background-color: #4CAF50;
-  color: #FFFFFF;
-  padding: 10px 20px;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
-  animation: slideFade 0.5s ease forwards;
-}
-
-.notification.fade-out {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-/* NOTIFIKASI Error */
+/* ========== NOTIFIKASI ========== */
+.notification,
 .error-notification {
   position: fixed;
   top: 20px;
   right: 20px;
-  background-color: #FF5722;
-  color: #FFFFFF;
   padding: 10px 20px;
   border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  color: #fff;
   z-index: 1000;
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-  transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
   animation: slideFade 0.5s ease forwards;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
-
+.notification {
+  background-color: #4CAF50;
+}
+.error-notification {
+  background-color: #FF5722;
+}
+.notification.fade-out,
 .error-notification.fade-out {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
 }
 
-/* Tombol terpilih - lebih menonjol */
-.sewa-button.selected {
-  background-color: #388E3C; /* hijau lebih tua */
-  color: #ffffff;
-  border: 2px solid #2e7d32;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-  transform: scale(1.02);
-  font-weight: bold;
-  transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s, border 0.3s;
+@keyframes slideFade {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
+/* ========== BACK BUTTON ========== */
 .back-button {
   position: absolute;
   top: 20px;
   left: 20px;
-  background-color: transparent;
+  background: transparent;
   color: #00796b;
   border: 2px solid #00796b;
   padding: 8px 14px;
   border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s, color 0.3s;
   z-index: 100;
 }
-
 .back-button:hover {
   background-color: #00796b;
-  color: #ffffff;
+  color: #fff;
 }
 
+/* ========== DEVICE STATUS ========== */
 .device-status {
   margin-bottom: 20px;
   padding: 12px 20px;
@@ -246,31 +267,26 @@ table tbody tr:hover {
   color: #2e7d32;
 }
 
-.device-label {
-  font-weight: 600;
+/* ========== RENTAL DETAILS ========== */
+.rental-details {
+  margin-top: 20px;
+  background: #e0f7fa;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.rental-details h2 {
+  color: #00796b;
+  margin-bottom: 10px;
+}
+.rental-details p {
+  margin-bottom: 5px;
+}
+.rental-details strong {
+  color: #00796b;
 }
 
-.device-value {
-  font-size: 18px;
-  font-weight: bold;
-}
-
-
-
-
-/* ANIMASI NOTIFIKASI */
-@keyframes slideFade {
-  from {
-    opacity: 0;
-    transform: translateY(-15px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* LOADER SPINNER (Opsional) */
+/* ========== LOADER ========== */
 .loader {
   border: 4px solid #f3f3f3;
   border-top: 4px solid #65B741;
@@ -280,73 +296,39 @@ table tbody tr:hover {
   animation: spin 1s linear infinite;
   margin: auto;
 }
-
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-/* DETAIL SEWA */
-.rental-details {
-  margin-top: 20px;
-  background: #e0f7fa;
-  padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.rental-details h2 {
-  color: #00796b;
-  margin-bottom: 10px;
-}
-
-.rental-details p {
-  color: #000000;
-  margin-bottom: 5px;
-}
-
-.rental-details strong {
-  color: #00796b;
-}
-
-/* RESPONSIVE BREAKPOINT */
+/* ========== RESPONSIVE BREAKPOINT KHUSUS MOBILE ========== */
 @media (max-width: 768px) {
-  h1 {
-    font-size: 22px;
-  }
-
-  h2 {
-    font-size: 18px;
-  }
-
-  h3 {
-    font-size: 16px;
-  }
-
-  p, li {
-    font-size: 14px;
-  }
-
-  table {
-    font-size: 12px;
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-
-  .sewa-button, .batal-button {
-    font-size: 12px;
-  }
+  h1 { font-size: 22px; }
+  h2 { font-size: 18px; }
+  h3 { font-size: 16px; }
+  p, li { font-size: 14px; }
+  .sewa-button, .batal-button { font-size: 13px; }
 
   .rover-image {
     width: 100%;
     max-width: 300px;
   }
 
-  table thead {
-    position: sticky;
-    top: 0;
-    background-color: #f2f2f2;
-    z-index: 1;
+  .device-status {
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 14px;
+  }
+
+  .device-value {
+    font-size: 16px;
+  }
+
+  .back-button {
+    font-size: 12px;
+    padding: 6px 12px;
+    top: 10px;
+    left: 10px;
   }
 }

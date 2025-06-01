@@ -5,12 +5,13 @@ import "./RightSide.css";
 const RightSide = () => {
   return (
     <div className="RightSide">
-      <div>
-        <h3>Updates</h3>
+      <div className="section">
+        <h3 className="section-title">Updates</h3>
         <Updates />
       </div>
-      {/* <div>
-        <h3>Customer Review</h3>
+
+      {/* <div className="section">
+        <h3 className="section-title">Customer Review</h3>
         <CustomerReview />
       </div> */}
     </div>

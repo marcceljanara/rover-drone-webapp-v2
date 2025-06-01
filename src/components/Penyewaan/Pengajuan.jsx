@@ -100,7 +100,7 @@ function KelolaPenyewaan() {
 
   const handleComplete = async (id) => {
     if (!token) return;
-  
+
     try {
       const response = await fetch(`https://dev-api.xsmartagrichain.com/v1/rentals/${id}/status`, {
         method: 'PUT',
@@ -110,16 +110,16 @@ function KelolaPenyewaan() {
         },
         body: JSON.stringify({ rentalStatus: 'completed' }),
       });
-  
+
       const result = await response.json();
-  
+
       if (!response.ok) {
         throw new Error(result.message || 'Terjadi kesalahan saat menyelesaikan sewa.');
       }
-  
+
       setNotification(result.message);
       setShowNotification(true);
-  
+
       setData((prev) =>
         prev.map((rental) =>
           rental.id === id ? { ...rental, rental_status: 'completed' } : rental
@@ -130,7 +130,6 @@ function KelolaPenyewaan() {
       setShowNotification(true);
     }
   };
-  
 
   return (
     <div className="container">
@@ -153,81 +152,64 @@ function KelolaPenyewaan() {
       ) : error ? (
         <div className="notification error">{error}</div>
       ) : (
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Tanggal Mulai</th>
-              <th>Tanggal Berakhir</th>
-              <th>Status</th>
-              <th>Biaya (Rp)</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((item) => (
-              <tr key={item.id}>
-                <td
-                  className="clickable-id"
-                  onClick={() => navigate(`/penyewaan/${item.id}`)}
-                >
-                  {item.id}
-              </td>
-                <td>{new Date(item.start_date).toLocaleDateString()}</td>
-                <td>{new Date(item.end_date).toLocaleDateString()}</td>
-                <td>
-                  <span className={`status-badge status-${item.rental_status}`}>
-                    {item.rental_status}
-                  </span>
-                </td>
-                <td>{item.cost.toLocaleString('id-ID')}</td>
-                <td>
-                  {(role === 'admin' || role === 'user') && (
-                    <div style={{ display: 'flex', gap: '8px' }}>
-                      {role === 'admin' && (
-                        <button
-                          className="action-btn admin"
-                          onClick={() => handleComplete(item.id)}
-                          disabled={item.rental_status !== 'active'}
-                          style={{
-                            cursor: item.rental_status !== 'active' ? 'not-allowed' : 'pointer',
-                            opacity: item.rental_status !== 'active' ? 0.5 : 1,
-                          }}
-                        >
-                          Selesaikan
-                        </button>
-                      )}
-                      <button
-                        className={`action-btn ${role}`}
-                        onClick={() => handleAction(item.id)}
-                        disabled={role === 'user' && item.rental_status !== 'pending'}
-                        style={{
-                          cursor:
-                            role === 'user' && item.rental_status !== 'pending'
-                              ? 'not-allowed'
-                              : 'pointer',
-                          opacity:
-                            role === 'user' && item.rental_status !== 'pending'
-                              ? 0.5
-                              : 1,
-                        }}
-                      >
-                        {role === 'admin' ? 'Hapus Sewa' : 'Batalkan'}
-                      </button>
-                    </div>
-                  )}
-                </td>
-
-
+        <div className="table-responsive">
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Tanggal Mulai</th>
+                <th>Tanggal Berakhir</th>
+                <th>Status</th>
+                <th>Biaya (Rp)</th>
+                <th>Aksi</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {data.map((item) => (
+                <tr key={item.id}>
+                  <td className="clickable-id" onClick={() => navigate(`/penyewaan/${item.id}`)}>
+                    {item.id}
+                  </td>
+                  <td>{new Date(item.start_date).toLocaleDateString()}</td>
+                  <td>{new Date(item.end_date).toLocaleDateString()}</td>
+                  <td>
+                    <span className={`status-badge status-${item.rental_status}`}>
+                      {item.rental_status}
+                    </span>
+                  </td>
+                  <td>{item.cost.toLocaleString('id-ID')}</td>
+                  <td>
+                    {(role === 'admin' || role === 'user') && (
+                      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                        {role === 'admin' && (
+                          <button
+                            className="action-btn admin"
+                            onClick={() => handleComplete(item.id)}
+                            disabled={item.rental_status !== 'active'}
+                          >
+                            Selesaikan
+                          </button>
+                        )}
+                        <button
+                          className={`action-btn ${role}`}
+                          onClick={() => handleAction(item.id)}
+                          disabled={role === 'user' && item.rental_status !== 'pending'}
+                        >
+                          {role === 'admin' ? 'Hapus Sewa' : 'Batalkan'}
+                        </button>
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
 
       {showNotification && (
         <div
-          className={`${
+          className={`$ {
             notification.toLowerCase().includes('gagal') ||
             notification.toLowerCase().includes('error')
               ? 'error-notification'

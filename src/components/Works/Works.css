@@ -2,7 +2,7 @@
   padding: 0 3rem; /* Padding kiri dan kanan */
   display: flex; /* Menggunakan flexbox untuk tata letak */
   height: 90vh; /* Tinggi default */
-  margin-top: 10rem; /* Margin atas */
+  margin-top: -3rem; /* Margin atas */
   align-items: center; /* Pusatkan elemen secara vertikal */
   justify-content: space-between; /* Menyebar elemen ke kiri dan kanan */
 }

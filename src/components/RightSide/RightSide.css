@@ -1,29 +1,46 @@
-.RightSide{
+.RightSide {
+  display: flex;
+  flex-direction: column;
+  width: 95%;
+  padding-top: 2rem;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+/* Section inside RightSide */
+.section {
+  width: 100%;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+/* Responsiveness */
+@media screen and (max-width: 1200px) {
+  .RightSide {
+    margin-top: 3rem;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .RightSide {
+    width: 100%;
+    margin-top: 0;
+    padding-top: 1rem;
+  }
+
+  .RightSide > .section {
     display: flex;
     flex-direction: column;
-    padding-top: 2rem;
-    width: 95%;
-    justify-content: flex-start; /* Menempatkan elemen di atas */
-    align-items: flex-start; /* Menyelaraskan elemen ke kiri */
-}
+    align-items: center;
+  }
 
-
-@media screen and (max-width: 1200px) {
-    .RightSide{
-        justify-content: flex-start;
-        margin-top: 3rem;
-    }
-}
-
-@media screen and (max-width: 768px)
-{
-    .RightSide{
-        width: 100%;
-        margin-top: 0;
-    }
-    .RightSide>div{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+  .section-title {
+    text-align: center;
+  }
 }

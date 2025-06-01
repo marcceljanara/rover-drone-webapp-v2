@@ -32,7 +32,7 @@ const NonFungibleToken = () => {
 
   return (
     <div>
-      <h1 style={{ marginTop: '40px' }}>Non-Fungible Token</h1>
+      <h1 style={{ marginTop: '40px' }}>Non Fungible Token</h1>
       
       {isLoading ? (
         <div className="loading-spinner"></div>

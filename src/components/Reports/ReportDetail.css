@@ -1,0 +1,93 @@
+.report-detail {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: #f9fff9;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 128, 0, 0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .report-detail h2 {
+    text-align: center;
+    color: #2e7d32;
+    margin-bottom: 1.5rem;
+  }
+  
+  .report-detail p {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+  }
+  
+  .report-detail h3 {
+    margin-top: 2rem;
+    color: #388e3c;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 128, 0, 0.1);
+  }
+  
+  table th,
+  table td {
+    padding: 0.75rem 1rem;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  table th {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+  }
+  
+  table tr:nth-child(even) {
+    background-color: #f1f8e9;
+  }
+  
+  table tr:hover {
+    background-color: #dcedc8;
+    transition: 0.3s ease-in-out;
+  }
+  
+  .button-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 1rem;
+  }
+  
+  /* Tombol umum (back dan download) */
+  .button-group button {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Tombol Kembali */
+  .back-btn {
+    background-color: #e0e0e0;
+    color: #333;
+  }
+  
+  .back-btn:hover {
+    background-color: #bdbdbd;
+  }
+  
+  /* Tombol Unduh */
+  .download-btn {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  .download-btn:hover {
+    background-color: #43a047;
+  }
+  
+  

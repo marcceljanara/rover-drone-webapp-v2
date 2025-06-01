@@ -30,6 +30,11 @@ h2 {
   border-radius: 5px;
   cursor: pointer;
   font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.add-btn:hover {
+  background-color: #45a049;
 }
 
 .data-table {
@@ -52,11 +57,12 @@ h2 {
 .edit-btn,
 .delete-btn {
   font-size: 12px;
-  padding: 4px 10px;
+  padding: 6px 12px;
   margin: 0 2px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
 .edit-btn {
@@ -64,9 +70,19 @@ h2 {
   color: white;
 }
 
+.edit-btn:hover {
+  transform: scale(1.03);
+  opacity: 0.9;
+}
+
 .delete-btn {
   background-color: #f44336;
   color: white;
+}
+
+.delete-btn:hover {
+  transform: scale(1.03);
+  opacity: 0.9;
 }
 
 .footer {
@@ -76,11 +92,11 @@ h2 {
   margin-top: 20px;
   font-size: 14px;
   color: #4CAF50;
-  padding: 0 40px; /* Tambahkan padding global */
+  padding: 0 40px;
 }
 
 .data-range {
-  margin-left: 120px; /* Geser tulisan "Showing ..." lebih jauh ke kanan */
+  margin-left: 120px;
   color: #4CAF50;
   font-weight: 500;
 }
@@ -88,12 +104,12 @@ h2 {
 .pagination-wrapper {
   display: flex;
   align-items: center;
-  margin-right: 120px; /* Geser elemen pagination lebih jauh ke kiri */
+  margin-right: 120px;
 }
 
 .page-number {
   font-weight: bold;
-  margin-right: 20px; /* Jarak antara page number dan tombol */
+  margin-right: 20px;
   color: #4CAF50;
 }
 
@@ -102,7 +118,9 @@ h2 {
   border: 1px solid #4CAF50;
   color: #4CAF50;
   border-radius: 50%;
-  padding: 4px 10px;
+  padding: 6px 12px;
+  min-width: 32px;
+  min-height: 32px;
   cursor: pointer;
   margin: 0 4px;
   font-size: 14px;
@@ -125,10 +143,12 @@ h2 {
   padding: 4px 8px;
   border-radius: 4px;
   font-weight: bold;
+  pointer-events: none;
+  background-color: transparent; /* Menghapus background status */
 }
 
 .status-active {
-  color: #4CAF50; /* Hijau */
+  color: #4CAF50; /* Hijau tanpa latar belakang */
 }
 
 .status-inactive {
@@ -136,9 +156,37 @@ h2 {
 }
 
 .status-maintenance {
-  color: #FF9800; /* Oranye */
+  color: #e65100; /* Oranye gelap */
 }
 
 .status-error {
-  color: #FF5722; /* Merah Marun */
+  color: #bf360c; /* Merah marun gelap */
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 600px) {
+  .search-add-bar {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .search-add-bar input {
+    width: 100%;
+  }
+
+  .footer {
+    flex-direction: column;
+    padding: 0 20px;
+    gap: 10px;
+  }
+
+  .data-range {
+    margin-left: 0;
+    text-align: center;
+  }
+
+  .pagination-wrapper {
+    margin-right: 0;
+    justify-content: center;
+  }
 }
