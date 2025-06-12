@@ -20,18 +20,36 @@
   color: #333;
 }
 
-/* Responsiveness */
+/* 1200px ke bawah (Small Desktop - Tablet Landscape) */
 @media screen and (max-width: 1200px) {
   .RightSide {
     margin-top: 3rem;
   }
 }
 
+/* 1024px ke bawah (Tablet Portrait) */
+@media screen and (max-width: 1024px) {
+  .RightSide {
+    padding: 1.5rem;
+    align-items: center;
+  }
+
+  .section {
+    width: 90%;
+  }
+
+  .section-title {
+    font-size: 18px;
+    text-align: center;
+  }
+}
+
+/* 768px ke bawah (Tablet Portrait - Large Mobile) */
 @media screen and (max-width: 768px) {
   .RightSide {
     width: 100%;
-    margin-top: 0;
     padding-top: 1rem;
+    gap: 1.5rem;
   }
 
   .RightSide > .section {
@@ -40,7 +58,58 @@
     align-items: center;
   }
 
+  .section {
+    width: 95%;
+  }
+
   .section-title {
+    font-size: 17px;
     text-align: center;
+  }
+}
+
+/* 600px ke bawah (Medium Mobile) */
+@media screen and (max-width: 600px) {
+  .section-title {
+    font-size: 16px;
+  }
+
+  .section {
+    width: 100%;
+    padding: 0 1rem;
+  }
+}
+
+/* 480px ke bawah (Small Mobile) */
+@media screen and (max-width: 480px) {
+  .RightSide {
+    padding-top: 0.5rem;
+    gap: 1rem;
+  }
+
+  .section-title {
+    font-size: 15px;
+  }
+}
+
+/* 375px ke bawah (Very Small Devices like iPhone SE) */
+@media screen and (max-width: 375px) {
+  .section-title {
+    font-size: 14px;
+  }
+
+  .RightSide {
+    padding: 0.5rem;
+  }
+}
+
+/* 320px ke bawah (Extra Small Mobile / Foldable phones) */
+@media screen and (max-width: 320px) {
+  .section-title {
+    font-size: 13px;
+  }
+
+  .section {
+    padding: 0;
   }
 }

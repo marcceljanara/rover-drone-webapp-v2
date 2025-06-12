@@ -9,7 +9,7 @@ const DeviceDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [popupMessage, setPopupMessage] = useState('');
-  const [popupType, setPopupType] = useState('success'); // success atau error
+  const [popupType, setPopupType] = useState('success');
   const [showPopup, setShowPopup] = useState(false);
 
   const triggerPopup = (message, type = 'success') => {

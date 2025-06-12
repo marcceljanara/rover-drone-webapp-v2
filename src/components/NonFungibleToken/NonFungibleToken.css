@@ -72,7 +72,18 @@
     height: 60px;
     animation: spin 1.5s linear infinite;
     margin: 100px auto;
+    
   }
+
+
+
+  .nft-title {
+  margin: 40px auto 20px auto;
+  width: fit-content;
+  font-size: 2.5rem;
+  color: #333;
+}
+
   
   @keyframes spin {
     0% { transform: rotate(0deg); }

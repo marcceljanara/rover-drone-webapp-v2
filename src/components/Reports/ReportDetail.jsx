@@ -93,12 +93,16 @@ const ReportDetail = () => {
         <tbody>
           {report.payments.map((payment) => (
             <tr key={payment.id}>
-              <td>{payment.id}</td>
-              <td>{payment.rental_id}</td>
-              <td>{Number(payment.amount).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</td>
-              <td>{formatTanggalDanWaktuIndonesia(payment.payment_date)}</td>
-              <td>{payment.payment_status}</td>
-              <td>{payment.payment_method}</td>
+              <td data-label="ID Pembayaran">{payment.id}</td>
+              <td data-label="Rental ID">{payment.rental_id}</td>
+              <td data-label="Jumlah Pembayaran">
+                {Number(payment.amount).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}
+              </td>
+              <td data-label="Tanggal Pembayaran">
+                {formatTanggalDanWaktuIndonesia(payment.payment_date)}
+              </td>
+              <td data-label="Status Pembayaran">{payment.payment_status}</td>
+              <td data-label="Metode Pembayaran">{payment.payment_method}</td>
             </tr>
           ))}
         </tbody>

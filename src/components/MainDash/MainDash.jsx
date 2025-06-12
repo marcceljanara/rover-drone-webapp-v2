@@ -8,7 +8,7 @@ const MainDash = () => {
 
   return (
     <div>
-      <h1 style={{ marginTop: "40px" }}>Dashboard</h1>
+      <h1 className="dashboard-title">Dashboard</h1>
 
       {/* Dropdown menu */}
       <div className="dropdown-container">

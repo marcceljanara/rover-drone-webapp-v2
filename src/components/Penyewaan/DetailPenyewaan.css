@@ -1,0 +1,109 @@
+/* Rental Detail Page Styles */
+
+.rental-detail-container {
+  padding: 2rem 1rem;
+  max-width: 800px;
+  margin: auto;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+.rental-detail-error {
+  color: red;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.rental-detail-title {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.rental-detail-back-btn {
+  display: block;
+  margin: 2rem auto 0;
+  background-color: #28a745;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.rental-detail-back-btn:hover {
+  background-color: #218838;
+}
+
+.rental-detail-table-wrapper {
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+.rental-detail-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 300px;
+  font-size: 0.85rem;
+}
+
+.rental-detail-table th,
+.rental-detail-table td {
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  vertical-align: top;
+  word-break: break-word;
+}
+
+.rental-detail-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* Responsive - stacked style for small screens */
+@media screen and (max-width: 768px) {
+  .rental-detail-table,
+  .rental-detail-table thead,
+  .rental-detail-table tbody,
+  .rental-detail-table th,
+  .rental-detail-table td,
+  .rental-detail-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  .rental-detail-table tr {
+    margin-bottom: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+    padding: 0.5rem;
+  }
+
+  .rental-detail-table td {
+    position: relative;
+    padding-left: 45%;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    border: none;
+    border-bottom: 1px solid #eee;
+    box-sizing: border-box;
+  }
+
+  .rental-detail-table td::before {
+    content: attr(data-label);
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    transform: translateY(-50%);
+    font-weight: bold;
+    color: #555;
+    width: 40%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

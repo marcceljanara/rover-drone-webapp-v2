@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import './Penyewaan.css';
+import './DetailPenyewaan.css';
 
 function DetailPenyewaan() {
   const { id } = useParams();
@@ -53,7 +53,6 @@ function DetailPenyewaan() {
 
         updateCountdown();
         interval = setInterval(updateCountdown, 1000);
-
       } catch (err) {
         setError(err.message);
       }
@@ -65,37 +64,42 @@ function DetailPenyewaan() {
 
   if (error) {
     return (
-      <div className="container">
-        <p className="error-text">{error}</p>
-        <button onClick={() => navigate(-1)} className="back-btn">Kembali</button>
+      <div className="rental-detail-container">
+        <p className="rental-detail-error">{error}</p>
+        <button onClick={() => navigate(-1)} className="rental-detail-back-btn">Kembali</button>
       </div>
     );
   }
 
   if (!rental) {
-    return <div className="container">Memuat detail penyewaan...</div>;
+    return <div className="rental-detail-container">Memuat detail penyewaan...</div>;
   }
 
   return (
-    <div className="container">
-      <h2>Detail Penyewaan</h2>
-      <div className="table-wrapper">
-        <table className="data-table">
+    <div className="rental-detail-container">
+      <h2 className="rental-detail-title">Detail Penyewaan</h2>
+      <div className="rental-detail-table-wrapper">
+        <table className="rental-detail-table">
           <tbody>
             {Object.entries(rental).map(([key, value]) => (
               <tr key={key}>
-                <td><strong>{key}</strong></td>
-                <td>{String(value)}</td>
+                <td data-label="Field"><strong>{key}</strong></td>
+                <td data-label={key}>{String(value)}</td>
               </tr>
             ))}
             <tr>
-              <td><strong>Sisa Waktu Pembayaran</strong></td>
-              <td style={{ color: timeLeft === 'Batas waktu pembayaran habis' ? 'red' : 'black' }}>{timeLeft}</td>
+              <td data-label="Field"><strong>Sisa Waktu Pembayaran</strong></td>
+              <td
+                data-label="Sisa Waktu Pembayaran"
+                style={{ color: timeLeft === 'Batas waktu pembayaran habis' ? 'red' : 'black' }}
+              >
+                {timeLeft}
+              </td>
             </tr>
           </tbody>
         </table>
       </div>
-      <button onClick={() => navigate(-1)} className="back-btn">Kembali</button>
+      <button onClick={() => navigate(-1)} className="rental-detail-back-btn">Kembali</button>
     </div>
   );
 }

@@ -1,14 +1,13 @@
-/* src/components/Home/Home.css */
-
 .home {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; 
-  align-items: stretch; 
-  height: 100vh; 
+  justify-content: flex-start;
+  align-items: stretch;
+  min-height: 100vh;
   width: 100vw;
   padding: 0.5rem 3.5rem;
   color: var(--black);
+  background: linear-gradient(106.37deg, #bcffd8 29.63%, #e6ffcf 51.55%, #c6f3c8 90.85%);
 }
 
 .home h1 {
@@ -26,53 +25,134 @@
   box-shadow: 0px 20px 24px 3px rgba(40, 251, 40, 0.42);
   border-radius: 34px;
   border: none;
-  color: white; 
+  color: white;
   font-size: 16px;
   padding: 11px 26px;
   cursor: pointer;
-  text-decoration: none; /* Menghapus underline */
-  display: inline-block; /* Membuat tombol tidak berperilaku seperti link */
-  text-align: center; /* Pastikan teks berada di tengah */
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
 }
 
 .button:hover {
   background: white;
   border: 1px solid var(--orange);
-  text-decoration: none;
   color: var(--orange);
   text-decoration: none;
-
 }
-
 
 .i-button {
   display: flex;
-  justify-content: center; /* Pusatkan teks secara horizontal */
-  align-items: center; /* Pusatkan teks secara vertikal */
-  width: auto; /* Biarkan lebar otomatis agar sesuai dengan konten */
-  padding: 10px 20px; /* Sesuaikan padding agar tombol tidak terlalu kecil */
+  justify-content: center;
+  align-items: center;
+  width: auto;
+  padding: 10px 20px;
   font-size: 16px;
-  height: auto; /* Biarkan tinggi otomatis */
+  height: auto;
   text-decoration: none;
 }
 
+.shift-left {
+  margin-left: -1.5rem;
+}
 
-/* Tambahkan media query untuk perangkat kecil */
-@media screen and (max-width: 480px) {
+/* ======================== RESPONSIVE STYLES ========================= */
+@media screen and (max-width: 1366px) {
   .home {
-    padding: 0.5rem 1rem;
-    justify-content: flex-start;
+    padding: 0.5rem 2rem;
   }
 
   .home h1 {
-    font-size: 1rem; /* Kurangi ukuran font untuk judul */
+    font-size: 2.5rem;
   }
 
   .home p {
-    font-size: 1.2rem; /* Kurangi ukuran font untuk paragraf */
+    font-size: 1.25rem;
   }
-  .button{
-    width: 200px;
-    height: auto;
+}
+
+@media screen and (max-width: 1024px) {
+  .home {
+    padding: 0.5rem 1.8rem;
+  }
+
+  .shift-left {
+    margin-left: 0;
+  }
+
+  .home h1 {
+    font-size: 2.25rem;
+  }
+}
+
+@media screen and (max-width: 820px) {
+  .home {
+    padding: 0.5rem 1.5rem;
+  }
+
+  .home h1 {
+    font-size: 2rem;
+  }
+
+  .home p {
+    font-size: 1.2rem;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .home {
+    padding: 0.5rem 1.25rem;
+  }
+
+  .button {
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+
+  .home h1 {
+    font-size: 1.8rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .home {
+    padding: 0.5rem 1rem;
+  }
+
+  .home h1 {
+    font-size: 1.5rem;
+  }
+
+  .home p {
+    font-size: 1rem;
+  }
+
+  .button {
+    width: 100%;
+    font-size: 13px;
+    padding: 9px 18px;
+  }
+
+  .i-button {
+    font-size: 13px;
+  }
+}
+
+@media screen and (max-width: 360px) {
+  .home {
+    padding: 0.5rem 0.8rem;
+  }
+
+  .home h1 {
+    font-size: 1.3rem;
+  }
+
+  .home p {
+    font-size: 0.95rem;
+  }
+
+  .button {
+    font-size: 12px;
+    padding: 8px 16px;
   }
 }

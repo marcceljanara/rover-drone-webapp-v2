@@ -1,93 +1,191 @@
 .report-detail {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 2rem;
-    background-color: #f9fff9;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 128, 0, 0.1);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #f9fff9;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 128, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.report-detail h2 {
+  text-align: center;
+  color: #2e7d32;
+  margin-bottom: 1.5rem;
+}
+
+.report-detail p {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+}
+
+.report-detail h3 {
+  margin-top: 2rem;
+  color: #388e3c;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 128, 0, 0.1);
+}
+
+table th,
+table td {
+  padding: 0.75rem 1rem;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+table th {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+table tr:nth-child(even) {
+  background-color: #f1f8e9;
+}
+
+table tr:hover {
+  background-color: #dcedc8;
+  transition: 0.3s ease-in-out;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1rem;
+  flex-wrap: wrap; /* biar tombol wrap di layar kecil */
+}
+
+/* Tombol umum (back dan download) */
+.button-group button {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+  flex: 1 1 auto; /* tombol fleksibel tapi minimal lebarnya */
+  min-width: 120px;
+}
+
+/* Tombol Kembali */
+.back-btn {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.back-btn:hover {
+  background-color: #bdbdbd;
+}
+
+/* Tombol Unduh */
+.download-btn {
+  background-color: #4caf50;
+  color: white;
+}
+
+.download-btn:hover {
+  background-color: #43a047;
+}
+
+/* RESPONSIVE TABLE UNTUK BERBAGAI DEVICE */
+/* Media Query untuk layar kecil sampai besar, sesuai daftar device */
+/* iPhone SE, XR, 12 Pro, 14 Pro Max, Pixel 7, Samsung S8+ & S20 Ultra, Samsung A51/71 */
+/* iPad Mini, iPad Air, iPad Pro, Surface Pro 7, Surface Duo, Galaxy Z Fold 5, Asus Zenbook Fold */
+/* Nest Hub, Nest Hub Max */
+
+/* Maksimal lebar device yang diakomodasi: 1024px+ */
+/* Mengubah tabel jadi blok agar mudah dibaca di layar kecil */
+
+@media (max-width: 1024px) {
+  table, thead, tbody, th, td, tr {
+    display: block;
   }
-  
-  .report-detail h2 {
-    text-align: center;
-    color: #2e7d32;
-    margin-bottom: 1.5rem;
+
+  thead tr {
+    display: none; /* sembunyikan header karena akan pakai data-label */
   }
-  
-  .report-detail p {
-    margin: 0.5rem 0;
-    font-size: 1rem;
-  }
-  
-  .report-detail h3 {
-    margin-top: 2rem;
-    color: #388e3c;
-  }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-    background-color: #fff;
-    box-shadow: 0 2px 5px rgba(0, 128, 0, 0.1);
-  }
-  
-  table th,
-  table td {
-    padding: 0.75rem 1rem;
-    border: 1px solid #ddd;
-    text-align: left;
-  }
-  
-  table th {
-    background-color: #e8f5e9;
-    color: #2e7d32;
-  }
-  
-  table tr:nth-child(even) {
-    background-color: #f1f8e9;
-  }
-  
-  table tr:hover {
-    background-color: #dcedc8;
-    transition: 0.3s ease-in-out;
-  }
-  
-  .button-group {
-    display: flex;
-    gap: 10px;
+
+  tbody tr {
     margin-bottom: 1rem;
-  }
-  
-  /* Tombol umum (back dan download) */
-  .button-group button {
-    padding: 10px 20px;
-    font-size: 14px;
-    font-weight: bold;
-    border: none;
+    border: 1px solid #ccc;
     border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    padding: 0.75rem 1rem;
+    background-color: #f9fff9;
+    box-shadow: 0 1px 4px rgba(0,128,0,0.1);
   }
-  
-  /* Tombol Kembali */
-  .back-btn {
-    background-color: #e0e0e0;
-    color: #333;
+
+  tbody td {
+    /* buat tiap cell berdiri sendiri */
+    padding-left: 50%;
+    position: relative;
+    text-align: left;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    white-space: normal;
+    word-wrap: break-word;
   }
-  
-  .back-btn:hover {
-    background-color: #bdbdbd;
+
+  tbody td:last-child {
+    border-bottom: none;
   }
-  
-  /* Tombol Unduh */
-  .download-btn {
-    background-color: #4caf50;
-    color: white;
+
+  tbody td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 10px;
+    top: 0.75rem;
+    font-weight: 700;
+    color: #2e7d32;
+    white-space: nowrap;
   }
-  
-  .download-btn:hover {
-    background-color: #43a047;
+
+  /* Tombol-group responsif, agar tidak kepotong di layar kecil */
+  .button-group {
+    flex-direction: column;
   }
-  
-  
+
+  .button-group button {
+    width: 100%;
+    min-width: unset;
+  }
+}
+
+/* Perbaikan minor untuk layar sangat kecil, misal iPhone SE (320px) */
+@media (max-width: 360px) {
+  .report-detail {
+    padding: 1rem;
+  }
+
+  .button-group button {
+    font-size: 12px;
+    padding: 8px 15px;
+  }
+
+  tbody td {
+    padding-left: 55%;
+  }
+
+  tbody td::before {
+    font-size: 0.85rem;
+  }
+}
+
+/* Perbaikan untuk tablet landscape (900px - 1024px) agar tombol tetap rapi */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .button-group {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .button-group button {
+    flex: 1 1 48%;
+    margin-bottom: 8px;
+  }
+}

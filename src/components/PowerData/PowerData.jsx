@@ -48,7 +48,7 @@ const PowerData = () => {
 
   return (
     <div className="PowerData">
-      <h1 style={{ marginTop: "40px" }}>Power Data</h1>
+<h1 className="power-title">Power Data</h1>
 
       <div className="dropdown-container">
         <select

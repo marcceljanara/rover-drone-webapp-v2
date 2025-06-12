@@ -45,12 +45,12 @@ const Sidebar = () => {
         <UilBars />
       </div>
 
-      {/* Sidebar Menu */}
+      {/* Sidebar */}
       <div
-        className="sidebar"
+        className={`sidebar ${expanded ? "open" : "closed"}`}
         style={{
           left: expanded ? "0" : window.innerWidth <= 768 ? "-100%" : "0",
-          position: window.innerWidth <= 768 ? "fixed" : "relative",
+          position: window.innerWidth <= 768 ? "fixed" : "relative"
         }}
       >
         <div className="logo">

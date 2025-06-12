@@ -32,7 +32,7 @@ const Payments = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Gagal memuat data perangkat');
+        throw new Error(errorData.message || 'Gagal memuat data pembayaran');
       }
 
       const result = await response.json();
@@ -45,7 +45,6 @@ const Payments = () => {
 
       setData(payments);
     } catch (error) {
-      console.error('Error saat mengambil data perangkat:', error.message);
       alert(`Gagal memuat data: ${error.message}`);
     }
   };
@@ -61,7 +60,6 @@ const Payments = () => {
 
   const handleSubmit = async () => {
     const accessToken = localStorage.getItem('accessToken');
-
     try {
       const response = await fetch(`https://dev-api.xsmartagrichain.com/v1/payments/${selectedPaymentId}`, {
         method: 'PUT',
@@ -69,7 +67,11 @@ const Payments = () => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${accessToken}`,
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          payment_status: formData.paymentStatus,
+          payment_method: formData.paymentMethod,
+          transaction_description: formData.transactionDescription,
+        }),
       });
 
       const result = await response.json();
@@ -99,6 +101,7 @@ const Payments = () => {
   return (
     <div className="container">
       <h2>Kelola Pembayaran Rover Drone</h2>
+
       <div className="search-add-bar">
         <input
           type="text"
@@ -110,89 +113,105 @@ const Payments = () => {
 
       {notification && <div className="notification">{notification}</div>}
 
-      <table className="data-table">
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th>Rental Id</th>
-            <th>Biaya</th>
-            <th>Status Pembayaran</th>
-            <th>Tindakan</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentData.map((item) => (
-            <tr key={item.id}>
-              <td className="clickable-id" onClick={() => navigate(`/payments/${item.id}`)}>
-                {item.id}
-              </td>
-              <td>{item.rentalId}</td>
-              <td>{Number(item.amount).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</td>
-              <td>{item.payment_status}</td>
-              <td>
-              <button
-              className={`edit-btn ${glowingButton === item.id ? 'glow' : ''}`}
-              disabled={item.payment_status === 'completed' || item.payment_status === 'failed'}
-              onClick={() => {
-                handleGlow(item.id);
-                setSelectedPaymentId(item.id);
-                setFormData({
-                  paymentStatus: 'completed',
-                  paymentMethod: '',
-                  transactionDescription: '',
-                });
-                setShowModal(true);
-              }}
-            >
-              Selesaikan
-            </button>
-              </td>
+      <div className="table-responsive">
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Rental Id</th>
+              <th>Biaya</th>
+              <th>Status Pembayaran</th>
+              <th>Tindakan</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {currentData.length === 0 ? (
+              <tr>
+                <td colSpan="5" style={{ textAlign: 'center' }}>Data tidak ditemukan</td>
+              </tr>
+            ) : (
+              currentData.map((item) => (
+                <tr key={item.id}>
+                  <td
+                    data-label="Id"
+                    className="clickable-id"
+                    onClick={() => navigate(`/payments/${item.id}`)}
+                    style={{ cursor: 'pointer', color: '#0066cc', textDecoration: 'underline' }}
+                  >
+                    {item.id}
+                  </td>
+                  <td data-label="Rental Id">{item.rentalId}</td>
+                  <td data-label="Biaya">
+                    {item.amount.toLocaleString('id-ID', {
+                      style: 'currency',
+                      currency: 'IDR',
+                    })}
+                  </td>
+                  <td data-label="Status Pembayaran">{item.payment_status}</td>
+                  <td data-label="Tindakan">
+                    <button
+                      className={`edit-btn ${glowingButton === item.id ? 'glow' : ''}`}
+                      onClick={() => {
+                        setSelectedPaymentId(item.id);
+                        setShowModal(true);
+                        handleGlow(item.id);
+                      }}
+                    >
+                      Edit
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
 
       <div className="footer">
-        <span>
-          Showing {startIndex + 1} - {Math.min(startIndex + itemsPerPage, filteredData.length)} of {filteredData.length}
-        </span>
+        <span className="page-number">Halaman {currentPage} dari {totalPages}</span>
         <div className="pagination">
-          <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>◀</button>
-          <span className="page-number">Page {String(currentPage).padStart(2, '0')}</span>
-          <button onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>▶</button>
+          <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1}>
+            Sebelumnya
+          </button>
+          <button onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages}>
+            Berikutnya
+          </button>
         </div>
       </div>
 
       {showModal && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h3>Verifikasi Pembayaran</h3>
+        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <h3>Edit Pembayaran</h3>
 
-            <label>Status Pembayaran:</label>
+            <label>Status Pembayaran</label>
             <select
               value={formData.paymentStatus}
               onChange={(e) => setFormData({ ...formData, paymentStatus: e.target.value })}
             >
               <option value="completed">Completed</option>
-              <option value="failed">Failed</option>
+              <option value="pending">Pending</option>
+              <option value="cancelled">Cancelled</option>
             </select>
 
-            <label>Metode Pembayaran:</label>
+            <label>Metode Pembayaran</label>
             <input
               type="text"
+              placeholder="Contoh: Transfer Bank"
               value={formData.paymentMethod}
               onChange={(e) => setFormData({ ...formData, paymentMethod: e.target.value })}
             />
 
-            <label>Deskripsi Transaksi:</label>
+            <label>Deskripsi Transaksi</label>
             <textarea
+              placeholder="Catatan atau detail transaksi"
               value={formData.transactionDescription}
               onChange={(e) => setFormData({ ...formData, transactionDescription: e.target.value })}
             />
 
             <div className="modal-buttons">
-              <button onClick={handleSubmit}>Verifikasi</button>
               <button onClick={() => setShowModal(false)}>Batal</button>
+              <button className="edit-btn" onClick={handleSubmit}>Simpan</button>
             </div>
           </div>
         </div>

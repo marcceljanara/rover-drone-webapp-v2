@@ -1,192 +1,139 @@
 .container {
-    padding: 20px;
-    background-color: #f0fff0;
-    font-family: Arial, sans-serif;
+  padding: 20px;
+  background-color: #f0fff0;
+  font-family: Arial, sans-serif;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.search-add-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+  margin: 20px 0;
+}
+
+.search-add-bar input,
+.search-add-bar select {
+  padding: 8px 12px;
+  border: 1px solid #4CAF50;
+  border-radius: 5px;
+  font-size: 14px;
+  min-width: 120px;
+  flex: 1;
+}
+
+.add-btn {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.add-btn:hover {
+  background-color: #45a049;
+}
+
+.glow {
+  box-shadow: 0 0 10px #4CAF50;
+}
+
+.notification {
+  background-color: #fdd835;
+  color: black;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+}
+
+/* Table styles */
+.table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  font-size: 14px;
+}
+
+.data-table th,
+.data-table td {
+  padding: 10px;
+  border: 1px solid #ccc;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.page-number {
+  font-weight: bold;
+}
+
+/* Responsif Label Data di Mobile */
+@media (max-width: 768px) {
+  .data-table thead {
+    display: none;
   }
-  
-  h2 {
-    font-size: 24px;
-    font-weight: bold;
-  }
-  
-  .search-add-bar {
-    display: flex;
-    justify-content: space-between;
-    margin: 20px 0;
-  }
-  
-  .search-add-bar input {
-    width: 300px;
-    padding: 8px 12px;
-    border: 1px solid #4CAF50;
-    border-radius: 5px;
-  }
-  
-  .add-btn {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 8px 14px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  
-  .data-table {
+
+  .data-table, .data-table tbody, .data-table tr, .data-table td {
+    display: block;
     width: 100%;
-    border-collapse: collapse;
-    background-color: #f0fff0;
-    box-shadow: none;
-    margin: 0;
-    padding: 0;
   }
-  
-  .data-table th,
-  .data-table td {
-    padding: 10px;
-    border: 1px solid #ccc;
-    text-align: center;
-    font-size: 14px;
-  }
-  
-  .footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 20px;
-    font-size: 14px;
-    color: #4CAF50;
-    padding: 0 40px;
-  }
-  
-  .pagination button {
-    background-color: white;
-    border: 1px solid #4CAF50;
-    color: #4CAF50;
-    border-radius: 50%;
-    padding: 4px 10px;
-    cursor: pointer;
-    margin: 0 4px;
-    font-size: 14px;
-    transition: background-color 0.2s, color 0.2s;
-  }
-  
-  .pagination button:hover {
-    background-color: #4CAF50;
-    color: white;
-  }
-  
-  /* Efek glow untuk tombol */
-  .glow {
-    box-shadow: 0 0 10px 10px rgba(76, 175, 80, 0.5);
-    transition: box-shadow 0.3s ease-in-out;
-  }
-  
-  /* Modal styling */
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-  }
-  
-  .modal {
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    width: 400px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  }
-  
-  .modal h3 {
-    margin-top: 0;
+
+  .data-table tr {
     margin-bottom: 15px;
+    border-bottom: 2px solid #ddd;
   }
-  
-  .modal input {
-    width: 95%;
-    padding: 8px;
-    margin: 5px 0 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-  }
-  
-  .modal-actions {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-  }
-  
-  .cancel-btn,
-  .add-btn {
-    background-color: #4CAF50;
-    color: white;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  
-  .cancel-btn {
-    background-color: #bdc3c7;
-  }
-  
-  .cancel-btn:hover {
-    background-color: #95a5a6;
-  }
-  
-  .add-btn:hover {
-    background-color: #45a049;
-  }
-  
-  /* Additional UI adjustments */
-  .notification {
-    background-color: #f44336;
-    color: white;
-    padding: 10px;
-    margin-top: 10px;
-    border-radius: 5px;
-  }
-  
-  .status-badge {
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-weight: bold;
-  }
-  
-  .status-active {
-    color: #4CAF50;
-  }
-  
-  .status-inactive {
-    color: #f44336;
-  }
-  
-  .status-maintenance {
-    color: #FF9800;
-  }
-  
-  .status-error {
-    color: #FF5722;
-  }
-  
-  .password-input {
+
+  .data-table td {
+    text-align: left;
+    padding-left: 50%;
     position: relative;
   }
-  
-  .password-input i {
+
+  .data-table td::before {
+    content: attr(data-label);
     position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    font-size: 18px;
+    left: 10px;
+    top: 10px;
+    font-weight: bold;
+    white-space: nowrap;
   }
-  
-  
+
+  .search-add-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-add-bar input,
+  .search-add-bar select,
+  .add-btn {
+    width: 100%;
+  }
+}

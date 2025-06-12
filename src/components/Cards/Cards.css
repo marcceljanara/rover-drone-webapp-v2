@@ -1,23 +1,90 @@
 .Cards {
   display: flex;
   gap: 10px;
+  flex-wrap: wrap; /* supaya kartu bisa pindah baris jika tidak muat */
+  justify-content: center; /* supaya rata tengah saat wrap */
 }
-.parentContainer{
+
+.parentContainer {
   width: 100%;
+  box-sizing: border-box;
 }
 
+/* ---------------------------------- */
+/* Desktop besar dan normal (tidak berubah) */
+/* ---------------------------------- */
+@media screen and (min-width: 1201px) {
+  .Cards {
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  .parentContainer {
+    height: auto; /* biarkan tinggi dinamis sesuai konten */
+    max-width: 15rem; /* misal batasi max lebar agar kartu tetap proporsional */
+  }
+}
+
+/* ---------------------------------- */
+/* Desktop sedang sampai tablet landscape */
+/* ---------------------------------- */
 @media screen and (max-width: 1200px) {
-  .Cards{
+  .Cards {
     flex-direction: column;
+    gap: 1rem;
+    align-items: center; /* supaya card rata tengah */
+    width: 100%;
   }
-  .parentContainer{
+
+  .parentContainer {
     height: 9rem;
+    max-width: 90%; /* agar tidak penuh, beri margin sisi */
   }
 }
 
-@media screen and (max-width: 768px)
-{
-  .Cards{
+/* ---------------------------------- */
+/* Tablet portrait dan HP besar */
+/* ---------------------------------- */
+@media screen and (max-width: 768px) {
+  .Cards {
     width: 90%;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 0 auto; /* supaya center */
+  }
+
+  .parentContainer {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* ---------------------------------- */
+/* HP sedang sampai kecil */
+/* ---------------------------------- */
+@media screen and (max-width: 480px) {
+  .Cards {
+    width: 95%;
+    gap: 0.8rem;
+  }
+
+  .parentContainer {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* ---------------------------------- */
+/* HP sangat kecil (misal <360px) */
+/* ---------------------------------- */
+@media screen and (max-width: 360px) {
+  .Cards {
+    width: 100%;
+    gap: 0.6rem;
+  }
+
+  .parentContainer {
+    max-width: 100%;
+    height: auto;
   }
 }

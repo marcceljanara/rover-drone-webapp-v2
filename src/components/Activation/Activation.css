@@ -1,192 +1,153 @@
 .container {
-  padding: 20px;
-  background-color: #f0fff0;
+  padding: 1rem;
   font-family: Arial, sans-serif;
 }
 
 h2 {
-  font-size: 24px;
-  font-weight: bold;
+  text-align: center;
+  margin-bottom: 1rem;
 }
 
 .search-add-bar {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
-  margin: 20px 0;
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
 .search-add-bar input {
-  width: 300px;
-  padding: 8px 12px;
-  border: 1px solid #4CAF50;
+  flex: 1;
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+.add-btn,
+.edit-btn,
+.delete-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  color: white;
+  font-weight: bold;
   border-radius: 5px;
+  cursor: pointer;
 }
 
 .add-btn {
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.3s ease;
+  background-color: #007bff;
 }
 
-.add-btn:hover {
-  background-color: #45a049;
+.edit-btn {
+  background-color: #ffc107;
+  margin-right: 0.5rem;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+}
+
+.glow {
+  box-shadow: 0 0 8px 2px rgba(255, 255, 255, 0.7);
+}
+
+.notification {
+  background-color: #dff0d8;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 5px;
+  color: #3c763d;
+}
+
+/* Wrapper with horizontal scroll */
+.responsive-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .data-table {
   width: 100%;
+  min-width: 700px;
   border-collapse: collapse;
-  background-color: #f0fff0;
-  box-shadow: none;
-  margin: 0;
-  padding: 0;
+}
+
+.data-table thead {
+  background-color: #f4f4f4;
 }
 
 .data-table th,
 .data-table td {
-  padding: 10px;
-  border: 1px solid #ccc;
-  text-align: center;
-  font-size: 14px;
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
 }
 
-.edit-btn,
-.delete-btn {
-  font-size: 12px;
-  padding: 6px 12px;
-  margin: 0 2px;
-  border: none;
-  border-radius: 5px;
+.data-table .clickable-id {
   cursor: pointer;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  color: #007bff;
 }
 
-.edit-btn {
-  background-color: #4CAF50;
+.status-badge {
+  padding: 0.3rem 0.6rem;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  text-transform: capitalize;
+  display: inline-block;
+}
+
+.status-active {
+  background-color: #28a745;
+  color: white;
+}
+.status-inactive {
+  background-color: #6c757d;
+  color: white;
+}
+.status-maintenance {
+  background-color: #ffc107;
+  color: black;
+}
+.status-error {
+  background-color: #dc3545;
   color: white;
 }
 
-.edit-btn:hover {
-  transform: scale(1.03);
-  opacity: 0.9;
-}
-
-.delete-btn {
-  background-color: #f44336;
-  color: white;
-}
-
-.delete-btn:hover {
-  transform: scale(1.03);
-  opacity: 0.9;
+.status-dropdown {
+  padding: 0.4rem;
+  font-size: 1rem;
+  border-radius: 5px;
 }
 
 .footer {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  margin-top: 20px;
-  font-size: 14px;
-  color: #4CAF50;
-  padding: 0 40px;
+  margin-top: 1rem;
+  gap: 1rem;
 }
 
-.data-range {
-  margin-left: 120px;
-  color: #4CAF50;
-  font-weight: 500;
-}
-
-.pagination-wrapper {
+.pagination {
   display: flex;
   align-items: center;
-  margin-right: 120px;
+  gap: 0.5rem;
+}
+
+.pagination button {
+  padding: 0.4rem 0.8rem;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.pagination button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
 .page-number {
   font-weight: bold;
-  margin-right: 20px;
-  color: #4CAF50;
-}
-
-.pagination button {
-  background-color: white;
-  border: 1px solid #4CAF50;
-  color: #4CAF50;
-  border-radius: 50%;
-  padding: 6px 12px;
-  min-width: 32px;
-  min-height: 32px;
-  cursor: pointer;
-  margin: 0 4px;
-  font-size: 14px;
-  transition: background-color 0.2s, color 0.2s;
-}
-
-.pagination button:hover {
-  background-color: #4CAF50;
-  color: white;
-}
-
-/* Efek glow untuk tombol */
-.glow {
-  box-shadow: 0 0 10px 10px rgba(76, 175, 80, 0.5);
-  transition: box-shadow 0.3s ease-in-out;
-}
-
-/* Warna status */
-.status-badge {
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-weight: bold;
-  pointer-events: none;
-  background-color: transparent; /* Menghapus background status */
-}
-
-.status-active {
-  color: #4CAF50; /* Hijau tanpa latar belakang */
-}
-
-.status-inactive {
-  color: #f44336; /* Merah */
-}
-
-.status-maintenance {
-  color: #e65100; /* Oranye gelap */
-}
-
-.status-error {
-  color: #bf360c; /* Merah marun gelap */
-}
-
-/* RESPONSIVE DESIGN */
-@media (max-width: 600px) {
-  .search-add-bar {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .search-add-bar input {
-    width: 100%;
-  }
-
-  .footer {
-    flex-direction: column;
-    padding: 0 20px;
-    gap: 10px;
-  }
-
-  .data-range {
-    margin-left: 0;
-    text-align: center;
-  }
-
-  .pagination-wrapper {
-    margin-right: 0;
-    justify-content: center;
-  }
 }

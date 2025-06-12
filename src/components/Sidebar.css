@@ -1,92 +1,91 @@
-.sidebar {  
-  display: flex;  
-  flex-direction: column;  
-  position: relative;  
-  padding-top: 3rem;  
-  transition: all 300ms ease;  
-}  
-  
-/* logo */  
-.bars {  
-  display: none;  
-}  
-  
-.logo {  
-  display: flex;  
-  height: 5rem;  
-  font-weight: bold;  
-  font-size: 22px;  
-  gap: 1rem;  
-  align-items: center;  
-  justify-content: center;  
-  height: 4%;  
-}  
-  
-.logo > span > span {  
-  color: var(--pink);  
-}  
-  
-.logo > img {  
-  width: 3rem;  
-  height: 4rem;  
-}  
-  
-/* menu */  
-.menu {  
-  margin-top: 4rem;  
-  display: flex;  
-  flex-direction: column;  
-  gap: 2rem;  
-  height: 100%; /* diperlukan untuk push sign-out ke bawah */
-}  
-  
-.menuItem {  
-  display: flex;  
-  align-items: center;  
-  gap: 1rem;  
-  height: 2.5rem;  
-  margin-left: 2rem;  
-  position: relative;  
-  transition: all 300ms ease;  
-  border-radius: 0.7rem;  
-  font-size: 14px;  
-  color: var(--fontColor);  
-  text-decoration: none;  
-}  
-  
-.menuItem:hover {  
-  cursor: pointer;  
-}  
-  
-.active {  
-  background: var(--activeItem);  
-  margin-left: 0;  
-}  
-  
-.active::before {  
-  content: "";  
-  width: 8px;  
-  height: 100%;  
-  background: var(--pink);  
-  margin-right: calc(1rem - 8px);  
-}  
-  
-/* Signout section styled to be consistently visible and higher */
-.signout-section {
-  margin-top: 2rem;  /* Naik dari auto jadi 2rem agar lebih atas */
-  padding-top: 1rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  align-self: flex-start; /* Pastikan posisinya di kiri */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding-top: 3rem;
+  transition: all 300ms ease;
 }
 
-.menuItemLink {  
-  color: var(--fontColor);  
-  text-decoration: none;  
-}  
-  
-.menuItemLink:hover {  
-  color: var(--fontColor);  
-}  
+/* Hamburger icon */
+.bars {
+  display: none;
+}
+
+.logo {
+  display: flex;
+  height: 5rem;
+  font-weight: bold;
+  font-size: 22px;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  height: 4%;
+}
+
+.logo > span > span {
+  color: var(--pink);
+}
+
+.logo > img {
+  width: 3rem;
+  height: 4rem;
+}
+
+/* Menu */
+.menu {
+  margin-top: 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  height: 100%;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  height: 2.5rem;
+  margin-left: 2rem;
+  position: relative;
+  transition: all 300ms ease;
+  border-radius: 0.7rem;
+  font-size: 14px;
+  color: var(--fontColor);
+  text-decoration: none;
+}
+
+.menuItem:hover {
+  cursor: pointer;
+}
+
+.active {
+  background: var(--activeItem);
+  margin-left: 0;
+}
+
+.active::before {
+  content: "";
+  width: 8px;
+  height: 100%;
+  background: var(--pink);
+  margin-right: calc(1rem - 8px);
+}
+
+.signout-section {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  align-self: flex-start;
+}
+
+.menuItemLink {
+  color: var(--fontColor);
+  text-decoration: none;
+}
+
+.menuItemLink:hover {
+  color: var(--fontColor);
+}
 
 .role-badge {
   margin-top: 1rem;
@@ -105,11 +104,8 @@
   max-width: 80%;
 }
 
+/* Responsive 1200px */
 @media screen and (max-width: 1200px) {
-  .role-badge {
-    display: none;
-  }
-
   .menuItem > span {
     display: none;
   }
@@ -118,46 +114,59 @@
     display: none;
   }
 
-  /* Pastikan logout label dan icon tetap tampil di responsive */
-  .signout-section .menuItemLink span {
-    display: inline !important;
-  }
-
+  .signout-section .menuItemLink span,
   .signout-section .menuItemLink svg {
     display: inline !important;
   }
+
+  .role-badge {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 12px;
+    padding: 0.4rem 0.8rem;
+  }
 }
 
-@media screen and (max-width: 768px) {  
-  .sidebar {  
-    position: fixed;  
-    z-index: 9;  
-    background: #ffe0e0;  
-    width: 55%;  
-    padding-right: 1rem;  
-    height: 100%;  
-  }  
-  
-  .menuItem > span {  
-    display: block;  
-  }  
-  
-  .logo {  
-    display: flex;  
-  }  
-  
-  .bars {  
-    display: flex;  
-    position: fixed;  
-    top: 2rem;  
-    left: 60%;  
-    background: #ffe0e0;  
-    padding: 10px;  
-    border-radius: 10px;  
-    z-index: 9;  
-  }  
-  
-  .close {  
-    left: -60%;  
+/* Mobile 768px */
+@media screen and (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    z-index: 9;
+    background: #ffe0e0;
+    width: 65%;
+    padding-right: 1rem;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    transition: left 0.3s ease;
+  }
+
+  .menuItem > span {
+    display: block;
+  }
+
+  .logo {
+    display: flex;
+  }
+
+  .bars {
+    display: flex;
+    position: fixed;
+    top: 2rem;
+    left: 2rem;
+    background: #ffe0e0;
+    padding: 10px;
+    border-radius: 10px;
+    z-index: 10;
+    cursor: pointer;
+  }
+
+  .role-badge {
+    display: block;
+    margin-top: 1rem;
+    font-size: 13px;
+    background: #fff6fa;
+    color: #333;
+    text-align: center;
   }
 }

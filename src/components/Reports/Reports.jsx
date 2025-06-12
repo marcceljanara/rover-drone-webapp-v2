@@ -26,12 +26,8 @@ const Reports = () => {
         method: 'GET',
         headers: { Authorization: `Bearer ${accessToken}` },
       });
-
       const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || 'Gagal memuat data laporan');
-      }
+      if (!response.ok) throw new Error(result.message || 'Gagal memuat data laporan');
 
       const data = result.data.reports.map((report) => ({
         id: report.id,
@@ -53,7 +49,6 @@ const Reports = () => {
 
   const handleAdd = async () => {
     const accessToken = localStorage.getItem('accessToken');
-
     try {
       const response = await fetch('https://dev-api.xsmartagrichain.com/v1/reports', {
         method: 'POST',
@@ -63,12 +58,8 @@ const Reports = () => {
         },
         body: JSON.stringify({ startDate, endDate }),
       });
-
       const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || 'Gagal menambahkan laporan');
-      }
+      if (!response.ok) throw new Error(result.message || 'Gagal menambahkan laporan');
 
       setNotification(result.message || 'Laporan berhasil ditambahkan');
       setTimeout(() => setNotification(null), 3000);
@@ -95,12 +86,8 @@ const Reports = () => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-
       const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || 'Gagal menghapus laporan');
-      }
+      if (!response.ok) throw new Error(result.message || 'Gagal menghapus laporan');
 
       setNotification(result.message || 'Laporan berhasil dihapus');
       setTimeout(() => setNotification(null), 3000);
@@ -149,38 +136,38 @@ const Reports = () => {
 
       {notification && <div className="notification">{notification}</div>}
 
-      <table className="data-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Tanggal Laporan</th>
-            <th>Total Transaksi</th>
-            <th>Tanggal Mulai</th>
-            <th>Tanggal Akhir</th>
-            <th>Aksi</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentData.map((item) => (
-            <tr key={item.id}>
-              <td className="clickable-id" onClick={() => navigate(`/reports/${item.id}`)}>
-                {item.id}
-              </td>
-              <td>{formatTanggalDanWaktuIndonesia(item.reportDate)}</td>
-              <td>{item.totalTransactions}</td>
-              <td>{formatTanggalIndonesia(item.startDate)}</td>
-              <td>{formatTanggalIndonesia(item.endDate)}</td>
-              <td>
-                <button className="delete-btn" onClick={() => confirmDelete(item.id)}>Hapus</button>
-              </td>
+      <div className="table-wrapper">
+        <table className="responsive-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Tanggal Laporan</th>
+              <th>Total Transaksi</th>
+              <th>Tanggal Mulai</th>
+              <th>Tanggal Akhir</th>
+              <th>Aksi</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {currentData.map((item) => (
+              <tr key={item.id}>
+                <td data-label="ID" className="clickable-id" onClick={() => navigate(`/reports/${item.id}`)}>{item.id}</td>
+                <td data-label="Tanggal Laporan">{formatTanggalDanWaktuIndonesia(item.reportDate)}</td>
+                <td data-label="Total Transaksi">{item.totalTransactions}</td>
+                <td data-label="Tanggal Mulai">{formatTanggalIndonesia(item.startDate)}</td>
+                <td data-label="Tanggal Akhir">{formatTanggalIndonesia(item.endDate)}</td>
+                <td data-label="Aksi">
+                  <button className="delete-btn" onClick={() => confirmDelete(item.id)}>Hapus</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       <div className="footer">
         <span>
-          Showing {startIndex + 1} - {Math.min(startIndex + itemsPerPage, filteredData.length)} of {filteredData.length}
+          Menampilkan {startIndex + 1} - {Math.min(startIndex + itemsPerPage, filteredData.length)} dari {filteredData.length}
         </span>
         <div className="pagination">
           <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>◀</button>
@@ -189,6 +176,7 @@ const Reports = () => {
         </div>
       </div>
 
+      {/* Modal Tambah */}
       {showAddModal && (
         <div className="modal-overlay">
           <div className="modal">
@@ -205,6 +193,7 @@ const Reports = () => {
         </div>
       )}
 
+      {/* Modal Hapus */}
       {showDeleteModal && (
         <div className="modal-overlay">
           <div className="modal">

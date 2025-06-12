@@ -103,6 +103,7 @@
 .w-secCircle > img {
   transform: scale(0.6); /* Skala gambar dalam lingkaran sekunder */
 }
+
 .w-backCircle {
   position: absolute; /* Posisi absolut untuk lingkaran belakang */
   height: 13rem; /* Tinggi lingkaran belakang */
@@ -150,10 +151,6 @@
   }
 }
 
-
-
-
-
 @media screen and (max-width: 768px) {
   .works {
     flex-direction: column;
@@ -179,8 +176,6 @@
     left: 6rem !important;
   }
 }
-
-
 
 body {
   overflow-x: hidden;

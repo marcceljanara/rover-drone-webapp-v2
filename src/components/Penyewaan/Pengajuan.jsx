@@ -4,40 +4,38 @@ import './Penyewaan.css';
 import './Pengajuan.css';
 
 function KelolaPenyewaan() {
+  const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const [notification, setNotification] = useState('');
   const [showNotification, setShowNotification] = useState(false);
-  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
+
   const role = localStorage.getItem('role');
   const token = localStorage.getItem('accessToken');
 
   useEffect(() => {
-    const fetchRentals = async () => {
-      if (!token) {
-        setError('Token tidak ditemukan. Silakan login terlebih dahulu.');
-        setLoading(false);
-        return;
-      }
+    if (!token) {
+      setError('Token tidak ditemukan. Silakan login terlebih dahulu.');
+      setLoading(false);
+      return;
+    }
 
+    const fetchRentals = async () => {
       try {
         const response = await fetch('https://dev-api.xsmartagrichain.com/v1/rentals', {
-          method: 'GET',
           headers: {
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
-            'Accept': 'application/json',
+            Accept: 'application/json',
           },
         });
-
         const result = await response.json();
 
-        if (!response.ok) {
-          throw new Error(result.message || 'Terjadi kesalahan saat memuat data penyewaan.');
-        }
-
-        setData(result.data.rentals || []);
+        if (!response.ok) throw new Error(result.message || 'Gagal memuat data penyewaan.');
+        setData(result.data?.rentals || []);
+        setError('');
       } catch (err) {
         setError(err.message);
       } finally {
@@ -59,39 +57,35 @@ function KelolaPenyewaan() {
     if (!token) return;
 
     try {
-      const url =
-        role === 'admin'
-          ? `https://dev-api.xsmartagrichain.com/v1/rentals/${id}`
-          : `https://dev-api.xsmartagrichain.com/v1/rentals/${id}/cancel`;
+      const isAdmin = role === 'admin';
+      const url = isAdmin
+        ? `https://dev-api.xsmartagrichain.com/v1/rentals/${id}`
+        : `https://dev-api.xsmartagrichain.com/v1/rentals/${id}/cancel`;
 
       const options = {
         method: 'PUT',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: role === 'user' ? JSON.stringify({ rentalStatus: 'cancelled' }) : null,
+        body: !isAdmin ? JSON.stringify({ rentalStatus: 'cancelled' }) : null,
       };
 
       const response = await fetch(url, options);
       const result = await response.json();
 
-      if (!response.ok) {
-        throw new Error(result.message || 'Terjadi kesalahan saat mengubah status sewa.');
-      }
+      if (!response.ok) throw new Error(result.message || 'Gagal mengubah status sewa.');
 
       setNotification(result.message);
       setShowNotification(true);
 
-      if (role === 'user') {
-        setData((prev) =>
-          prev.map((rental) =>
-            rental.id === id ? { ...rental, rental_status: 'cancelled' } : rental
-          )
-        );
-      } else if (role === 'admin') {
-        setData((prev) => prev.filter((rental) => rental.id !== id));
-      }
+      setData((prev) =>
+        isAdmin
+          ? prev.filter((item) => item.id !== id)
+          : prev.map((item) =>
+              item.id === id ? { ...item, rental_status: 'cancelled' } : item
+            )
+      );
     } catch (err) {
       setNotification(err.message);
       setShowNotification(true);
@@ -102,27 +96,28 @@ function KelolaPenyewaan() {
     if (!token) return;
 
     try {
-      const response = await fetch(`https://dev-api.xsmartagrichain.com/v1/rentals/${id}/status`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ rentalStatus: 'completed' }),
-      });
+      const response = await fetch(
+        `https://dev-api.xsmartagrichain.com/v1/rentals/${id}/status`,
+        {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ rentalStatus: 'completed' }),
+        }
+      );
 
       const result = await response.json();
 
-      if (!response.ok) {
-        throw new Error(result.message || 'Terjadi kesalahan saat menyelesaikan sewa.');
-      }
+      if (!response.ok) throw new Error(result.message || 'Gagal menyelesaikan sewa.');
 
       setNotification(result.message);
       setShowNotification(true);
 
       setData((prev) =>
-        prev.map((rental) =>
-          rental.id === id ? { ...rental, rental_status: 'completed' } : rental
+        prev.map((item) =>
+          item.id === id ? { ...item, rental_status: 'completed' } : item
         )
       );
     } catch (err) {
@@ -131,16 +126,27 @@ function KelolaPenyewaan() {
     }
   };
 
+  const filteredData = data.filter((item) =>
+    item.id.toString().toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
-    <div className="container">
+    <main className="container" role="main">
       <h2>Kelola Penyewaan Rover Drone</h2>
 
       <div className="search-add-bar">
-        <input type="text" placeholder="Cari ID Penyewaan" />
+        <input
+          type="text"
+          placeholder="Cari ID Penyewaan"
+          aria-label="Cari ID Penyewaan"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
         {role === 'user' && (
           <button
             className="add-btn"
             onClick={() => navigate('/penyewaan/lanjutan')}
+            aria-label="Ajukan Penyewaan Baru"
           >
             + Ajukan Penyewaan Baru
           </button>
@@ -150,10 +156,12 @@ function KelolaPenyewaan() {
       {loading ? (
         <p>Memuat data...</p>
       ) : error ? (
-        <div className="notification error">{error}</div>
+        <div className="notification error" role="alert" aria-live="assertive">
+          {error}
+        </div>
       ) : (
-        <div className="table-responsive">
-          <table className="data-table">
+        <div className="table-wrapper">
+          <table className="data-table" role="table" aria-label="Daftar penyewaan rover drone">
             <thead>
               <tr>
                 <th>ID</th>
@@ -165,43 +173,62 @@ function KelolaPenyewaan() {
               </tr>
             </thead>
             <tbody>
-              {data.map((item) => (
-                <tr key={item.id}>
-                  <td className="clickable-id" onClick={() => navigate(`/penyewaan/${item.id}`)}>
-                    {item.id}
-                  </td>
-                  <td>{new Date(item.start_date).toLocaleDateString()}</td>
-                  <td>{new Date(item.end_date).toLocaleDateString()}</td>
-                  <td>
-                    <span className={`status-badge status-${item.rental_status}`}>
-                      {item.rental_status}
-                    </span>
-                  </td>
-                  <td>{item.cost.toLocaleString('id-ID')}</td>
-                  <td>
-                    {(role === 'admin' || role === 'user') && (
-                      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              {filteredData.length > 0 ? (
+                filteredData.map(({ id, start_date, end_date, rental_status, cost }) => (
+                  <tr key={id}>
+                    <td
+                      className="clickable-id"
+                      tabIndex={0}
+                      role="button"
+                      aria-label={`Lihat detail penyewaan ${id}`}
+                      onClick={() => navigate(`/penyewaan/${id}`)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          navigate(`/penyewaan/${id}`);
+                        }
+                      }}
+                    >
+                      {id}
+                    </td>
+                    <td>{new Date(start_date).toLocaleDateString('id-ID')}</td>
+                    <td>{new Date(end_date).toLocaleDateString('id-ID')}</td>
+                    <td>
+                      <span className={`status-badge status-${rental_status}`}>
+                        {rental_status}
+                      </span>
+                    </td>
+                    <td>{cost?.toLocaleString('id-ID')}</td>
+                    <td>
+                      <div className="action-wrapper">
                         {role === 'admin' && (
                           <button
                             className="action-btn admin"
-                            onClick={() => handleComplete(item.id)}
-                            disabled={item.rental_status !== 'active'}
+                            onClick={() => handleComplete(id)}
+                            disabled={rental_status !== 'active'}
+                            aria-disabled={rental_status !== 'active'}
                           >
                             Selesaikan
                           </button>
                         )}
                         <button
                           className={`action-btn ${role}`}
-                          onClick={() => handleAction(item.id)}
-                          disabled={role === 'user' && item.rental_status !== 'pending'}
+                          onClick={() => handleAction(id)}
+                          disabled={role === 'user' && rental_status !== 'pending'}
+                          aria-disabled={role === 'user' && rental_status !== 'pending'}
                         >
                           {role === 'admin' ? 'Hapus Sewa' : 'Batalkan'}
                         </button>
                       </div>
-                    )}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6" style={{ textAlign: 'center' }}>
+                    Data penyewaan tidak ditemukan.
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
@@ -209,17 +236,15 @@ function KelolaPenyewaan() {
 
       {showNotification && (
         <div
-          className={`$ {
-            notification.toLowerCase().includes('gagal') ||
-            notification.toLowerCase().includes('error')
-              ? 'error-notification'
-              : 'notification'
-          }`}
+          className={/gagal|error/i.test(notification) ? 'error-notification' : 'notification'}
+          role="alert"
+          aria-live="polite"
+          style={{ position: 'fixed', bottom: 20, right: 20, zIndex: 1000 }}
         >
           {notification}
         </div>
       )}
-    </div>
+    </main>
   );
 }
 
