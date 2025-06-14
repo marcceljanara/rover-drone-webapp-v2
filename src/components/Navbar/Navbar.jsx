@@ -15,10 +15,11 @@ const Navbar = () => {
   const [resendCooldown, setResendCooldown] = useState(0);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showPasswordLogin, setShowPasswordLogin] = useState(false);
+  const [showPasswordSignUp, setShowPasswordSignUp] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
-
     if (token) {
       try {
         const decoded = jwtDecode(token);
@@ -82,9 +83,7 @@ const Navbar = () => {
     setNotificationMessage(message);
     setNotificationType(type);
     setShowNotification(true);
-    setTimeout(() => {
-      setShowNotification(false);
-    }, 3000);
+    setTimeout(() => setShowNotification(false), 3000);
   };
 
   const handleLoginSubmit = async (e) => {
@@ -105,18 +104,14 @@ const Navbar = () => {
       }
 
       const data = await response.json();
-      const accessToken = data.data.accessToken;
-      const refreshToken = data.data.refreshToken;
-
+      const { accessToken, refreshToken } = data.data;
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
 
       try {
         const decoded = jwtDecode(accessToken);
         const role = decoded.role;
-        if (role) {
-          localStorage.setItem("role", role);
-        }
+        if (role) localStorage.setItem("role", role);
       } catch (err) {
         console.error("Gagal decode token:", err);
       }
@@ -221,13 +216,9 @@ const Navbar = () => {
 
   return (
     <div className="n-wrapper" id="Navbar">
-      <div className="n-left">
-        <div className="n-name">Roone</div>
-      </div>
-
-      <div className="hamburger" onClick={toggleMenu}>
-        ☰
-      </div>
+      {/* NAVIGATION */}
+      <div className="n-left"><div className="n-name">Roone</div></div>
+      <div className="hamburger" onClick={toggleMenu}>☰</div>
 
       <div className={`n-right ${isMenuOpen ? "open" : ""}`}>
         <div className="n-list">
@@ -250,18 +241,24 @@ const Navbar = () => {
       {(showLoginForm || showSignUpForm || showVerify) && (
         <div className="login-overlay active" onClick={closeAllForms}></div>
       )}
-
       {showNotification && (
         <div className={`notification ${notificationType}`}>{notificationMessage}</div>
       )}
 
+      {/* LOGIN FORM */}
       {showLoginForm && (
         <div className="login-form">
           <button className="close-btn" onClick={closeLoginForm}>&times;</button>
           <h2>Sign In</h2>
           <form onSubmit={handleLoginSubmit}>
             <div className="form-group"><label>Email</label><input type="email" name="email" required /></div>
-            <div className="form-group"><label>Password</label><input type="password" name="password" required /></div>
+            <div className="form-group password-toggle">
+              <label>Password</label>
+              <input type={showPasswordLogin ? "text" : "password"} name="password" required />
+              <button type="button" className="eye-toggle" onClick={() => setShowPasswordLogin(prev => !prev)}>
+                {showPasswordLogin ? "🙈" : "👁️"}
+              </button>
+            </div>
             <div className="form-group">
               <input type="checkbox" id="remember-me" name="remember-me" />
               <label htmlFor="remember-me">Remember me</label>
@@ -272,6 +269,7 @@ const Navbar = () => {
         </div>
       )}
 
+      {/* SIGN UP FORM */}
       {showSignUpForm && (
         <div className="login-form">
           <button className="close-btn" onClick={closeSignUpForm}>&times;</button>
@@ -280,12 +278,19 @@ const Navbar = () => {
             <div className="form-group"><label>Full Name</label><input type="text" name="fullname" required /></div>
             <div className="form-group"><label>Username</label><input type="text" name="username" required /></div>
             <div className="form-group"><label>Email</label><input type="email" name="email-signup" required /></div>
-            <div className="form-group"><label>Password</label><input type="password" name="password-signup" required /></div>
+            <div className="form-group password-toggle">
+              <label>Password</label>
+              <input type={showPasswordSignUp ? "text" : "password"} name="password-signup" required />
+              <button type="button" className="eye-toggle" onClick={() => setShowPasswordSignUp(prev => !prev)}>
+                {showPasswordSignUp ? "🙈" : "👁️"}
+              </button>
+            </div>
             <button type="submit" className="login-btn">Register</button>
           </form>
         </div>
       )}
 
+      {/* OTP VERIFIKASI */}
       {showVerify && (
         <div className="login-form">
           <button className="close-btn" onClick={() => setShowVerify(false)}>&times;</button>
