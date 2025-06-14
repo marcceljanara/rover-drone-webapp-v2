@@ -5,6 +5,7 @@
   position: relative;
   margin-top: 4rem;
 }
+
 .f-content {
   position: absolute;
   display: flex;
@@ -16,13 +17,22 @@
   gap: 4rem;
   color: white;
 }
+
+.f-content span {
+  margin-top: 10rem; /* Tambahan agar agak turun di tampilan normal */
+}
+
 .f-icons {
   display: flex;
   gap: 1rem;
 }
 
-@media screen and (max-width: 500px){
-  .f-content{
-    transform: scale(.5);
+@media screen and (max-width: 500px) {
+  .f-content {
+    transform: scale(0.5);
+  }
+
+  .f-content span {
+    margin-top: 0; /* Reset agar posisi kembali seperti semula di tampilan kecil */
   }
 }
