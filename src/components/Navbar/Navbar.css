@@ -59,6 +59,24 @@
   cursor: pointer;
 }
 
+
+
+
+.password-toggle {
+  position: relative;
+}
+
+.eye-toggle {
+  position: absolute;
+  right: 10px;
+  top: 70%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+
 /* ========== HAMBURGER ========== */
 .hamburger {
   display: none;
