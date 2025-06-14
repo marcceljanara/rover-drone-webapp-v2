@@ -12,10 +12,10 @@ import {
   UilCar,
   UilMoneyBill,
   UilFileAlt,
-  UilUsersAlt
+  UilUsersAlt,
 } from "@iconscout/react-unicons";
 
-export const SidebarData = [
+const allSidebarData = [
   { heading: "Dashboard", icon: UilEstate, link: "/dashboard" },
   { heading: "Power Data", icon: UilChart, link: "/power-data" },
   { heading: "Non Fungible Token", icon: UilUsdCircle, link: "/non-fungible-token" },
@@ -30,6 +30,15 @@ const Sidebar = () => {
   const [expanded, setExpanded] = useState(window.innerWidth > 768);
   const location = useLocation();
 
+  const role = localStorage.getItem("role") || "guest";
+
+  const filteredSidebarData = allSidebarData.filter((item) => {
+    if (role === "user") {
+      return !["/payments", "/reports", "/admin"].includes(item.link);
+    }
+    return true;
+  });
+
   useEffect(() => {
     const handleResize = () => {
       setExpanded(window.innerWidth > 768);
@@ -40,17 +49,15 @@ const Sidebar = () => {
 
   return (
     <>
-      {/* Hamburger Icon */}
-      <div className="bars" onClick={() => setExpanded(prev => !prev)}>
+      <div className="bars" onClick={() => setExpanded((prev) => !prev)}>
         <UilBars />
       </div>
 
-      {/* Sidebar */}
       <div
         className={`sidebar ${expanded ? "open" : "closed"}`}
         style={{
           left: expanded ? "0" : window.innerWidth <= 768 ? "-100%" : "0",
-          position: window.innerWidth <= 768 ? "fixed" : "relative"
+          position: window.innerWidth <= 768 ? "fixed" : "relative",
         }}
       >
         <div className="logo">
@@ -60,12 +67,10 @@ const Sidebar = () => {
           </span>
         </div>
 
-        <div className="role-badge">
-          Role: {localStorage.getItem("role") || "guest"}
-        </div>
+        <div className="role-badge">Role: {role}</div>
 
         <div className="menu">
-          {SidebarData.map((item, index) => {
+          {filteredSidebarData.map((item, index) => {
             const Icon = item.icon;
             return (
               <NavLink
