@@ -13,22 +13,92 @@
 
 .logo {
   display: flex;
-  height: 5rem;
-  font-weight: bold;
-  font-size: 22px;
-  gap: 1rem;
   align-items: center;
   justify-content: center;
-  height: 4%;
-}
-
-.logo > span > span {
-  color: var(--pink);
+  gap: 1rem;
+  font-weight: bold;
+  font-size: 22px;
+  height: 5rem;
 }
 
 .logo > img {
   width: 3rem;
   height: 4rem;
+}
+
+/* Text and icon container */
+.logo-text {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.logo-text > span > span {
+  color: var(--pink);
+}
+
+.icon-lokasi {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+/* Lokasi box */
+.lokasi-box-container {
+  position: absolute;
+  top: 120%;
+  left: 0;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 99;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 220px;
+  max-width: 280px;
+}
+
+.input-search {
+  padding: 0.4rem 0.6rem;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #aaa;
+  outline: none;
+  width: 100%;
+  background-color: #f9f9f9;
+}
+
+.input-search:focus {
+  border-color: var(--pink);
+}
+
+.dropdown {
+  padding: 0.4rem 0.6rem;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #aaa;
+  outline: none;
+  width: 100%;
+  background-color: #f9f9f9;
+}
+
+.dropdown:focus {
+  border-color: var(--pink);
+}
+
+.lokasi-item {
+  font-size: 13px;
+  font-weight: 500;
+  color: #555;
+  background-color: #f2f2f2;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  margin-top: 0.3rem;
+  cursor: not-allowed;
 }
 
 /* Menu */
@@ -88,10 +158,7 @@
 }
 
 .role-badge {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 1rem auto;
   padding: 0.5rem 1rem;
   background-color: #ffe8f1;
   color: var(--black);
@@ -117,13 +184,6 @@
   .signout-section .menuItemLink span,
   .signout-section .menuItemLink svg {
     display: inline !important;
-  }
-
-  .role-badge {
-    display: block;
-    margin-top: 0.5rem;
-    font-size: 12px;
-    padding: 0.4rem 0.8rem;
   }
 }
 
@@ -161,12 +221,83 @@
     cursor: pointer;
   }
 
-  .role-badge {
-    display: block;
-    margin-top: 1rem;
-    font-size: 13px;
-    background: #fff6fa;
-    color: #333;
-    text-align: center;
+  .lokasi-box-container {
+    left: -30%;
+    width: 240px;
+    font-size: 12px;
   }
 }
+
+
+
+.lokasi-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.dropdown {
+  padding: 0.4rem 0.6rem;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #aaa;
+  outline: none;
+  width: 100%;
+  background-color: #f9f9f9;
+}
+
+.dropdown:focus {
+  border-color: var(--pink);
+}
+
+
+
+
+
+.icon-lokasi {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.icon-lokasi.active {
+  background-color: white;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+}
+
+
+
+
+
+.lokasi-box-container {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  z-index: 999;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 250px;
+  margin-top: 0.5rem;
+}
+
+.lokasi-box-container input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.3rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.lokasi-box-container label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
