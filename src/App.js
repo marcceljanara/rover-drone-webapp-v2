@@ -16,6 +16,7 @@ import ReportDetail from './components/Reports/ReportDetail';
 import Admin from './components/Admin/Admin';
 import AdminDetail from './components/Admin/AdminDetail';
 import DeviceDetail from './components/Activation/DeviceDetail'; // ✅ Tambahan terbaru
+import Addresses from './components/Addresses';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -25,6 +26,12 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/addresses" element={
+            <div className="AppGlass">
+              <Sidebar />
+              <Addresses />
+            </div>
+            } />
 
           <Route path="/dashboard" element={
             <div className="AppGlass">
