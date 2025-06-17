@@ -7,13 +7,7 @@ import lokasiIcon from '../../imgs/Icon-Lokasi.png';
 function calculateRentalCost(interval) {
   const dailyRate = 100000;
   const rentalDays = interval * 30;
-
-  const discountRates = {
-    6: 0.05,
-    12: 0.10,
-    24: 0.15,
-    36: 0.20,
-  };
+  const discountRates = { 6: 0.05, 12: 0.10, 24: 0.15, 36: 0.20 };
 
   const baseCost = rentalDays * dailyRate;
   const discountRate = discountRates[interval] || 0;
@@ -35,14 +29,10 @@ const Penyewaan = () => {
   const [showNotification, setShowNotification] = useState(false);
   const [loading, setLoading] = useState(false);
   const [deviceStatus, setDeviceStatus] = useState({ loading: true, value: null, error: null });
-
-  const [checkboxes, setCheckboxes] = useState({
-    lux: false,
-    temperature: false,
-    humidity: false,
-  });
-
+  const [availableSensors, setAvailableSensors] = useState([]);
+  const [checkboxes, setCheckboxes] = useState({});
   const [showLokasiForm, setShowLokasiForm] = useState(false);
+  const [sensorTotal, setSensorTotal] = useState(0);
 
   const navigate = useNavigate();
   const token = localStorage.getItem('accessToken');
@@ -67,14 +57,58 @@ const Penyewaan = () => {
       }
     };
 
+    const fetchSensors = async () => {
+      try {
+        const res = await fetch('https://dev-api.xsmartagrichain.com/v1/sensors/available', {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = await res.json();
+        const sensors = data?.data?.sensors || [];
+
+        setAvailableSensors(sensors);
+        const initialCheckboxes = {};
+        sensors.forEach(sensor => {
+          initialCheckboxes[sensor.id] = false;
+        });
+        setCheckboxes(initialCheckboxes);
+      } catch (err) {
+        console.error('Gagal memuat sensor:', err);
+      }
+    };
+
     fetchAvailableDevices();
+    fetchSensors();
   }, [token]);
 
-  const handleCheckboxChange = (key) => {
-    setCheckboxes((prev) => ({ ...prev, [key]: !prev[key] }));
+  const calculateSelectedSensorCost = () => {
+    const selectedSensorCost = availableSensors
+      .filter(sensor => checkboxes[sensor.id])
+      .reduce((total, sensor) => total + sensor.cost, 0);
+    return selectedSensorCost;
   };
 
-  const handlePilih = (dur) => setDuration(dur);
+  const handleCheckboxChange = (key) => {
+    const updatedCheckboxes = { ...checkboxes, [key]: !checkboxes[key] };
+    setCheckboxes(updatedCheckboxes);
+
+    // Rehitung total sensor setiap kali ceklist berubah
+    const newSensorTotal = availableSensors
+      .filter(sensor => updatedCheckboxes[sensor.id])
+      .reduce((total, sensor) => total + sensor.cost, 0);
+    setSensorTotal(newSensorTotal);
+  };
+
+  const handlePilih = (dur) => {
+    setDuration(dur);
+
+    // Saat tombol pilih diklik, hitung total sensor yang aktif
+    const total = calculateSelectedSensorCost();
+    setSensorTotal(total);
+  };
 
   const handleSewa = async () => {
     if (![6, 12, 24, 36].includes(duration)) {
@@ -124,11 +158,12 @@ const Penyewaan = () => {
     return [6, 12, 24, 36].map((dur) => {
       const { finalCost, rentalDays, discount, discountPercentage } = calculateRentalCost(dur);
       const daily = (finalCost / rentalDays).toFixed(2);
+      const totalWithSensor = finalCost + sensorTotal;
 
       return (
         <tr key={dur}>
           <td>{dur} Bulan</td>
-          <td>Rp{finalCost.toLocaleString('id-ID')}</td>
+          <td>Rp{totalWithSensor.toLocaleString('id-ID')}</td>
           <td>Rp{Number(daily).toLocaleString('id-ID')}</td>
           <td>{discountPercentage}%</td>
           <td>Rp{discount.toLocaleString('id-ID')}</td>
@@ -165,25 +200,27 @@ const Penyewaan = () => {
           {deviceStatus.loading
             ? 'Memuat...'
             : deviceStatus.error
-            ? deviceStatus.error
-            : deviceStatus.value}
+              ? deviceStatus.error
+              : deviceStatus.value}
         </span>
       </div>
 
       <div className="lokasi-checkbox-row">
         <div className="checkbox-container">
-          <label>
-            <input type="checkbox" checked={checkboxes.lux} onChange={() => handleCheckboxChange('lux')} />
-            Lux
-          </label>
-          <label>
-            <input type="checkbox" checked={checkboxes.temperature} onChange={() => handleCheckboxChange('temperature')} />
-            Temperature
-          </label>
-          <label>
-            <input type="checkbox" checked={checkboxes.humidity} onChange={() => handleCheckboxChange('humidity')} />
-            Humidity
-          </label>
+          {availableSensors.length === 0 ? (
+            <p style={{ fontStyle: 'italic' }}>Memuat sensor...</p>
+          ) : (
+            availableSensors.map(sensor => (
+              <label key={sensor.id}>
+                <input
+                  type="checkbox"
+                  checked={checkboxes[sensor.id] || false}
+                  onChange={() => handleCheckboxChange(sensor.id)}
+                />
+                {sensor.id} (Rp{sensor.cost.toLocaleString('id-ID')})
+              </label>
+            ))
+          )}
         </div>
         <img
           src={lokasiIcon}
