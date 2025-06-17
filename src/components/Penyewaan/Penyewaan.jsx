@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Penyewaan.css';
 import roverImage from '../../imgs/rover2.png';
+import lokasiIcon from '../../imgs/Icon-Lokasi.png';
 
 function calculateRentalCost(interval) {
   const dailyRate = 100000;
-  const daysInMonth = 30;
-  const rentalDays = interval * daysInMonth;
+  const rentalDays = interval * 30;
 
   const discountRates = {
     6: 0.05,
@@ -36,6 +36,14 @@ const Penyewaan = () => {
   const [loading, setLoading] = useState(false);
   const [deviceStatus, setDeviceStatus] = useState({ loading: true, value: null, error: null });
 
+  const [checkboxes, setCheckboxes] = useState({
+    lux: false,
+    temperature: false,
+    humidity: false,
+  });
+
+  const [showLokasiForm, setShowLokasiForm] = useState(false);
+
   const navigate = useNavigate();
   const token = localStorage.getItem('accessToken');
 
@@ -50,17 +58,21 @@ const Penyewaan = () => {
     const fetchAvailableDevices = async () => {
       try {
         const response = await fetch('https://dev-api.xsmartagrichain.com/v1/devices?scope=available', {
-          headers: { 'Authorization': `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${token}` },
         });
         const data = await response.json();
         setDeviceStatus({ loading: false, value: data.data.devices.length, error: null });
-      } catch (err) {
+      } catch {
         setDeviceStatus({ loading: false, value: null, error: 'Gagal memuat perangkat' });
       }
     };
 
     fetchAvailableDevices();
   }, [token]);
+
+  const handleCheckboxChange = (key) => {
+    setCheckboxes((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
 
   const handlePilih = (dur) => setDuration(dur);
 
@@ -83,32 +95,36 @@ const Penyewaan = () => {
       const response = await fetch('https://dev-api.xsmartagrichain.com/v1/rentals', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ interval: duration }),
       });
 
       const data = await response.json().catch(() => ({}));
-      const msg = data?.message || (response.ok ? 'Berhasil menyewa perangkat!' : 'Gagal menyewa.');
-
-      setNotification(msg);
+      const message = data?.message || (response.ok ? 'Berhasil menyewa perangkat!' : 'Gagal menyewa.');
+      setNotification(message);
 
       if (response.ok) {
         setTimeout(() => navigate('/riwayat-sewa'), 2000);
       }
-    } catch (err) {
-      setNotification(err.message || 'Terjadi kesalahan saat menyewa.');
+    } catch (error) {
+      setNotification(error.message || 'Terjadi kesalahan saat menyewa.');
     } finally {
-      setShowNotification(true);
       setLoading(false);
+      setShowNotification(true);
     }
+  };
+
+  const handleIconClick = () => {
+    setShowLokasiForm(!showLokasiForm);
   };
 
   const renderTableRows = () => {
     return [6, 12, 24, 36].map((dur) => {
       const { finalCost, rentalDays, discount, discountPercentage } = calculateRentalCost(dur);
       const daily = (finalCost / rentalDays).toFixed(2);
+
       return (
         <tr key={dur}>
           <td>{dur} Bulan</td>
@@ -118,8 +134,8 @@ const Penyewaan = () => {
           <td>Rp{discount.toLocaleString('id-ID')}</td>
           <td>
             <button
-              onClick={() => handlePilih(dur)}
               className={`sewa-button ${duration === dur ? 'selected' : ''}`}
+              onClick={() => handlePilih(dur)}
             >
               Pilih
             </button>
@@ -142,6 +158,7 @@ const Penyewaan = () => {
       </div>
 
       <h3>Formulir Penyewaan</h3>
+
       <div className="device-status">
         <span className="device-label">📦 Jumlah Perangkat Tersedia:</span>
         <span className="device-value">
@@ -152,6 +169,50 @@ const Penyewaan = () => {
             : deviceStatus.value}
         </span>
       </div>
+
+      <div className="lokasi-checkbox-row">
+        <div className="checkbox-container">
+          <label>
+            <input type="checkbox" checked={checkboxes.lux} onChange={() => handleCheckboxChange('lux')} />
+            Lux
+          </label>
+          <label>
+            <input type="checkbox" checked={checkboxes.temperature} onChange={() => handleCheckboxChange('temperature')} />
+            Temperature
+          </label>
+          <label>
+            <input type="checkbox" checked={checkboxes.humidity} onChange={() => handleCheckboxChange('humidity')} />
+            Humidity
+          </label>
+        </div>
+        <img
+          src={lokasiIcon}
+          alt="Ikon Lokasi"
+          className={`lokasi-icon ${showLokasiForm ? 'active' : ''}`}
+          onClick={handleIconClick}
+        />
+      </div>
+
+      {showLokasiForm && (
+        <div className="lokasi-box-container">
+          <div className="lokasi-section">
+            <label htmlFor="provinsi">Provinsi</label>
+            <input type="text" id="provinsi" placeholder="Masukkan provinsi" />
+          </div>
+          <div className="lokasi-section">
+            <label htmlFor="kota">Kota</label>
+            <input type="text" id="kota" placeholder="Masukkan kota" />
+          </div>
+          <div className="lokasi-section">
+            <label htmlFor="kecamatan">Kecamatan</label>
+            <input type="text" id="kecamatan" placeholder="Masukkan kecamatan" />
+          </div>
+          <div className="lokasi-section">
+            <label htmlFor="kelurahan">Kelurahan</label>
+            <input type="text" id="kelurahan" placeholder="Masukkan kelurahan" />
+          </div>
+        </div>
+      )}
 
       <div className="form-container">
         <div className="table-responsive">
@@ -171,11 +232,11 @@ const Penyewaan = () => {
         </div>
 
         <button
-          onClick={handleSewa}
-          disabled={!duration || loading}
           className={`sewa-button ${!duration || loading ? 'disabled' : ''}`}
+          disabled={!duration || loading}
+          onClick={handleSewa}
         >
-          {loading ? <span className="spinner"></span> : 'Sewa'}
+          {loading ? <span className="spinner" /> : 'Sewa'}
         </button>
       </div>
 

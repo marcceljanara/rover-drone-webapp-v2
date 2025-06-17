@@ -1,38 +1,122 @@
+/* ========== GLOBAL BODY ========== */
 body {
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
   background: linear-gradient(135deg, #BCFFDB 30%, #E6FFCF 52%, #C6F3C8 91%);
   color: #000;
-  height: 100vh;
-  overflow-y: auto;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
+/* ========== CONTAINER ========== */
 .penyewaan-container {
   padding: 60px 20px 20px;
-  background: none;
+  max-width: 960px;
+  margin: 40px auto;
   border-radius: 1rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  max-width: 800px;
-  margin: 40px auto;
-  color: #000;
+  background: none;
   position: relative;
 }
 
+/* ========== TEXT ELEMENTS ========== */
 h1, h2, h3 {
   color: #00796b;
   margin-bottom: 10px;
-}
-p, li {
-  color: #000;
-  line-height: 1.6;
-  font-size: 16px;
+  text-align: center;
 }
 
+p, li {
+  color: #000;
+  font-size: 16px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+/* ========== BACK BUTTON ========== */
+.back-button {
+  background: transparent;
+  border: none;
+  color: #00796b;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+/* ========== IMAGE ========== */
+.image-container {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.rover-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+/* ========== DEVICE STATUS ========== */
+.device-status {
+  font-weight: bold;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.device-label {
+  margin-right: 8px;
+}
+
+.device-value {
+  color: #00796b;
+}
+
+/* ========== ICON & CHECKBOX WRAPPER ========== */
+.lokasi-checkbox-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px 0;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.checkbox-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 150px;
+}
+
+.checkbox-container label {
+  font-weight: bold;
+  color: #333;
+}
+
+.lokasi-icon {
+  width: 40px;
+  height: auto;
+  margin-top: 5px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.lokasi-icon.active {
+  transform: rotate(20deg);
+}
+
+/* ========== FORM & TABLE ========== */
 .form-container {
-  margin-top: 20px;
+  margin-top: 10px;
   padding: 10px;
   width: 100%;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   overflow-x: auto;
 }
 
@@ -40,92 +124,55 @@ p, li {
   overflow-x: auto;
 }
 
-table {
+.rental-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 1rem;
+  font-size: 14px;
 }
-thead {
+
+.rental-table thead {
   background-color: #f2f2f2;
 }
-th, td {
+
+.rental-table th,
+.rental-table td {
   padding: 10px;
-  text-align: left;
+  text-align: center;
   border-bottom: 1px solid #ddd;
 }
-tbody tr:hover {
+
+.rental-table tbody tr:hover {
   background-color: #eafaf1;
   transition: background-color 0.3s ease-in-out;
 }
 
-/* Responsive Table */
-@media (max-width: 1024px) {
-  table, thead, tbody, tr, td {
-    display: block;
-    width: 100%;
-  }
-
-  thead {
-    display: none;
-  }
-
-  tr {
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 8px;
-    background: #fafafa;
-  }
-
-  td {
-    position: relative;
-    padding-left: 50%;
-    text-align: left;
-    border: none;
-    border-bottom: 1px solid #eee;
-  }
-
-  td:last-child {
-    border-bottom: none;
-  }
-
-  td::before {
-    position: absolute;
-    top: 10px;
-    left: 15px;
-    width: 45%;
-    white-space: nowrap;
-    font-weight: bold;
-    color: #333;
-    font-size: 14px;
-  }
-
-  td:nth-of-type(1)::before { content: "Durasi"; }
-  td:nth-of-type(2)::before { content: "Harga Total"; }
-  td:nth-of-type(3)::before { content: "Harga/Hari"; }
-  td:nth-of-type(4)::before { content: "Diskon (%)"; }
-  td:nth-of-type(5)::before { content: "Diskon (Rp)"; }
-  td:nth-of-type(6)::before { content: "Aksi"; }
-}
-
-/* Buttons */
+/* ========== BUTTON: SEWA ========== */
 .sewa-button {
   padding: 10px 20px;
   background-color: #00796b;
   color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
   margin-top: 10px;
+  transition: background-color 0.3s ease;
 }
+
+.sewa-button:hover {
+  background-color: #005e53;
+}
+
 .sewa-button.selected {
   background-color: #004d40;
 }
+
 .sewa-button.disabled {
   background-color: #ccc;
   cursor: not-allowed;
 }
 
+/* ========== SPINNER ========== */
 .spinner {
   width: 16px;
   height: 16px;
@@ -133,6 +180,7 @@ tbody tr:hover {
   border-top: 3px solid #00796b;
   border-radius: 50%;
   animation: spin 1s linear infinite;
+  display: inline-block;
 }
 
 @keyframes spin {
@@ -141,6 +189,7 @@ tbody tr:hover {
   }
 }
 
+/* ========== NOTIFICATION ========== */
 .notification {
   margin-top: 20px;
   padding: 10px;
@@ -148,22 +197,155 @@ tbody tr:hover {
   border: 1px solid #b2dba1;
   color: #3c763d;
   border-radius: 5px;
-}
-
-.back-button {
-  background: transparent;
-  color: #00796b;
-  border: none;
-  font-size: 16px;
-  cursor: pointer;
-  margin-bottom: 10px;
-}
-
-.image-container {
   text-align: center;
-  margin: 20px 0;
 }
-.rover-image {
-  max-width: 100%;
-  height: auto;
+
+/* ========== LOCATION BOX (FORM LOKASI) ========== */
+.lokasi-box-container {
+  background: #ffffff;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.3s ease-in-out;
+  position: absolute;
+  top: 910px; /* posisi awal bisa diganti */
+  left: 600px;
+  z-index: 10;
+  cursor: grab;
+}
+
+/* Tambahan area untuk tempat klik dan geser */
+.drag-handle {
+  background-color: #00796b;
+  color: #fff;
+  padding: 10px;
+  font-weight: bold;
+  border-radius: 6px 6px 0 0;
+  cursor: move;
+  margin: -20px -20px 10px -20px; /* supaya penuh di atas box */
+}
+
+.lokasi-section {
+  margin-bottom: 15px;
+}
+
+.lokasi-section label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #00796b;
+}
+
+.lokasi-section input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+
+/* ANIMASI */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 1024px) {
+  .penyewaan-container {
+    padding: 30px 10px;
+  }
+
+  .sewa-button {
+    width: 100%;
+  }
+
+  .lokasi-checkbox-row {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .rental-table,
+  .rental-table thead,
+  .rental-table tbody,
+  .rental-table tr,
+  .rental-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .rental-table thead {
+    display: none;
+  }
+
+  .rental-table tr {
+    margin-bottom: 20px;
+    padding: 10px;
+    background: #fafafa;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+
+  .rental-table td {
+    position: relative;
+    padding-left: 50%;
+    text-align: left;
+    border: none;
+    border-bottom: 1px solid #eee;
+  }
+
+  .rental-table td:last-child {
+    border-bottom: none;
+  }
+
+  .rental-table td::before {
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    width: 45%;
+    font-weight: bold;
+    font-size: 14px;
+    color: #333;
+    white-space: nowrap;
+  }
+
+  .rental-table td:nth-of-type(1)::before { content: "Durasi"; }
+  .rental-table td:nth-of-type(2)::before { content: "Harga Total"; }
+  .rental-table td:nth-of-type(3)::before { content: "Harga/Hari"; }
+  .rental-table td:nth-of-type(4)::before { content: "Diskon (%)"; }
+  .rental-table td:nth-of-type(5)::before { content: "Diskon (Rp)"; }
+  .rental-table td:nth-of-type(6)::before { content: "Aksi"; }
+
+  .lokasi-box-container {
+    top: 45%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90vw;
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .lokasi-box-container {
+    width: 95vw;
+    padding: 15px;
+  }
+
+  .lokasi-section input {
+    font-size: 13px;
+    padding: 8px;
+  }
+
+  .lokasi-section label {
+    font-size: 14px;
+  }
 }
