@@ -2,18 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Penyewaan.css';
 import roverImage from '../../imgs/rover2.png';
+import lokasiIcon from '../../imgs/Icon-Lokasi.png';
 
 function calculateRentalCost(interval) {
   const dailyRate = 100000;
-  const daysInMonth = 30;
-  const rentalDays = interval * daysInMonth;
-
-  const discountRates = {
-    6: 0.05,
-    12: 0.10,
-    24: 0.15,
-    36: 0.20,
-  };
+  const rentalDays = interval * 30;
+  const discountRates = { 6: 0.05, 12: 0.10, 24: 0.15, 36: 0.20 };
 
   const baseCost = rentalDays * dailyRate;
   const discountRate = discountRates[interval] || 0;
@@ -35,6 +29,10 @@ const Penyewaan = () => {
   const [showNotification, setShowNotification] = useState(false);
   const [loading, setLoading] = useState(false);
   const [deviceStatus, setDeviceStatus] = useState({ loading: true, value: null, error: null });
+  const [availableSensors, setAvailableSensors] = useState([]);
+  const [checkboxes, setCheckboxes] = useState({});
+  const [showLokasiForm, setShowLokasiForm] = useState(false);
+  const [sensorTotal, setSensorTotal] = useState(0);
 
   const navigate = useNavigate();
   const token = localStorage.getItem('accessToken');
@@ -50,19 +48,67 @@ const Penyewaan = () => {
     const fetchAvailableDevices = async () => {
       try {
         const response = await fetch('https://dev-api.xsmartagrichain.com/v1/devices?scope=available', {
-          headers: { 'Authorization': `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${token}` },
         });
         const data = await response.json();
         setDeviceStatus({ loading: false, value: data.data.devices.length, error: null });
-      } catch (err) {
+      } catch {
         setDeviceStatus({ loading: false, value: null, error: 'Gagal memuat perangkat' });
       }
     };
 
+    const fetchSensors = async () => {
+      try {
+        const res = await fetch('https://dev-api.xsmartagrichain.com/v1/sensors/available', {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = await res.json();
+        const sensors = data?.data?.sensors || [];
+
+        setAvailableSensors(sensors);
+        const initialCheckboxes = {};
+        sensors.forEach(sensor => {
+          initialCheckboxes[sensor.id] = false;
+        });
+        setCheckboxes(initialCheckboxes);
+      } catch (err) {
+        console.error('Gagal memuat sensor:', err);
+      }
+    };
+
     fetchAvailableDevices();
+    fetchSensors();
   }, [token]);
 
-  const handlePilih = (dur) => setDuration(dur);
+  const calculateSelectedSensorCost = () => {
+    const selectedSensorCost = availableSensors
+      .filter(sensor => checkboxes[sensor.id])
+      .reduce((total, sensor) => total + sensor.cost, 0);
+    return selectedSensorCost;
+  };
+
+  const handleCheckboxChange = (key) => {
+    const updatedCheckboxes = { ...checkboxes, [key]: !checkboxes[key] };
+    setCheckboxes(updatedCheckboxes);
+
+    // Rehitung total sensor setiap kali ceklist berubah
+    const newSensorTotal = availableSensors
+      .filter(sensor => updatedCheckboxes[sensor.id])
+      .reduce((total, sensor) => total + sensor.cost, 0);
+    setSensorTotal(newSensorTotal);
+  };
+
+  const handlePilih = (dur) => {
+    setDuration(dur);
+
+    // Saat tombol pilih diklik, hitung total sensor yang aktif
+    const total = calculateSelectedSensorCost();
+    setSensorTotal(total);
+  };
 
   const handleSewa = async () => {
     if (![6, 12, 24, 36].includes(duration)) {
@@ -83,43 +129,48 @@ const Penyewaan = () => {
       const response = await fetch('https://dev-api.xsmartagrichain.com/v1/rentals', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ interval: duration }),
       });
 
       const data = await response.json().catch(() => ({}));
-      const msg = data?.message || (response.ok ? 'Berhasil menyewa perangkat!' : 'Gagal menyewa.');
-
-      setNotification(msg);
+      const message = data?.message || (response.ok ? 'Berhasil menyewa perangkat!' : 'Gagal menyewa.');
+      setNotification(message);
 
       if (response.ok) {
         setTimeout(() => navigate('/riwayat-sewa'), 2000);
       }
-    } catch (err) {
-      setNotification(err.message || 'Terjadi kesalahan saat menyewa.');
+    } catch (error) {
+      setNotification(error.message || 'Terjadi kesalahan saat menyewa.');
     } finally {
-      setShowNotification(true);
       setLoading(false);
+      setShowNotification(true);
     }
+  };
+
+  const handleIconClick = () => {
+    setShowLokasiForm(!showLokasiForm);
   };
 
   const renderTableRows = () => {
     return [6, 12, 24, 36].map((dur) => {
       const { finalCost, rentalDays, discount, discountPercentage } = calculateRentalCost(dur);
       const daily = (finalCost / rentalDays).toFixed(2);
+      const totalWithSensor = finalCost + sensorTotal;
+
       return (
         <tr key={dur}>
           <td>{dur} Bulan</td>
-          <td>Rp{finalCost.toLocaleString('id-ID')}</td>
+          <td>Rp{totalWithSensor.toLocaleString('id-ID')}</td>
           <td>Rp{Number(daily).toLocaleString('id-ID')}</td>
           <td>{discountPercentage}%</td>
           <td>Rp{discount.toLocaleString('id-ID')}</td>
           <td>
             <button
-              onClick={() => handlePilih(dur)}
               className={`sewa-button ${duration === dur ? 'selected' : ''}`}
+              onClick={() => handlePilih(dur)}
             >
               Pilih
             </button>
@@ -142,16 +193,63 @@ const Penyewaan = () => {
       </div>
 
       <h3>Formulir Penyewaan</h3>
+
       <div className="device-status">
         <span className="device-label">📦 Jumlah Perangkat Tersedia:</span>
         <span className="device-value">
           {deviceStatus.loading
             ? 'Memuat...'
             : deviceStatus.error
-            ? deviceStatus.error
-            : deviceStatus.value}
+              ? deviceStatus.error
+              : deviceStatus.value}
         </span>
       </div>
+
+      <div className="lokasi-checkbox-row">
+        <div className="checkbox-container">
+          {availableSensors.length === 0 ? (
+            <p style={{ fontStyle: 'italic' }}>Memuat sensor...</p>
+          ) : (
+            availableSensors.map(sensor => (
+              <label key={sensor.id}>
+                <input
+                  type="checkbox"
+                  checked={checkboxes[sensor.id] || false}
+                  onChange={() => handleCheckboxChange(sensor.id)}
+                />
+                {sensor.id} (Rp{sensor.cost.toLocaleString('id-ID')})
+              </label>
+            ))
+          )}
+        </div>
+        <img
+          src={lokasiIcon}
+          alt="Ikon Lokasi"
+          className={`lokasi-icon ${showLokasiForm ? 'active' : ''}`}
+          onClick={handleIconClick}
+        />
+      </div>
+
+      {showLokasiForm && (
+        <div className="lokasi-box-container">
+          <div className="lokasi-section">
+            <label htmlFor="provinsi">Provinsi</label>
+            <input type="text" id="provinsi" placeholder="Masukkan provinsi" />
+          </div>
+          <div className="lokasi-section">
+            <label htmlFor="kota">Kota</label>
+            <input type="text" id="kota" placeholder="Masukkan kota" />
+          </div>
+          <div className="lokasi-section">
+            <label htmlFor="kecamatan">Kecamatan</label>
+            <input type="text" id="kecamatan" placeholder="Masukkan kecamatan" />
+          </div>
+          <div className="lokasi-section">
+            <label htmlFor="kelurahan">Kelurahan</label>
+            <input type="text" id="kelurahan" placeholder="Masukkan kelurahan" />
+          </div>
+        </div>
+      )}
 
       <div className="form-container">
         <div className="table-responsive">
@@ -171,11 +269,11 @@ const Penyewaan = () => {
         </div>
 
         <button
-          onClick={handleSewa}
-          disabled={!duration || loading}
           className={`sewa-button ${!duration || loading ? 'disabled' : ''}`}
+          disabled={!duration || loading}
+          onClick={handleSewa}
         >
-          {loading ? <span className="spinner"></span> : 'Sewa'}
+          {loading ? <span className="spinner" /> : 'Sewa'}
         </button>
       </div>
 

@@ -1,6 +1,6 @@
 .device-detail-container {
   flex: 1;
-  padding: 40px;
+  padding: 40px 20px;
   background: linear-gradient(to bottom right, #e0ffe0, #f0fff0);
   display: flex;
   flex-direction: column;
@@ -8,9 +8,9 @@
 }
 
 .device-detail-container h2 {
-  font-size: 36px;
+  font-size: 32px;
   margin-bottom: 30px;
-  color: #333;
+  color: #2c3e50;
   text-align: center;
 }
 
@@ -18,15 +18,15 @@
   width: 100%;
   max-width: 800px;
   background-color: #fff;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
   border-radius: 12px;
-  padding: 30px 40px;
+  padding: 30px;
   margin-bottom: 30px;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .detail-item {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -39,6 +39,7 @@
   width: 180px;
   color: #333;
   flex-shrink: 0;
+  font-weight: 600;
 }
 
 .detail-value,
@@ -53,8 +54,8 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  flex-wrap: wrap;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .topic-with-button button {
@@ -72,6 +73,7 @@
   background-color: #0056b3;
 }
 
+/* Toggle Buttons */
 .toggle-buttons {
   display: flex;
   flex-wrap: wrap;
@@ -89,7 +91,7 @@
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .on-btn {
@@ -104,10 +106,12 @@
 
 .on-btn:hover {
   background-color: #00cc00;
+  transform: scale(1.03);
 }
 
 .off-btn:hover {
   background-color: #cc0000;
+  transform: scale(1.03);
 }
 
 .toggle-buttons .on-btn.active {
@@ -122,6 +126,7 @@
   box-shadow: 0 0 10px 2px rgba(204, 0, 0, 0.6);
 }
 
+/* Status Badge */
 .status-badge {
   padding: 6px 14px;
   border-radius: 20px;
@@ -153,7 +158,56 @@
   color: #fff;
 }
 
-/* Notifikasi Popup */
+/* Tiny Boxes & Countdown */
+.tiny-box-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 2rem auto;
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+}
+
+.tiny-box-group {
+  display: flex;
+  gap: 6px;
+}
+
+.tiny-box-group.left,
+.tiny-box-group.right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.tiny-box {
+  width: 6px;
+  height: 6px;
+  background-color: red;
+  border-radius: 2px;
+  transition: transform 0.2s ease;
+}
+
+/* Optional: Appear larger on active */
+/* .tiny-box.active {
+  transform: scale(1.6);
+} */
+
+.countdown-timer {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  box-shadow: 0 0 4px rgba(0,0,0,0.2);
+  font-weight: bold;
+  font-size: 18px;
+}
+
+/* Notification Popup */
 .notification-popup {
   position: fixed;
   bottom: 20px;
@@ -168,6 +222,7 @@
   gap: 10px;
   animation: fadeInOut 3s ease forwards;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  z-index: 999;
 }
 
 .notification-popup.error {
@@ -194,6 +249,14 @@
 
 /* Responsiveness */
 @media (max-width: 600px) {
+  .device-detail-container {
+    padding: 20px 10px;
+  }
+
+  .device-detail-card {
+    padding: 20px;
+  }
+
   .detail-item {
     flex-direction: column;
     align-items: flex-start;
@@ -217,5 +280,14 @@
   .on-btn,
   .off-btn {
     width: 100%;
+  }
+
+  .tiny-box-wrapper {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .tiny-box-group {
+    justify-content: center;
   }
 }
