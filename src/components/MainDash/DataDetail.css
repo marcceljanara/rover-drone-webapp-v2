@@ -1,0 +1,180 @@
+.data-detail {
+  padding: 1rem;
+}
+
+.interval-select {
+  margin: 1rem 0;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  font-size: 0.875rem; /* Smaller font size */
+  outline: none;
+  border: 1px solid #ccc;
+  background-color: #fff;
+}
+
+.cards-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem; /* Reduce gap */
+  margin-bottom: 2rem;
+}
+
+.sensor-table-container {
+  width: 100%;
+  overflow-x: auto; /* Makes the table scrollable horizontally if needed */
+  -webkit-overflow-scrolling: touch;
+  margin-top: 1rem;
+}
+
+.sensor-table {
+  width: 100%;
+  max-width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.sensor-table th,
+.sensor-table td {
+  padding: 0.5rem 0.75rem; /* Reduce padding */
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.sensor-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+  font-size: 0.9rem; /* Smaller font size for th */
+}
+
+.download-btn {
+  padding: 8px 16px; /* Smaller button */
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: background 0.3s ease;
+  font-size: 0.875rem; /* Smaller font size */
+}
+
+.download-btn:hover {
+  background: #218838;
+}
+
+/* Media queries for responsiveness */
+@media screen and (max-width: 1200px) {
+  .interval-select {
+    width: 100%;
+    max-width: 350px; /* Adjust size further */
+    font-size: 0.9rem;
+  }
+
+  .cards-section {
+    gap: 0.75rem;
+  }
+
+  .sensor-table {
+    font-size: 0.85rem; /* Smaller font size */
+  }
+
+  .sensor-table th,
+  .sensor-table td {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .download-btn {
+    padding: 8px 14px;
+    font-size: 0.85rem;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .data-detail {
+    padding: 1rem;
+  }
+
+  .interval-select {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .sensor-table th,
+  .sensor-table td {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .download-btn {
+    width: 100%;
+    padding: 10px 14px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .data-detail {
+    padding: 0.75rem;
+  }
+
+  .interval-select {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .cards-section {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .sensor-table {
+    font-size: 0.75rem; /* Smaller font size */
+  }
+
+  .sensor-table th,
+  .sensor-table td {
+    padding: 0.3rem 0.5rem; /* Smaller padding */
+  }
+
+  .download-btn {
+    width: 100%;
+    padding: 10px 16px;
+    font-size: 0.85rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .data-detail {
+    padding: 0.5rem;
+  }
+
+  .interval-select {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem; /* Smaller font size for smaller screens */
+  }
+
+  .cards-section {
+    flex-direction: column;
+    gap: 0.5rem; /* Reduce gap */
+  }
+
+  .sensor-table {
+    font-size: 0.7rem; /* Further reduce font size */
+  }
+
+  .sensor-table th,
+  .sensor-table td {
+    padding: 0.3rem 0.5rem;
+  }
+
+  .sensor-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    font-size: 0.7rem; /* Ukuran font header tabel lebih kecil */
+  }
+
+  .download-btn {
+    padding: 8px 14px;
+    font-size: 0.75rem;
+  }
+}

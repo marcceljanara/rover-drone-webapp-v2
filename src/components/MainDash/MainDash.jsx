@@ -1,39 +1,73 @@
-import React, { useState } from "react";
-import Cards from "../Cards/Cards";
-import Table from "../Table/Table";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./MainDash.css";
 
 const MainDash = () => {
-  const [selectedRange, setSelectedRange] = useState("1h");
+  const [devices, setDevices] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchDevices = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        const response = await fetch("https://dev-api.xsmartagrichain.com/v1/devices", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const result = await response.json();
+        setDevices(result.data.devices || []);
+      } catch (error) {
+        console.error("Error fetching devices:", error);
+      }
+    };
+
+    fetchDevices();
+  }, []);
+
+  const filteredDevices = devices.filter((device) =>
+    device.id.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "active":
+        return "#34D399"; // hijau terang
+      case "inactive":
+        return "#F87171"; // merah terang
+      default:
+        return "#D1D5DB"; // abu-abu (gray-300)
+    }
+  };
+  
 
   return (
-    <div>
-      <h1 className="dashboard-title">Dashboard</h1>
+<div className="MainDash">
+  <h1 className="dashboard-title">Dashboard</h1>
 
-      {/* Dropdown menu */}
-      <div className="dropdown-container">
-        <select
-          className="custom-dropdown"
-          value={selectedRange}
-          onChange={(e) => setSelectedRange(e.target.value)}
-        >
-          <option value="15m">15m</option>
-          <option value="1h">1h</option>
-          <option value="6h">6h</option>
-          <option value="12h">12h</option>
-          <option value="24h">24h</option>
-          <option value="7d">7d</option>
-          <option value="30d">30d</option>
-          <option value="60d">60d</option>
-          <option value="90d">90d</option>
-        </select>
-      </div>
+  <input
+    type="text"
+    placeholder="Cari ID device..."
+    className="search-input"
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+  />
 
-      <div className="MainDash">
-        <Cards selectedRange={selectedRange} />
-        <Table />
+  <div className="cards-container">
+    {filteredDevices.map((device) => (
+      <div
+        key={device.id}
+        className="device-card"
+        onClick={() => navigate(`/dashboard/${device.id}`)}
+        style={{ backgroundColor: getStatusColor(device.status) }}
+      >
+        <h3>{device.id}</h3>
+        <p>Status: {device.status}</p>
       </div>
-    </div>
+    ))}
+  </div>
+</div>
   );
 };
 

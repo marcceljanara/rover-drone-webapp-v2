@@ -19,6 +19,7 @@ import DeviceDetail from './components/Activation/DeviceDetail'; // ✅ Tambahan
 import Addresses from './components/Addresses';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import DataDetail from './components/MainDash/DataDetail';
 
 function App() {
   return (
@@ -33,11 +34,19 @@ function App() {
             </div>
             } />
 
+          {/* Rute lainnya dengan tata letak penuh */}
           <Route path="/dashboard" element={
             <div className="AppGlass">
               <Sidebar />
               <MainDash />
-              <RightSide /> {/* ✅ RightSide ditambahkan ke dashboard */}
+              {/* <RightSide /> */}
+            </div>
+          } />
+          <Route path="/dashboard/:id" element={
+            <div className="AppGlass">
+              <Sidebar />
+              <DataDetail />
+              <RightSide />
             </div>
           } />
 
