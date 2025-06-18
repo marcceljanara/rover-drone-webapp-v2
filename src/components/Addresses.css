@@ -29,7 +29,7 @@
 
 /* ======= Tombol Alamat Baru ======= */
 .add-address-btn {
-  padding: 8px 14px;
+  padding: 3px 9px;
   background-color: #00796b;
   color: white;
   border: none;
@@ -37,9 +37,11 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 1px;
   font-size: 14px;
   transition: background-color 0.3s ease;
+    margin-left: 40px; /* ubah nilai sesuai kebutuhan */
+
 }
 .add-address-btn:hover {
   background-color: #004d40;
