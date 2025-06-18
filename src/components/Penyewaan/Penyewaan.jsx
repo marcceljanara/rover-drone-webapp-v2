@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Penyewaan.css';
 import roverImage from '../../imgs/rover2.png';
 import lokasiIcon from '../../imgs/Icon-Lokasi.png';
 
-function calculateRentalCost(interval) {
-  const dailyRate = 100000;
-  const rentalDays = interval * 30;
-  const discountRates = { 6: 0.05, 12: 0.10, 24: 0.15, 36: 0.20 };
+const DISCOUNT_RATES = { 6: 0.05, 12: 0.1, 24: 0.15, 36: 0.2 };
+const DAILY_RATE = 100000;
 
-  const baseCost = rentalDays * dailyRate;
-  const discountRate = discountRates[interval] || 0;
+const calculateRentalCost = (interval, sensorTotal = 0) => {
+  const rentalDays = interval * 30;
+  const baseCost = DAILY_RATE * rentalDays;
+  const discountRate = DISCOUNT_RATES[interval] || 0;
   const discount = baseCost * discountRate;
-  const finalCost = baseCost - discount;
+  const finalCost = baseCost - discount + sensorTotal;
 
   return {
     rentalDays,
@@ -21,7 +21,7 @@ function calculateRentalCost(interval) {
     finalCost,
     discountPercentage: discountRate * 100,
   };
-}
+};
 
 const Penyewaan = () => {
   const [duration, setDuration] = useState(null);
@@ -32,10 +32,27 @@ const Penyewaan = () => {
   const [availableSensors, setAvailableSensors] = useState([]);
   const [checkboxes, setCheckboxes] = useState({});
   const [showLokasiForm, setShowLokasiForm] = useState(false);
-  const [sensorTotal, setSensorTotal] = useState(0);
+  const [ongkir, setOngkir] = useState(0);
+
+  const [lokasiForm, setLokasiForm] = useState({
+    namaPenerima: '', noHp: '', alamatLengkap: '',
+    provinsi: '', kabupatenKota: '', kecamatan: '', kelurahan: '', kodePos: ''
+  });
+
+  const [provinces, setProvinces] = useState([]);
+  const [kabupaten, setKabupaten] = useState([]);
+  const [kecamatan, setKecamatan] = useState([]);
+  const [kelurahan, setKelurahan] = useState([]);
+  const [provId, setProvId] = useState('');
+  const [kabId, setKabId] = useState('');
+  const [kecId, setKecId] = useState('');
 
   const navigate = useNavigate();
   const token = localStorage.getItem('accessToken');
+
+  const sensorTotal = useMemo(() => availableSensors.reduce((total, sensor) => (
+    checkboxes[sensor.id] ? total + sensor.cost : total
+  ), 0), [checkboxes, availableSensors]);
 
   useEffect(() => {
     if (showNotification) {
@@ -45,139 +62,97 @@ const Penyewaan = () => {
   }, [showNotification]);
 
   useEffect(() => {
-    const fetchAvailableDevices = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch('https://dev-api.xsmartagrichain.com/v1/devices?scope=available', {
+        const deviceRes = await fetch('https://dev-api.xsmartagrichain.com/v1/devices?scope=available', {
           headers: { Authorization: `Bearer ${token}` },
         });
-        const data = await response.json();
-        setDeviceStatus({ loading: false, value: data.data.devices.length, error: null });
+        const deviceData = await deviceRes.json();
+        setDeviceStatus({ loading: false, value: deviceData.data.devices.length, error: null });
       } catch {
         setDeviceStatus({ loading: false, value: null, error: 'Gagal memuat perangkat' });
       }
-    };
 
-    const fetchSensors = async () => {
       try {
-        const res = await fetch('https://dev-api.xsmartagrichain.com/v1/sensors/available', {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
+        const sensorRes = await fetch('https://dev-api.xsmartagrichain.com/v1/sensors/available', {
+          headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
         });
-        const data = await res.json();
-        const sensors = data?.data?.sensors || [];
-
+        const sensorData = await sensorRes.json();
+        const sensors = sensorData?.data?.sensors || [];
         setAvailableSensors(sensors);
-        const initialCheckboxes = {};
-        sensors.forEach(sensor => {
-          initialCheckboxes[sensor.id] = false;
-        });
-        setCheckboxes(initialCheckboxes);
+        const initial = Object.fromEntries(sensors.map(sensor => [sensor.id, false]));
+        setCheckboxes(initial);
       } catch (err) {
         console.error('Gagal memuat sensor:', err);
       }
     };
-
-    fetchAvailableDevices();
-    fetchSensors();
+    fetchData();
   }, [token]);
 
-  const calculateSelectedSensorCost = () => {
-    const selectedSensorCost = availableSensors
-      .filter(sensor => checkboxes[sensor.id])
-      .reduce((total, sensor) => total + sensor.cost, 0);
-    return selectedSensorCost;
-  };
+  useEffect(() => {
+    fetch("https://ibnux.github.io/data-indonesia/provinsi.json")
+      .then((res) => res.json())
+      .then(setProvinces)
+      .catch(() => alert("Gagal memuat provinsi"));
+  }, []);
 
-  const handleCheckboxChange = (key) => {
-    const updatedCheckboxes = { ...checkboxes, [key]: !checkboxes[key] };
-    setCheckboxes(updatedCheckboxes);
+  useEffect(() => {
+    if (!provId) return;
+    fetch(`https://ibnux.github.io/data-indonesia/kabupaten/${provId}.json`)
+      .then((r) => r.json())
+      .then(setKabupaten)
+      .catch(() => alert("Gagal memuat kabupaten/kota"));
+    setKabId(''); setKecId(''); setKecamatan([]); setKelurahan([]);
+    setLokasiForm((f) => ({ ...f, kabupatenKota: '', kecamatan: '', kelurahan: '' }));
+  }, [provId]);
 
-    // Rehitung total sensor setiap kali ceklist berubah
-    const newSensorTotal = availableSensors
-      .filter(sensor => updatedCheckboxes[sensor.id])
-      .reduce((total, sensor) => total + sensor.cost, 0);
-    setSensorTotal(newSensorTotal);
-  };
+  useEffect(() => {
+    if (!kabId) return;
+    fetch(`https://ibnux.github.io/data-indonesia/kecamatan/${kabId}.json`)
+      .then((r) => r.json())
+      .then(setKecamatan)
+      .catch(() => alert("Gagal memuat kecamatan"));
+    setKecId(''); setKelurahan([]);
+    setLokasiForm((f) => ({ ...f, kecamatan: '', kelurahan: '' }));
+  }, [kabId]);
 
-  const handlePilih = (dur) => {
-    setDuration(dur);
+  useEffect(() => {
+    if (!kecId) return;
+    fetch(`https://ibnux.github.io/data-indonesia/kelurahan/${kecId}.json`)
+      .then((r) => r.json())
+      .then(setKelurahan)
+      .catch(() => alert("Gagal memuat kelurahan"));
+    setLokasiForm((f) => ({ ...f, kelurahan: '' }));
+  }, [kecId]);
 
-    // Saat tombol pilih diklik, hitung total sensor yang aktif
-    const total = calculateSelectedSensorCost();
-    setSensorTotal(total);
-  };
+  const handleCheckboxChange = (id) => setCheckboxes(prev => ({ ...prev, [id]: !prev[id] }));
+  const handlePilih = (dur) => setDuration(dur);
+  const handleIconClick = () => setShowLokasiForm(prev => !prev);
+  const handleCekOngkir = () => setOngkir(30000 + Object.values(checkboxes).filter(Boolean).length * 5000);
+  const handleLokasiChange = (e) => setLokasiForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
 
   const handleSewa = async () => {
     if (![6, 12, 24, 36].includes(duration)) {
-      setNotification('Durasi sewa tidak valid.');
-      setShowNotification(true);
-      return;
+      setNotification('Durasi sewa tidak valid.'); setShowNotification(true); return;
     }
-
     if (!token) {
-      setNotification('Token tidak tersedia. Silakan login terlebih dahulu.');
-      setShowNotification(true);
-      return;
+      setNotification('Token tidak tersedia. Silakan login terlebih dahulu.'); setShowNotification(true); return;
     }
-
     setLoading(true);
-
     try {
       const response = await fetch('https://dev-api.xsmartagrichain.com/v1/rentals', {
         method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ interval: duration }),
       });
-
-      const data = await response.json().catch(() => ({}));
-      const message = data?.message || (response.ok ? 'Berhasil menyewa perangkat!' : 'Gagal menyewa.');
-      setNotification(message);
-
-      if (response.ok) {
-        setTimeout(() => navigate('/riwayat-sewa'), 2000);
-      }
+      const data = await response.json();
+      setNotification(data?.message || (response.ok ? 'Berhasil menyewa perangkat!' : 'Gagal menyewa.'));
+      if (response.ok) setTimeout(() => navigate('/riwayat-sewa'), 2000);
     } catch (error) {
       setNotification(error.message || 'Terjadi kesalahan saat menyewa.');
     } finally {
-      setLoading(false);
-      setShowNotification(true);
+      setLoading(false); setShowNotification(true);
     }
-  };
-
-  const handleIconClick = () => {
-    setShowLokasiForm(!showLokasiForm);
-  };
-
-  const renderTableRows = () => {
-    return [6, 12, 24, 36].map((dur) => {
-      const { finalCost, rentalDays, discount, discountPercentage } = calculateRentalCost(dur);
-      const daily = (finalCost / rentalDays).toFixed(2);
-      const totalWithSensor = finalCost + sensorTotal;
-
-      return (
-        <tr key={dur}>
-          <td>{dur} Bulan</td>
-          <td>Rp{totalWithSensor.toLocaleString('id-ID')}</td>
-          <td>Rp{Number(daily).toLocaleString('id-ID')}</td>
-          <td>{discountPercentage}%</td>
-          <td>Rp{discount.toLocaleString('id-ID')}</td>
-          <td>
-            <button
-              className={`sewa-button ${duration === dur ? 'selected' : ''}`}
-              onClick={() => handlePilih(dur)}
-            >
-              Pilih
-            </button>
-          </td>
-        </tr>
-      );
-    });
   };
 
   return (
@@ -197,18 +172,14 @@ const Penyewaan = () => {
       <div className="device-status">
         <span className="device-label">📦 Jumlah Perangkat Tersedia:</span>
         <span className="device-value">
-          {deviceStatus.loading
-            ? 'Memuat...'
-            : deviceStatus.error
-              ? deviceStatus.error
-              : deviceStatus.value}
+          {deviceStatus.loading ? 'Memuat...' : deviceStatus.error || deviceStatus.value}
         </span>
       </div>
 
       <div className="lokasi-checkbox-row">
         <div className="checkbox-container">
           {availableSensors.length === 0 ? (
-            <p style={{ fontStyle: 'italic' }}>Memuat sensor...</p>
+            <p><i>Memuat sensor...</i></p>
           ) : (
             availableSensors.map(sensor => (
               <label key={sensor.id}>
@@ -224,7 +195,7 @@ const Penyewaan = () => {
         </div>
         <img
           src={lokasiIcon}
-          alt="Ikon Lokasi"
+          alt="Lokasi"
           className={`lokasi-icon ${showLokasiForm ? 'active' : ''}`}
           onClick={handleIconClick}
         />
@@ -232,22 +203,74 @@ const Penyewaan = () => {
 
       {showLokasiForm && (
         <div className="lokasi-box-container">
+          {["namaPenerima", "noHp", "alamatLengkap"].map((field) => (
+            <div className="lokasi-section" key={field}>
+              <label htmlFor={field}>{field}</label>
+              <input
+                type="text"
+                id={field}
+                name={field}
+                value={lokasiForm[field]}
+                onChange={handleLokasiChange}
+                placeholder={`Masukkan ${field}`}
+              />
+            </div>
+          ))}
+
           <div className="lokasi-section">
-            <label htmlFor="provinsi">Provinsi</label>
-            <input type="text" id="provinsi" placeholder="Masukkan provinsi" />
+            <label>Provinsi</label>
+            <select value={provId} onChange={(e) => {
+              const id = e.target.value;
+              setProvId(id);
+              const p = provinces.find((v) => v.id === id);
+              setLokasiForm(f => ({ ...f, provinsi: p ? p.nama : '' }));
+            }}>
+              <option value="">-- Pilih Provinsi --</option>
+              {provinces.map((p) => <option key={p.id} value={p.id}>{p.nama}</option>)}
+            </select>
           </div>
+
           <div className="lokasi-section">
-            <label htmlFor="kota">Kota</label>
-            <input type="text" id="kota" placeholder="Masukkan kota" />
+            <label>Kabupaten/Kota</label>
+            <select value={kabId} onChange={(e) => {
+              const id = e.target.value;
+              setKabId(id);
+              const k = kabupaten.find((v) => v.id === id);
+              setLokasiForm(f => ({ ...f, kabupatenKota: k ? k.nama : '' }));
+            }} disabled={!kabupaten.length}>
+              <option value="">-- Pilih Kabupaten/Kota --</option>
+              {kabupaten.map((k) => <option key={k.id} value={k.id}>{k.nama}</option>)}
+            </select>
           </div>
+
           <div className="lokasi-section">
-            <label htmlFor="kecamatan">Kecamatan</label>
-            <input type="text" id="kecamatan" placeholder="Masukkan kecamatan" />
+            <label>Kecamatan</label>
+            <select value={kecId} onChange={(e) => {
+              const id = e.target.value;
+              setKecId(id);
+              const kc = kecamatan.find((v) => v.id === id);
+              setLokasiForm(f => ({ ...f, kecamatan: kc ? kc.nama : '' }));
+            }} disabled={!kecamatan.length}>
+              <option value="">-- Pilih Kecamatan --</option>
+              {kecamatan.map((kc) => <option key={kc.id} value={kc.id}>{kc.nama}</option>)}
+            </select>
           </div>
+
           <div className="lokasi-section">
-            <label htmlFor="kelurahan">Kelurahan</label>
-            <input type="text" id="kelurahan" placeholder="Masukkan kelurahan" />
+            <label>Kelurahan</label>
+            <select value={lokasiForm.kelurahan} onChange={(e) => setLokasiForm(f => ({ ...f, kelurahan: e.target.value }))} disabled={!kelurahan.length}>
+              <option value="">-- Pilih Kelurahan --</option>
+              {kelurahan.map((kel) => <option key={kel.id} value={kel.nama}>{kel.nama}</option>)}
+            </select>
           </div>
+
+          <div className="lokasi-section">
+            <label>Kode Pos</label>
+            <input type="text" name="kodePos" value={lokasiForm.kodePos} onChange={handleLokasiChange} placeholder="Masukkan kode pos" />
+          </div>
+
+          <button className="cek-ongkir-button" onClick={handleCekOngkir}>Cek Ongkir</button>
+          <div className="ongkir-info">Estimasi Ongkir: <strong>Rp{ongkir.toLocaleString('id-ID')}</strong></div>
         </div>
       )}
 
@@ -256,23 +279,36 @@ const Penyewaan = () => {
           <table className="rental-table">
             <thead>
               <tr>
-                <th>Durasi</th>
-                <th>Harga Total</th>
-                <th>Harga/Hari</th>
-                <th>Diskon (%)</th>
-                <th>Diskon (Rp)</th>
-                <th>Aksi</th>
+                <th>Durasi</th><th>Harga Total</th><th>Harga/Hari</th><th>Diskon (%)</th><th>Diskon (Rp)</th><th>Aksi</th>
               </tr>
             </thead>
-            <tbody>{renderTableRows()}</tbody>
+            <tbody>
+              {[6, 12, 24, 36].map((dur) => {
+                const { finalCost, rentalDays, discount, discountPercentage } = calculateRentalCost(dur, sensorTotal);
+                const daily = (finalCost / rentalDays).toFixed(2);
+                return (
+                  <tr key={dur}>
+                    <td>{dur} Bulan</td>
+                    <td>Rp{finalCost.toLocaleString('id-ID')}</td>
+                    <td>Rp{Number(daily).toLocaleString('id-ID')}</td>
+                    <td>{discountPercentage}%</td>
+                    <td>Rp{discount.toLocaleString('id-ID')}</td>
+                    <td>
+                      <button className={`sewa-button ${duration === dur ? 'selected' : ''}`} onClick={() => handlePilih(dur)}>Pilih</button>
+                    </td>
+                  </tr>
+                );
+              })}
+              {duration && (
+                <tr className="total-row">
+                  <td colSpan="5"><strong>Total Keseluruhan</strong></td>
+                  <td><strong>Rp{(calculateRentalCost(duration, sensorTotal).finalCost + ongkir).toLocaleString('id-ID')}</strong></td>
+                </tr>
+              )}
+            </tbody>
           </table>
         </div>
-
-        <button
-          className={`sewa-button ${!duration || loading ? 'disabled' : ''}`}
-          disabled={!duration || loading}
-          onClick={handleSewa}
-        >
+        <button className={`sewa-button ${!duration || loading ? 'disabled' : ''}`} disabled={!duration || loading} onClick={handleSewa}>
           {loading ? <span className="spinner" /> : 'Sewa'}
         </button>
       </div>

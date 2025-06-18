@@ -209,8 +209,8 @@ p, li {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   animation: fadeIn 0.3s ease-in-out;
   position: absolute;
-  top: 910px; /* posisi awal bisa diganti */
-  left: 600px;
+  top: 510px; /* posisi awal bisa diganti */
+  left: 800px;
   z-index: 10;
   cursor: grab;
 }
@@ -348,4 +348,37 @@ p, li {
   .lokasi-section label {
     font-size: 14px;
   }
+}
+
+
+
+
+
+
+
+
+.cek-ongkir-button {
+  margin-top: 12px;
+  padding: 8px 16px;
+  background-color: #0288d1;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cek-ongkir-button:hover {
+  background-color: #0277bd;
+}
+
+.ongkir-info {
+  margin-top: 8px;
+  background-color: #f5f5f5;
+  padding: 10px 16px;
+  border-left: 4px solid #0288d1;
+  font-size: 14px;
+  color: #333;
+  border-radius: 4px;
 }
