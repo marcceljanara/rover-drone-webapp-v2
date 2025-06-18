@@ -15,11 +15,12 @@ import Reports from './components/Reports/Reports';
 import ReportDetail from './components/Reports/ReportDetail';
 import Admin from './components/Admin/Admin';
 import AdminDetail from './components/Admin/AdminDetail';
-import DeviceDetail from './components/Activation/DeviceDetail'; // ✅ Tambahan terbaru
+import DeviceDetail from './components/Activation/DeviceDetail';
 import Addresses from './components/Addresses';
+import DataDetail from './components/MainDash/DataDetail';
+import Pengiriman from './components/Pengiriman/Pengiriman'; // ✅ Tambahan untuk halaman Pengiriman
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import DataDetail from './components/MainDash/DataDetail';
 
 function App() {
   return (
@@ -32,14 +33,12 @@ function App() {
               <Sidebar />
               <Addresses />
             </div>
-            } />
+          } />
 
-          {/* Rute lainnya dengan tata letak penuh */}
           <Route path="/dashboard" element={
             <div className="AppGlass">
               <Sidebar />
               <MainDash />
-              {/* <RightSide /> */}
             </div>
           } />
           <Route path="/dashboard/:id" element={
@@ -73,7 +72,6 @@ function App() {
               <RightSide />
             </div>
           } />
-
           <Route path="/penyewaan/lanjutan" element={
             <div className="AppGlass">
               <Sidebar />
@@ -81,7 +79,6 @@ function App() {
               <RightSide />
             </div>
           } />
-
           <Route path="/penyewaan/:id" element={
             <div className="AppGlass">
               <Sidebar />
@@ -97,7 +94,6 @@ function App() {
               <RightSide />
             </div>
           } />
-
           <Route path="/devices/:id" element={
             <div className="AppGlass">
               <Sidebar />
@@ -113,7 +109,6 @@ function App() {
               <RightSide />
             </div>
           } />
-
           <Route path="/payments/:id" element={
             <div className="AppGlass">
               <Sidebar />
@@ -129,7 +124,6 @@ function App() {
               <RightSide />
             </div>
           } />
-
           <Route path="/reports/:id" element={
             <div className="AppGlass">
               <Sidebar />
@@ -145,11 +139,19 @@ function App() {
               <RightSide />
             </div>
           } />
-
           <Route path="/admin/:id" element={
             <div className="AppGlass">
               <Sidebar />
               <AdminDetail />
+              <RightSide />
+            </div>
+          } />
+
+          {/* ✅ Rute baru untuk halaman Pengiriman */}
+          <Route path="/pengiriman" element={
+            <div className="AppGlass">
+              <Sidebar />
+              <Pengiriman />
               <RightSide />
             </div>
           } />

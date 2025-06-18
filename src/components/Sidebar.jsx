@@ -16,31 +16,30 @@ import {
   UilMoneyBill,
   UilFileAlt,
   UilUsersAlt,
-  UilTruck
+  UilTruck,
 } from "@iconscout/react-unicons";
 
-// Semua menu yang bisa ditampilkan
-const allMenu = [
+const menuData = [
   { heading: "Dashboard", icon: UilEstate, link: "/dashboard" },
   { heading: "Power Data", icon: UilChart, link: "/power-data" },
   { heading: "Non Fungible Token", icon: UilUsdCircle, link: "/non-fungible-token" },
   { heading: "Perangkat", icon: UilRocket, link: "/devices" },
   { heading: "Penyewaan", icon: UilCar, link: "/penyewaan" },
-  { heading: "Shipping", icon: UilTruck, link: "/shipping", role: "admin" },
-  { heading: "Pembayaran", icon: UilMoneyBill, link: "/payments", role: "admin" },
-  { heading: "Laporan Keuangan", icon: UilFileAlt, link: "/reports", role: "admin" },
-  { heading: "Manajemen Pengguna", icon: UilUsersAlt, link: "/admin", role: "admin" },
+  { heading: "Pembayaran", icon: UilMoneyBill, link: "/payments" },
+  { heading: "Laporan Keuangan", icon: UilFileAlt, link: "/reports" },
+  { heading: "Manajemen Pengguna", icon: UilUsersAlt, link: "/admin" },
+  { heading: "Pengiriman", icon: UilTruck, link: "/pengiriman" }, // MENU BARU
 ];
 
 const Sidebar = () => {
   const [expanded, setExpanded] = useState(window.innerWidth > 768);
   const role = localStorage.getItem("role") || "guest";
 
-  // Filter menu berdasarkan role
-  const filteredMenu = allMenu.filter((item) => {
-    if (item.role && item.role !== role) return false;
-    return true;
-  });
+  const filteredMenu = menuData.filter((item) =>
+    role === "user"
+      ? !["/payments", "/reports", "/admin"].includes(item.link)
+      : true
+  );
 
   useEffect(() => {
     const handleResize = () => setExpanded(window.innerWidth > 768);
@@ -61,13 +60,14 @@ const Sidebar = () => {
           position: window.innerWidth <= 768 ? "fixed" : "relative",
         }}
       >
-        {/* ---------- Logo & Lokasi ---------- */}
+        {/* Logo */}
         <div className="logo">
           <img src={Logo} alt="logo" className="logo-img" />
           <div className="logo-text">
             <span className="brand-name">
               Ro<span>o</span>ne
             </span>
+
             <NavLink to="/addresses">
               <img src={IconLokasi} className="icon-lokasi" alt="lokasi" />
             </NavLink>
@@ -76,7 +76,7 @@ const Sidebar = () => {
 
         <div className="role-badge">Role: {role}</div>
 
-        {/* ---------- Menu Navigasi ---------- */}
+        {/* Menu */}
         <div className="menu">
           {filteredMenu.map(({ heading, icon: Icon, link }) => (
             <NavLink
