@@ -4,13 +4,15 @@
   position: relative;
   padding-top: 3rem;
   transition: all 300ms ease;
+  background-color: transparent;
 }
 
-/* Hamburger icon */
+/* Hamburger icon (menu bar toggle) */
 .bars {
   display: none;
 }
 
+/* Logo section */
 .logo {
   display: flex;
   align-items: center;
@@ -51,7 +53,7 @@
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Lokasi box */
+/* Lokasi dropdown */
 .lokasi-box-container {
   position: absolute;
   top: 120%;
@@ -146,6 +148,7 @@
   margin-right: calc(1rem - 8px);
 }
 
+/* Sign Out section */
 .signout-section {
   margin-top: 2rem;
   padding-top: 1rem;
@@ -162,6 +165,7 @@
   color: var(--fontColor);
 }
 
+/* Role badge styling */
 .role-badge {
   margin: 1rem auto;
   padding: 0.5rem 1rem;
@@ -176,7 +180,7 @@
   max-width: 80%;
 }
 
-/* Responsive 1200px */
+/* Responsive for tablets */
 @media screen and (max-width: 1200px) {
   .menuItem > span {
     display: none;
@@ -192,7 +196,7 @@
   }
 }
 
-/* Mobile 768px */
+/* Responsive for mobile */
 @media screen and (max-width: 768px) {
   .sidebar {
     position: fixed;
