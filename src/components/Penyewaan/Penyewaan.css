@@ -202,17 +202,17 @@ p, li {
 
 /* ========== LOCATION BOX (FORM LOKASI) ========== */
 .lokasi-box-container {
-  background: #ffffff;
+  background: #fff;
   border: 1px solid #ddd;
   padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
   animation: fadeIn 0.3s ease-in-out;
   position: absolute;
-  top: 510px; /* posisi awal bisa diganti */
-  left: 800px;
+  top: 520px;
+  right: 20px;
+  width: 300px;
   z-index: 10;
-  cursor: grab;
 }
 
 /* Tambahan area untuk tempat klik dan geser */
@@ -232,17 +232,38 @@ p, li {
 
 .lokasi-section label {
   display: block;
-  font-weight: bold;
-  margin-bottom: 5px;
+  font-weight: 600;
+  margin-bottom: 8px;
   color: #00796b;
+  font-size: 15px;
 }
 
-.lokasi-section input {
+.lokasi-section select {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #aaa;
-  border-radius: 6px;
+  padding: 10px 12px;
   font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fdfdfd;
+  color: #333;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.lokasi-section select:focus {
+  outline: none;
+  border-color: #00796b;
+  box-shadow: 0 0 0 2px rgba(0, 121, 107, 0.2);
+}
+
+.ongkir-info {
+  margin-top: 16px;
+  padding: 12px;
+  background-color: #e0f7fa;
+  border-left: 5px solid #00796b;
+  color: #004d40;
+  font-weight: 500;
+  font-size: 14px;
+  border-radius: 6px;
 }
 
 
@@ -350,35 +371,3 @@ p, li {
   }
 }
 
-
-
-
-
-
-
-
-.cek-ongkir-button {
-  margin-top: 12px;
-  padding: 8px 16px;
-  background-color: #0288d1;
-  color: white;
-  font-weight: bold;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.cek-ongkir-button:hover {
-  background-color: #0277bd;
-}
-
-.ongkir-info {
-  margin-top: 8px;
-  background-color: #f5f5f5;
-  padding: 10px 16px;
-  border-left: 4px solid #0288d1;
-  font-size: 14px;
-  color: #333;
-  border-radius: 4px;
-}

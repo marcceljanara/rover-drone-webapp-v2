@@ -32,20 +32,12 @@ const Penyewaan = () => {
   const [availableSensors, setAvailableSensors] = useState([]);
   const [checkboxes, setCheckboxes] = useState({});
   const [showLokasiForm, setShowLokasiForm] = useState(false);
+  const [userAddresses, setUserAddresses] = useState([]);
+  const [selectedAddressId, setSelectedAddressId] = useState('');
+  const [selectedSubdistrict, setSelectedSubdistrict] = useState('');
   const [ongkir, setOngkir] = useState(0);
+  const [setupFee, setSetupFee] = useState(1000000); // contoh tetap 1jt
 
-  const [lokasiForm, setLokasiForm] = useState({
-    namaPenerima: '', noHp: '', alamatLengkap: '',
-    provinsi: '', kabupatenKota: '', kecamatan: '', kelurahan: '', kodePos: ''
-  });
-
-  const [provinces, setProvinces] = useState([]);
-  const [kabupaten, setKabupaten] = useState([]);
-  const [kecamatan, setKecamatan] = useState([]);
-  const [kelurahan, setKelurahan] = useState([]);
-  const [provId, setProvId] = useState('');
-  const [kabId, setKabId] = useState('');
-  const [kecId, setKecId] = useState('');
 
   const navigate = useNavigate();
   const token = localStorage.getItem('accessToken');
@@ -90,70 +82,111 @@ const Penyewaan = () => {
   }, [token]);
 
   useEffect(() => {
-    fetch("https://ibnux.github.io/data-indonesia/provinsi.json")
-      .then((res) => res.json())
-      .then(setProvinces)
-      .catch(() => alert("Gagal memuat provinsi"));
-  }, []);
+  const fetchAddresses = async () => {
+    try {
+      const res = await fetch("https://dev-api.xsmartagrichain.com/v1/users/addresses", {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const data = await res.json();
+      if (res.ok) setUserAddresses(data?.data?.addresses || []);
+      else throw new Error(data.message || "Gagal memuat alamat");
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+  fetchAddresses();
+}, [token]);
 
-  useEffect(() => {
-    if (!provId) return;
-    fetch(`https://ibnux.github.io/data-indonesia/kabupaten/${provId}.json`)
-      .then((r) => r.json())
-      .then(setKabupaten)
-      .catch(() => alert("Gagal memuat kabupaten/kota"));
-    setKabId(''); setKecId(''); setKecamatan([]); setKelurahan([]);
-    setLokasiForm((f) => ({ ...f, kabupatenKota: '', kecamatan: '', kelurahan: '' }));
-  }, [provId]);
-
-  useEffect(() => {
-    if (!kabId) return;
-    fetch(`https://ibnux.github.io/data-indonesia/kecamatan/${kabId}.json`)
-      .then((r) => r.json())
-      .then(setKecamatan)
-      .catch(() => alert("Gagal memuat kecamatan"));
-    setKecId(''); setKelurahan([]);
-    setLokasiForm((f) => ({ ...f, kecamatan: '', kelurahan: '' }));
-  }, [kabId]);
-
-  useEffect(() => {
-    if (!kecId) return;
-    fetch(`https://ibnux.github.io/data-indonesia/kelurahan/${kecId}.json`)
-      .then((r) => r.json())
-      .then(setKelurahan)
-      .catch(() => alert("Gagal memuat kelurahan"));
-    setLokasiForm((f) => ({ ...f, kelurahan: '' }));
-  }, [kecId]);
 
   const handleCheckboxChange = (id) => setCheckboxes(prev => ({ ...prev, [id]: !prev[id] }));
   const handlePilih = (dur) => setDuration(dur);
   const handleIconClick = () => setShowLokasiForm(prev => !prev);
-  const handleCekOngkir = () => setOngkir(30000 + Object.values(checkboxes).filter(Boolean).length * 5000);
-  const handleLokasiChange = (e) => setLokasiForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
 
-  const handleSewa = async () => {
-    if (![6, 12, 24, 36].includes(duration)) {
-      setNotification('Durasi sewa tidak valid.'); setShowNotification(true); return;
-    }
-    if (!token) {
-      setNotification('Token tidak tersedia. Silakan login terlebih dahulu.'); setShowNotification(true); return;
-    }
-    setLoading(true);
-    try {
-      const response = await fetch('https://dev-api.xsmartagrichain.com/v1/rentals', {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ interval: duration }),
-      });
-      const data = await response.json();
-      setNotification(data?.message || (response.ok ? 'Berhasil menyewa perangkat!' : 'Gagal menyewa.'));
-      if (response.ok) setTimeout(() => navigate('/riwayat-sewa'), 2000);
-    } catch (error) {
-      setNotification(error.message || 'Terjadi kesalahan saat menyewa.');
-    } finally {
-      setLoading(false); setShowNotification(true);
-    }
-  };
+const handleSewa = async () => {
+  if (![6, 12, 24, 36].includes(duration)) {
+    setNotification('Durasi sewa tidak valid.');
+    setShowNotification(true);
+    return;
+  }
+
+  if (!token) {
+    setNotification('Token tidak tersedia. Silakan login terlebih dahulu.');
+    setShowNotification(true);
+    return;
+  }
+
+  if (!selectedAddressId || !selectedSubdistrict) {
+    setNotification('Silakan pilih alamat pengiriman terlebih dahulu.');
+    setShowNotification(true);
+    return;
+  }
+
+  const selectedSensors = Object.entries(checkboxes)
+    .filter(([_, checked]) => checked)
+    .map(([id]) => id);
+
+  setLoading(true);
+  try {
+    const response = await fetch('https://dev-api.xsmartagrichain.com/v1/rentals', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        interval: duration,
+        shippingAddressId: selectedAddressId,
+        subdistrictName: selectedSubdistrict,
+        sensors: selectedSensors,
+      }),
+    });
+
+    const data = await response.json();
+    setNotification(data?.message || (response.ok ? 'Berhasil menyewa perangkat!' : 'Gagal menyewa.'));
+    if (response.ok) setTimeout(() => navigate('/riwayat-sewa'), 2000);
+  } catch (error) {
+    setNotification(error.message || 'Terjadi kesalahan saat menyewa.');
+  } finally {
+    setLoading(false);
+    setShowNotification(true);
+  }
+};
+
+
+  const handleAddressSelect = async (e) => {
+  const id = e.target.value;
+  setSelectedAddressId(id);
+
+  const address = userAddresses.find(a => a.id === id);
+  if (!address || !address.kelurahan) return;
+
+  setSelectedSubdistrict(address.kelurahan);
+
+  // 👉 URL‑encode kelurahan
+  const url =
+    "https://dev-api.xsmartagrichain.com/v1/shipping-cost" +
+    "?subdistrictName=" +
+    encodeURIComponent(address.kelurahan);
+
+  try {
+    const res = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || "Gagal mengambil ongkir");
+
+    const shippingCost = data.data.shippingInfo.shippingCost;
+    setOngkir(shippingCost);
+  } catch (err) {
+    alert(err.message);
+    setOngkir(0);
+  }
+};
+
 
   return (
     <div className="penyewaan-container">
@@ -175,6 +208,28 @@ const Penyewaan = () => {
           {deviceStatus.loading ? 'Memuat...' : deviceStatus.error || deviceStatus.value}
         </span>
       </div>
+
+      {showLokasiForm && (
+        <div className="lokasi-box-container">
+          <div className="lokasi-section">
+            <label>Pilih Alamat</label>
+            <select value={selectedAddressId} onChange={handleAddressSelect}>
+              <option value="">-- Pilih Alamat --</option>
+              {userAddresses.map((addr) => (
+                <option key={addr.id} value={addr.id}>
+                  {addr.alamat_lengkap}, {addr.kelurahan}, {addr.kecamatan}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {ongkir > 0 && (
+            <div className="ongkir-info">
+              Estimasi Ongkir: <strong>Rp{ongkir.toLocaleString('id-ID')}</strong>
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="lokasi-checkbox-row">
         <div className="checkbox-container">
@@ -201,78 +256,8 @@ const Penyewaan = () => {
         />
       </div>
 
-      {showLokasiForm && (
-        <div className="lokasi-box-container">
-          {["namaPenerima", "noHp", "alamatLengkap"].map((field) => (
-            <div className="lokasi-section" key={field}>
-              <label htmlFor={field}>{field}</label>
-              <input
-                type="text"
-                id={field}
-                name={field}
-                value={lokasiForm[field]}
-                onChange={handleLokasiChange}
-                placeholder={`Masukkan ${field}`}
-              />
-            </div>
-          ))}
 
-          <div className="lokasi-section">
-            <label>Provinsi</label>
-            <select value={provId} onChange={(e) => {
-              const id = e.target.value;
-              setProvId(id);
-              const p = provinces.find((v) => v.id === id);
-              setLokasiForm(f => ({ ...f, provinsi: p ? p.nama : '' }));
-            }}>
-              <option value="">-- Pilih Provinsi --</option>
-              {provinces.map((p) => <option key={p.id} value={p.id}>{p.nama}</option>)}
-            </select>
-          </div>
 
-          <div className="lokasi-section">
-            <label>Kabupaten/Kota</label>
-            <select value={kabId} onChange={(e) => {
-              const id = e.target.value;
-              setKabId(id);
-              const k = kabupaten.find((v) => v.id === id);
-              setLokasiForm(f => ({ ...f, kabupatenKota: k ? k.nama : '' }));
-            }} disabled={!kabupaten.length}>
-              <option value="">-- Pilih Kabupaten/Kota --</option>
-              {kabupaten.map((k) => <option key={k.id} value={k.id}>{k.nama}</option>)}
-            </select>
-          </div>
-
-          <div className="lokasi-section">
-            <label>Kecamatan</label>
-            <select value={kecId} onChange={(e) => {
-              const id = e.target.value;
-              setKecId(id);
-              const kc = kecamatan.find((v) => v.id === id);
-              setLokasiForm(f => ({ ...f, kecamatan: kc ? kc.nama : '' }));
-            }} disabled={!kecamatan.length}>
-              <option value="">-- Pilih Kecamatan --</option>
-              {kecamatan.map((kc) => <option key={kc.id} value={kc.id}>{kc.nama}</option>)}
-            </select>
-          </div>
-
-          <div className="lokasi-section">
-            <label>Kelurahan</label>
-            <select value={lokasiForm.kelurahan} onChange={(e) => setLokasiForm(f => ({ ...f, kelurahan: e.target.value }))} disabled={!kelurahan.length}>
-              <option value="">-- Pilih Kelurahan --</option>
-              {kelurahan.map((kel) => <option key={kel.id} value={kel.nama}>{kel.nama}</option>)}
-            </select>
-          </div>
-
-          <div className="lokasi-section">
-            <label>Kode Pos</label>
-            <input type="text" name="kodePos" value={lokasiForm.kodePos} onChange={handleLokasiChange} placeholder="Masukkan kode pos" />
-          </div>
-
-          <button className="cek-ongkir-button" onClick={handleCekOngkir}>Cek Ongkir</button>
-          <div className="ongkir-info">Estimasi Ongkir: <strong>Rp{ongkir.toLocaleString('id-ID')}</strong></div>
-        </div>
-      )}
 
       <div className="form-container">
         <div className="table-responsive">
@@ -300,11 +285,37 @@ const Penyewaan = () => {
                 );
               })}
               {duration && (
-                <tr className="total-row">
-                  <td colSpan="5"><strong>Total Keseluruhan</strong></td>
-                  <td><strong>Rp{(calculateRentalCost(duration, sensorTotal).finalCost + ongkir).toLocaleString('id-ID')}</strong></td>
-                </tr>
+                <>
+                  <tr className="total-row">
+                    <td colSpan="5"><strong>Subtotal</strong></td>
+                    <td>
+                      <strong>
+                        Rp{calculateRentalCost(duration, sensorTotal).finalCost.toLocaleString('id-ID')}
+                      </strong>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colSpan="5">Ongkir</td>
+                    <td>Rp{ongkir.toLocaleString('id-ID')}</td>
+                  </tr>
+                  <tr>
+                    <td colSpan="5">Biaya Setup</td>
+                    <td>Rp{setupFee.toLocaleString('id-ID')}</td>
+                  </tr>
+                  <tr className="total-row">
+                    <td colSpan="5"><strong>Total Keseluruhan</strong></td>
+                    <td>
+                      <strong>
+                        Rp{(
+                          calculateRentalCost(duration, sensorTotal).finalCost +
+                          ongkir + setupFee
+                        ).toLocaleString('id-ID')}
+                      </strong>
+                    </td>
+                  </tr>
+                </>
               )}
+
             </tbody>
           </table>
         </div>
