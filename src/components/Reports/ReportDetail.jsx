@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './ReportDetail.css';
-import { formatTanggalDanWaktuIndonesia, formatTanggalIndonesia } from '../../utils/datetimeIndonesia';
+import { formatIntervalIndonesian, formatTanggalDanWaktuIndonesia} from '../../utils/datetimeIndonesia';
 
 const ReportDetail = () => {
   const { id } = useParams();
@@ -73,7 +73,7 @@ const ReportDetail = () => {
 
       <h2>Detail Laporan</h2>
       <p><strong>ID Laporan:</strong> {report.id}</p>
-      <p><strong>Interval Laporan:</strong> {formatTanggalIndonesia(report.start_date)} s.d. {formatTanggalIndonesia(report.end_date)}</p>
+      <p><strong>Interval Laporan:</strong> {formatIntervalIndonesian(report.report_interval)}</p>
       <p><strong>Total Transaksi:</strong> {report.total_transactions}</p>
       <p><strong>Total Jumlah:</strong> {Number(report.total_amount).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</p>
       <p><strong>Tanggal Laporan:</strong> {formatTanggalDanWaktuIndonesia(report.report_date)}</p>

@@ -68,9 +68,9 @@ const Payments = () => {
           Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
-          payment_status: formData.paymentStatus,
-          payment_method: formData.paymentMethod,
-          transaction_description: formData.transactionDescription,
+          paymentStatus: formData.paymentStatus,
+          paymentMethod: formData.paymentMethod,
+          transactionDescription: formData.transactionDescription,
         }),
       });
 

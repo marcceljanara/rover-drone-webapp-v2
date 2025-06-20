@@ -143,7 +143,7 @@ const handleSewa = async () => {
 
     const data = await response.json();
     setNotification(data?.message || (response.ok ? 'Berhasil menyewa perangkat!' : 'Gagal menyewa.'));
-    if (response.ok) setTimeout(() => navigate('/riwayat-sewa'), 2000);
+    if (response.ok) setTimeout(() => navigate(-1), 2000);
   } catch (error) {
     setNotification(error.message || 'Terjadi kesalahan saat menyewa.');
   } finally {
