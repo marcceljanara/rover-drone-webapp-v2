@@ -1,232 +1,117 @@
-/* Global Styles */
-body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  color: #333;
-  background-color: #f3f4f6; /* Tailwind gray-100 */
-  margin: 0;
-  padding: 0;
+/* ===== Container & Title ===== */
+.ship-container {
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 16px;
+  font-family: Arial, sans‑serif;
 }
 
-.pengiriman-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1.5rem;
-}
-
-/* Typography */
-h1, h2, h3 {
-  color: #1f2937; /* Tailwind gray-800 */
-  margin-bottom: 0.5rem;
-}
-
-h1 {
-  font-size: 2rem;
+.ship-title {
+  font-size: 24px;
   font-weight: 700;
+  color: #00796b;
+  margin-bottom: 24px;
+  text-align: center;
 }
 
-h2 {
-  font-size: 1.5rem;
-  font-weight: 600;
-}
-
-h3 {
-  font-size: 1.25rem;
-  font-weight: 500;
-}
-
-/* Filter Section */
-.filter-section {
+/* ===== Filter Bar ===== */
+.ship-filter {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
+  gap: 8px;
+  margin-bottom: 20px;
 }
 
-.filter-section input,
-.filter-section button {
-  padding: 0.5rem 0.75rem;
+.ship-filter select,
+.ship-filter input {
+  padding: 8px 10px;
+  border: 1px solid #ccc;
   border-radius: 6px;
-  border: 1px solid #d1d5db; /* Tailwind gray-300 */
-  font-size: 0.9rem;
+  font-size: 14px;
+  flex: 1 1 160px;
 }
 
-.filter-section input {
-  flex: 1 1 200px;
-}
-
-.filter-section button {
-  background-color: #3b82f6; /* Tailwind blue-500 */
-  color: white;
+.ship-filter button {
+  background: #00796b;
+  color: #fff;
   border: none;
+  padding: 8px 18px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
+  font-size: 14px;
 }
 
-.filter-section button:hover {
-  background-color: #2563eb; /* Tailwind blue-600 */
-  transform: translateY(-2px);
-}
+.ship-filter button:hover { background: #005e53; }
 
-/* Table Styles */
-.pengiriman-table {
+/* ===== Table ===== */
+.ship-table-wrapper { overflow-x: auto; }
+
+.ship-table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 2rem;
-  font-size: 0.95rem;
-  background-color: white;
-  border-radius: 6px;
-  overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  font-size: 14px;
+  min-width: 600px;
 }
 
-.pengiriman-table th,
-.pengiriman-table td {
-  border-bottom: 1px solid #e5e7eb; /* Tailwind gray-200 */
-  padding: 0.75rem 1rem;
+.ship-table th,
+.ship-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #e0e0e0;
   text-align: left;
+  white-space: nowrap;
 }
 
-.pengiriman-table th {
-  background-color: #f1f5f9; /* Tailwind gray-100 */
+.ship-table tbody tr:hover { background: #f3fefb; }
+
+/* ===== States ===== */
+.ship-loading,
+.ship-empty { text-align: center; padding: 16px; color: #666; }
+
+.ship-error {
+  text-align: center;
+  color: #c62828;
+  margin-bottom: 10px;
   font-weight: 600;
-  color: #374151; /* Tailwind gray-700 */
 }
 
-.pengiriman-table tr:nth-child(even) {
-  background-color: #f9fafb; /* Tailwind gray-50 */
-}
+/* ===== Responsive Stacked ===== */
+@media (max-width: 640px) {
+  .ship-table,
+  .ship-table thead,
+  .ship-table tbody,
+  .ship-table tr,
+  .ship-table td { display: block; width: 100%; }
 
-.pengiriman-table button {
-  padding: 0.35rem 0.75rem;
-  border: none;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: background-color 0.3s, opacity 0.2s;
-}
+  .ship-table thead { display: none; }
 
-.pengiriman-table button:first-child {
-  background-color: #3b82f6; /* Tailwind blue-500 */
-  color: white;
-}
-
-.pengiriman-table button:last-child {
-  background-color: #ef4444; /* Tailwind red-500 */
-  color: white;
-}
-
-.pengiriman-table button:hover {
-  opacity: 0.9;
-}
-
-/* Form Styles */
-form {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-bottom: 2rem;
-  background-color: #ffffff;
-  padding: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-}
-
-form input,
-form select {
-  padding: 0.6rem 0.75rem;
-  border-radius: 6px;
-  border: 1px solid #d1d5db; /* Tailwind gray-300 */
-  font-size: 0.9rem;
-  width: 100%;
-}
-
-form button {
-  grid-column: span 2;
-  padding: 0.75rem;
-  background-color: #22c55e; /* Tailwind green-500 */
-  color: white;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
-}
-
-form button:hover {
-  background-color: #16a34a; /* Tailwind green-600 */
-  transform: translateY(-2px);
-}
-
-/* Detail Section */
-.detail-section {
-  margin-top: 2rem;
-  padding: 1rem 1.25rem;
-  background-color: #f9fafb; /* Tailwind gray-50 */
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-}
-
-.detail-section h3 {
-  margin-top: 1rem;
-  margin-bottom: 0.75rem;
-  font-size: 1.1rem;
-  color: #1f2937; /* Tailwind gray-800 */
-}
-
-.detail-section select,
-.detail-section button {
-  padding: 0.5rem 0.75rem;
-  border-radius: 6px;
-  border: 1px solid #d1d5db; /* Tailwind gray-300 */
-  font-size: 0.9rem;
-}
-
-.detail-section button {
-  background-color: #8b5cf6; /* Tailwind violet-500 */
-  color: white;
-  border: none;
-  margin-left: 0.5rem;
-  transition: background-color 0.3s, transform 0.2s;
-}
-
-.detail-section button:hover {
-  background-color: #7c3aed; /* Tailwind violet-600 */
-  transform: translateY(-2px);
-}
-
-/* Responsiveness */
-@media (max-width: 1024px) {
-  .filter-section {
-    flex-direction: column;
-    gap: 0.75rem;
+  .ship-table tr {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    padding: 8px;
   }
 
-  form {
-    grid-template-columns: 1fr;
+  .ship-table td {
+    position: relative;
+    padding-left: 45%;
+    border: none;
+    border-bottom: 1px solid #eee;
   }
 
-  form button {
-    grid-column: span 1;
-  }
-}
+  .ship-table td:last-child { border-bottom: none; }
 
-@media (max-width: 600px) {
-  .pengiriman-table {
-    font-size: 0.85rem;
-  }
-
-  .pengiriman-table th,
-  .pengiriman-table td {
-    padding: 0.5rem 0.75rem;
-  }
-
-  .filter-section input,
-  .filter-section button,
-  form input,
-  form select,
-  form button,
-  .detail-section select,
-  .detail-section button {
-    font-size: 0.85rem;
-    padding: 0.5rem 0.65rem;
+  .ship-table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: 600;
+    color: #555;
+    width: 40%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }

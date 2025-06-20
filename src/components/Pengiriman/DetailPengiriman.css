@@ -1,0 +1,122 @@
+.ship-detail-container {
+  max-width: 720px;
+  margin: 40px auto;
+  padding: 1rem;
+  font-family: Arial, sans-serif;
+}
+
+.ship-detail-title {
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: #00695c;
+}
+
+.ship-detail-table-wrapper {
+  overflow-x: auto;
+}
+
+.ship-detail-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.ship-detail-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #ddd;
+  vertical-align: top;
+}
+
+.ship-back-btn {
+  margin-top: 24px;
+  padding: 10px 18px;
+  background-color: #00796b;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.ship-back-btn:hover {
+  background-color: #005f56;
+}
+
+.ship-loading,
+.ship-error {
+  text-align: center;
+  color: #555;
+  margin: 16px 0;
+}
+
+/* tombol & error sudah ada – tambahkan gaya form edit */
+.ship-edit-btn {
+  margin: 18px 0;
+  padding: 8px 16px;
+  background: #0288d1;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.ship-edit-btn:hover { background:#0277bd; }
+
+.ship-edit-form {
+  margin-top: 10px;
+  padding: 16px;
+  background: #f9fffe;
+  border: 1px solid #c8e6c9;
+  border-radius: 8px;
+}
+
+.ship-edit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.ship-edit-grid label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+  color: #00695c;
+}
+
+.ship-edit-grid input,
+.ship-edit-grid textarea {
+  margin-top: 4px;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.88rem;
+}
+
+.ship-edit-actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+}
+
+.ship-save-btn {
+  background: #00796b;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.ship-save-btn:hover { background:#005f56; }
+
+.ship-cancel-btn {
+  background: #e0e0e0;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.ship-cancel-btn:hover { background:#d5d5d5; }
+
+/* responsive grid */
+@media (max-width:640px){
+  .ship-edit-grid { grid-template-columns: 1fr; }
+}

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './DetailShipment.css'; // Reuse styling
 
-function DetailPengiriman() {
+function DetailShipment() {
   const { id } = useParams(); // rentalId
   const navigate = useNavigate();
   const token = localStorage.getItem('accessToken');
@@ -64,4 +64,4 @@ function DetailPengiriman() {
   );
 }
 
-export default DetailPengiriman;
+export default DetailShipment;
