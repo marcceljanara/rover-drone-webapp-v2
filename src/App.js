@@ -22,6 +22,7 @@ import Pengiriman from './components/Pengiriman/Pengiriman';
 import Returns from './components/Returns/Returns'; // ✅ Tambahan menu Return
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import DetailPengiriman from './components/Penyewaan/DetailShipment';
 
 function App() {
   return (
@@ -91,6 +92,15 @@ function App() {
               <RightSide />
             </div>
           } />
+
+          <Route path="/penyewaan/:id/shipment" element={
+              <div className="AppGlass">
+              <Sidebar />
+              <DetailPengiriman />
+              <RightSide />
+            </div>
+          } />
+
 
           <Route path="/devices" element={
             <div className="AppGlass">

@@ -99,7 +99,15 @@ function DetailPenyewaan() {
           </tbody>
         </table>
       </div>
+      <button
+      onClick={() => navigate(`/penyewaan/${id}/shipment`)}
+      className="rental-detail-back-btn"
+      style={{ marginTop: '10px', backgroundColor: '#00796b', color: '#fff' }}
+    >
+      Pengiriman
+    </button>
       <button onClick={() => navigate(-1)} className="rental-detail-back-btn">Kembali</button>
+
     </div>
   );
 }
