@@ -116,6 +116,32 @@
 }
 .ship-cancel-btn:hover { background:#d5d5d5; }
 
+.ship-confirm-btn {
+  padding: 4px 8px;
+  background-color: #0099cc;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.ship-confirm-btn:hover {
+  background-color: #0077aa;
+}
+
+.ship-upload-btn {
+  padding: 4px 10px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.ship-upload-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+
 /* responsive grid */
 @media (max-width:640px){
   .ship-edit-grid { grid-template-columns: 1fr; }

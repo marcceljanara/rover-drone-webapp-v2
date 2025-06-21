@@ -4,72 +4,169 @@ import "./DetailPengiriman.css";
 import { formatTanggalDanWaktuIndonesia } from "../../utils/datetimeIndonesia";
 
 export default function DetailPengiriman() {
-  const { rentalId } = useParams();
-  const navigate = useNavigate();
-  const token = localStorage.getItem("accessToken");
+  const { rentalId } = useParams();     // ← param di <Route path="/pengiriman/:rentalId" ... />
+  const navigate    = useNavigate();
+  const token       = localStorage.getItem("accessToken");
 
-  const [data, setData] = useState(null);
-  const [shipmentId, setShipmentId] = useState("");   // simpan id asli shipment
-  const [error, setError] = useState("");
-  const [editMode, setEditMode] = useState(false);
-  const [draft, setDraft] = useState({
-    courierName: "",
-    courierService: "",
-    trackingNumber: "",
-    notes: "",
+  /* ──────────── state ──────────── */
+  const [data,        setData]        = useState(null);
+  const [shipmentId,  setShipmentId]  = useState("");
+  const [error,       setError]       = useState("");
+
+  /* edit kurir/resi */
+  const [editMode,    setEditMode]    = useState(false);
+  const [draft,       setDraft]       = useState({
+    courierName: "", courierService: "", trackingNumber: "", notes: ""
   });
 
-  useEffect(() => {
-    fetchDetail();
-  }, [rentalId, token]);
+  /* edit status */
+  const [statusMode,  setStatusMode]  = useState(false);
+  const [statusDraft, setStatusDraft] = useState("");
 
-  useEffect(() => {
-    if (data) {
-      setDraft({
-        courierName: data.courier_name || "",
-        courierService: data.courier_service || "",
-        trackingNumber: data.tracking_number || "",
-        notes: data.notes || "",
-      });
-    }
-  }, [data]);
+  // Upload Bukti Pengiriman
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
+
+
+  /* ──────────── ambil detail pertama kali ──────────── */
+  useEffect(() => { fetchDetail(); }, [rentalId, token]);
 
   const fetchDetail = async () => {
     try {
       setError("");
-      const res = await fetch(`https://dev-api.xsmartagrichain.com/v1/shipments/${rentalId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res  = await fetch(
+        `https://dev-api.xsmartagrichain.com/v1/shipments/${rentalId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       const json = await res.json();
       if (!res.ok) throw new Error(json.message || "Gagal memuat detail");
-      setData(json.data.shipment);
-      setShipmentId(json.data.shipment.id); 
+
+      const s = json.data.shipment;
+      setData(s);
+      setShipmentId(s.id);
+      setDraft({
+        courierName   : s.courier_name    || "",
+        courierService: s.courier_service || "",
+        trackingNumber: s.tracking_number || "",
+        notes         : s.notes           || "",
+      });
+      setStatusDraft(s.shipping_status);
     } catch (e) {
-      setError(e.message);
-      setData(null);
+      setError(e.message); setData(null);
     }
   };
 
-  const handleSave = async () => {
+  /* ──────────── aksi penyimpanan ──────────── */
+  const handleInfoSave = async () => {
     try {
-      const res = await fetch(`https://dev-api.xsmartagrichain.com/v1/shipments/${shipmentId}/info`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(draft),
-      });
+      const res = await fetch(
+        `https://dev-api.xsmartagrichain.com/v1/shipments/${shipmentId}/info`,
+        {
+          method: "PUT",
+          headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+          body: JSON.stringify(draft),
+        }
+      );
       const json = await res.json();
       if (!res.ok) throw new Error(json.message || "Gagal memperbarui");
-      alert(json.message || "Berhasil diperbarui");
+      alert(json.message || "Info kurir/resi diperbarui");
       setEditMode(false);
       fetchDetail();
-    } catch (e) {
-      alert(e.message);
-    }
+    } catch (e) { alert(e.message); }
   };
 
+  const handleStatusSave = async () => {
+    try {
+      const res = await fetch(
+        `https://dev-api.xsmartagrichain.com/v1/shipments/${shipmentId}/status`,
+        {
+          method: "PATCH",
+          headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+          body  : JSON.stringify({ status: statusDraft }),
+        }
+      );
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.message || "Gagal memperbarui status");
+      alert(json.message || "Status berhasil diperbarui");
+      setStatusMode(false);
+      fetchDetail();
+    } catch (e) { alert(e.message); }
+  };
+
+  /* ───── konfirmasi tanggal KIRIM aktual ───── */
+  const handleKonfirmasiTanggalKirim = async () => {
+    const now = new Date().toISOString().slice(0,19).replace("T"," ");
+    try {
+      const res = await fetch(
+        `https://dev-api.xsmartagrichain.com/v1/shipments/${shipmentId}/actual-shipping`,
+        {
+          method: "PATCH",
+          headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+          body: JSON.stringify({ date: now }),
+        }
+      );
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.message || "Gagal konfirmasi kirim");
+      alert(json.message);
+      fetchDetail();
+    } catch (e) { alert(e.message); }
+  };
+
+  /* ───── konfirmasi tanggal SAMPAI aktual ───── */
+  const handleKonfirmasiTanggalSampai = async () => {
+    const now = new Date().toISOString().slice(0,19).replace("T"," ");
+    try {
+      const res = await fetch(
+        `https://dev-api.xsmartagrichain.com/v1/shipments/${shipmentId}/actual-delivery`,
+        {
+          method: "PATCH",
+          headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+          body: JSON.stringify({ date: now }),
+        }
+      );
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.message || "Gagal konfirmasi sampai");
+      alert(json.message);
+      fetchDetail();
+    } catch (e) { alert(e.message); }
+  };
+
+  // Upload bukti pengiriman
+  const handleUploadProof = async () => {
+  if (!selectedFile) {
+    alert("Pilih file gambar terlebih dahulu");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("photo", selectedFile);
+
+  try {
+    setUploading(true);
+    const res = await fetch(
+      `https://dev-api.xsmartagrichain.com/v1/shipments/${shipmentId}/delivery-proof`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      }
+    );
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.message || "Gagal upload bukti pengiriman");
+    alert(json.message || "Upload berhasil");
+    setSelectedFile(null);
+    fetchDetail();
+  } catch (e) {
+    alert(e.message);
+  } finally {
+    setUploading(false);
+  }
+};
+
+
+  /* ──────────── tampilan ──────────── */
   return (
     <div className="ship-detail-container">
       <h2 className="ship-detail-title">Detail Pengiriman</h2>
@@ -77,110 +174,170 @@ export default function DetailPengiriman() {
       {error ? (
         <p className="ship-error">{error}</p>
       ) : !data ? (
-        <p className="ship-loading">Memuat detail...</p>
+        <p className="ship-loading">Memuat detail…</p>
       ) : (
         <>
           <div className="ship-detail-table-wrapper">
             <table className="ship-detail-table">
               <tbody>
-                <tr><td>ID</td><td>{data.id}</td></tr>
+                <tr><td>ID Pengiriman</td><td>{data.id}</td></tr>
                 <tr><td>Rental ID</td><td>{data.rental_id}</td></tr>
-                <tr><td>Alamat Pengiriman</td><td>{data.shipping_address_id}</td></tr>
+                <tr><td>Alamat Pengiriman</td><td>{data.full_address}</td></tr>
+
+                {/* kurir / layanan */}
                 <tr>
                   <td>Kurir / Layanan</td>
                   <td>
                     {editMode ? (
                       <>
-                        <input
-                          value={draft.courierName}
-                          onChange={(e) => setDraft({ ...draft, courierName: e.target.value })}
-                          className="ship-inline-input"
-                        />
+                        <input value={draft.courierName}
+                               onChange={e=>setDraft({...draft,courierName:e.target.value})}
+                               className="ship-inline-input" />
                         {" / "}
-                        <input
-                          value={draft.courierService}
-                          onChange={(e) => setDraft({ ...draft, courierService: e.target.value })}
-                          className="ship-inline-input"
-                        />
+                        <input value={draft.courierService}
+                               onChange={e=>setDraft({...draft,courierService:e.target.value})}
+                               className="ship-inline-input" />
                       </>
-                    ) : (
-                      `${data.courier_name} / ${data.courier_service}`
-                    )}
+                    ) : `${data.courier_name} / ${data.courier_service}`}
                   </td>
                 </tr>
+
+                {/* resi */}
                 <tr>
                   <td>No. Resi</td>
                   <td>
                     {editMode ? (
-                      <input
-                        value={draft.trackingNumber}
-                        onChange={(e) => setDraft({ ...draft, trackingNumber: e.target.value })}
-                        className="ship-inline-input"
-                      />
-                    ) : (
-                      data.tracking_number || "-"
-                    )}
+                      <input value={draft.trackingNumber}
+                             onChange={e=>setDraft({...draft,trackingNumber:e.target.value})}
+                             className="ship-inline-input" />
+                    ) : (data.tracking_number || "-")}
                   </td>
                 </tr>
-                <tr><td>Status</td><td>{data.shipping_status}</td></tr>
+
+                {/* status */}
+                <tr>
+                  <td>Status</td>
+                  <td>
+                    {statusMode ? (
+                      <select value={statusDraft}
+                              onChange={e=>setStatusDraft(e.target.value)}
+                              className="ship-inline-input">
+                        {["waiting","packed","shipped","delivered","failed"].map(s=>(
+                          <option key={s} value={s}>{s}</option>
+                        ))}
+                      </select>
+                    ) : data.shipping_status}
+                  </td>
+                </tr>
+
+                {/* tanggal2 */}
                 <tr><td>Perkiraan Kirim</td><td>{formatTanggalDanWaktuIndonesia(data.estimated_shipping_date)}</td></tr>
                 <tr><td>Perkiraan Sampai</td><td>{formatTanggalDanWaktuIndonesia(data.estimated_delivery_date)}</td></tr>
+
                 <tr>
-                  <td>Tanggal Kirim Sebenarnya</td>
-                  <td>{data.actual_shipping_date ? formatTanggalDanWaktuIndonesia(data.actual_shipping_date) : "-"}</td>
+                  <td>Tgl Kirim Sebenarnya</td>
+                  <td>
+                    {data.actual_shipping_date
+                      ? formatTanggalDanWaktuIndonesia(data.actual_shipping_date)
+                      : <button className="ship-confirm-btn"
+                                onClick={handleKonfirmasiTanggalKirim}>
+                          Konfirmasi Tanggal Kirim
+                        </button>}
+                  </td>
                 </tr>
+
                 <tr>
-                  <td>Tanggal Sampai Sebenarnya</td>
-                  <td>{data.actual_delivery_date ? formatTanggalDanWaktuIndonesia(data.actual_delivery_date) : "-"}</td>
+                  <td>Tgl Sampai Sebenarnya</td>
+                  <td>
+                    {data.actual_delivery_date
+                      ? formatTanggalDanWaktuIndonesia(data.actual_delivery_date)
+                      : <button className="ship-confirm-btn"
+                                onClick={handleKonfirmasiTanggalSampai}>
+                          Konfirmasi Tanggal Sampai
+                        </button>}
+                  </td>
                 </tr>
+
+                {/* catatan */}
                 <tr>
                   <td>Catatan</td>
                   <td>
                     {editMode ? (
-                      <textarea
-                        value={draft.notes}
-                        onChange={(e) => setDraft({ ...draft, notes: e.target.value })}
-                        rows={2}
-                        className="ship-inline-input"
-                      />
-                    ) : (
-                      data.notes || "-"
-                    )}
+                      <textarea rows={2}
+                                value={draft.notes}
+                                onChange={e=>setDraft({...draft,notes:e.target.value})}
+                                className="ship-inline-input" />
+                    ) : (data.notes || "-")}
                   </td>
                 </tr>
+
+                {/* bukti */}
                 <tr>
                   <td>Bukti Pengiriman</td>
                   <td>
-                    {data.delivery_proof_url ? (
-                      <a href={data.delivery_proof_url} target="_blank" rel="noopener noreferrer">
-                        Lihat Bukti
-                      </a>
+                    {'https://dev-api.xsmartagrichain.com'+ data.delivery_proof_url ? (
+                      <>
+                        <a href={'https://dev-api.xsmartagrichain.com'+ data.delivery_proof_url} target="_blank" rel="noopener noreferrer">
+                          <img
+                            src={'https://dev-api.xsmartagrichain.com'+ data.delivery_proof_url}
+                            alt="Bukti Pengiriman"
+                            style={{ width: "120px", height: "auto", border: "1px solid #ccc", borderRadius: "4px" }}
+                          />
+                        </a>
+                      </>
                     ) : (
-                      "-"
+                      <>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => setSelectedFile(e.target.files[0])}
+                          style={{ marginBottom: "6px" }}
+                        />
+                        <br />
+                        <button
+                          onClick={handleUploadProof}
+                          className="ship-upload-btn"
+                          disabled={uploading}
+                        >
+                          {uploading ? "Mengunggah..." : "Upload Bukti"}
+                        </button>
+                      </>
                     )}
                   </td>
                 </tr>
+
+
+
                 <tr><td>Dibuat</td><td>{formatTanggalDanWaktuIndonesia(data.created_at)}</td></tr>
                 <tr><td>Diperbarui</td><td>{formatTanggalDanWaktuIndonesia(data.updated_at)}</td></tr>
               </tbody>
             </table>
           </div>
 
-          {/* Tombol Aksi */}
-          {!editMode ? (
-            <button className="ship-edit-btn" onClick={() => setEditMode(true)}>
-              Edit Info Pengiriman
-            </button>
-          ) : (
-            <div className="ship-detail-actions">
-              <button className="ship-save-btn" onClick={handleSave}>Simpan</button>
-              <button className="ship-cancel-btn" onClick={() => setEditMode(false)}>Batal</button>
-            </div>
-          )}
+          {/* tombol aksi */}
+          <div className="ship-detail-actions">
+            {editMode ? (
+              <>
+                <button className="ship-save-btn" onClick={handleInfoSave}>Simpan Info</button>
+                <button className="ship-cancel-btn" onClick={()=>setEditMode(false)}>Batal</button>
+              </>
+            ) : (
+              <button className="ship-edit-btn"  onClick={()=>setEditMode(true)}>Edit Info</button>
+            )}
+
+            {statusMode ? (
+              <>
+                <button className="ship-save-btn" onClick={handleStatusSave}>Simpan Status</button>
+                <button className="ship-cancel-btn" onClick={()=>setStatusMode(false)}>Batal</button>
+              </>
+            ) : (
+              <button className="ship-edit-btn"  onClick={()=>setStatusMode(true)}>Ubah Status</button>
+            )}
+          </div>
         </>
       )}
 
-      <button onClick={() => navigate(-1)} className="ship-back-btn">Kembali</button>
+      <button onClick={()=>navigate(-1)} className="ship-back-btn">Kembali</button>
     </div>
   );
 }
