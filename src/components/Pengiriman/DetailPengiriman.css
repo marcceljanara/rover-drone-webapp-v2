@@ -1,15 +1,23 @@
+/* =============== GENERAL STYLE =============== */
 .ship-detail-container {
-  max-width: 720px;
+  max-width: 880px;
   margin: 40px auto;
-  padding: 1rem;
-  font-family: Arial, sans-serif;
+  padding: 1rem 1.5rem;
+  font-family: 'Segoe UI', sans-serif;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  overflow-x: auto;
 }
 
 .ship-detail-title {
+  font-size: 2rem;
+  font-weight: 600;
   text-align: center;
-  font-size: 1.8rem;
+  color: #00796b;
   margin-bottom: 1.5rem;
-  color: #00695c;
 }
 
 .ship-detail-table-wrapper {
@@ -18,131 +26,211 @@
 
 .ship-detail-table {
   width: 100%;
+  min-width: 640px;
   border-collapse: collapse;
   font-size: 0.95rem;
+  color: #222;
 }
 
 .ship-detail-table td {
-  padding: 10px 14px;
+  padding: 12px 16px;
   border-bottom: 1px solid #ddd;
   vertical-align: top;
 }
 
-.ship-back-btn {
-  margin-top: 24px;
-  padding: 10px 18px;
-  background-color: #00796b;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.ship-back-btn:hover {
-  background-color: #005f56;
-}
-
-.ship-loading,
-.ship-error {
-  text-align: center;
-  color: #555;
-  margin: 16px 0;
-}
-
-/* tombol & error sudah ada – tambahkan gaya form edit */
-.ship-edit-btn {
-  margin: 18px 0;
-  padding: 8px 16px;
-  background: #0288d1;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-.ship-edit-btn:hover { background:#0277bd; }
-
-.ship-edit-form {
-  margin-top: 10px;
-  padding: 16px;
-  background: #f9fffe;
-  border: 1px solid #c8e6c9;
-  border-radius: 8px;
-}
-
-.ship-edit-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.ship-edit-grid label {
-  display: flex;
-  flex-direction: column;
-  font-size: 0.9rem;
-  color: #00695c;
-}
-
-.ship-edit-grid input,
-.ship-edit-grid textarea {
-  margin-top: 4px;
-  padding: 8px 10px;
+/* =============== FORM ELEMENTS =============== */
+.ship-inline-input,
+.ship-detail-table input,
+.ship-detail-table textarea,
+.ship-detail-table select {
+  padding: 8px 12px;
+  width: 100%;
   border: 1px solid #ccc;
   border-radius: 6px;
-  font-size: 0.88rem;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+  margin-top: 4px;
 }
 
-.ship-edit-actions {
-  margin-top: 12px;
+.ship-proof-image {
+  width: 140px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+.ship-detail-actions {
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+  justify-content: center;
 }
+
+/* =============== BUTTONS =============== */
+.ship-edit-btn,
+.ship-save-btn,
+.ship-cancel-btn,
+.ship-confirm-btn,
+.ship-upload-btn,
+.ship-back-btn {
+  padding: 8px 16px;
+  font-weight: 500;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.ship-edit-btn {
+  background: #0288d1;
+  color: #fff;
+}
+.ship-edit-btn:hover { background: #0277bd; }
 
 .ship-save-btn {
   background: #00796b;
   color: #fff;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
 }
-.ship-save-btn:hover { background:#005f56; }
+.ship-save-btn:hover { background: #005f56; }
 
 .ship-cancel-btn {
   background: #e0e0e0;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
+  color: #333;
 }
-.ship-cancel-btn:hover { background:#d5d5d5; }
+.ship-cancel-btn:hover { background: #d5d5d5; }
 
 .ship-confirm-btn {
-  padding: 4px 8px;
-  background-color: #0099cc;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+  background: #0099cc;
+  color: #fff;
 }
-.ship-confirm-btn:hover {
-  background-color: #0077aa;
-}
+.ship-confirm-btn:hover { background: #0077aa; }
 
 .ship-upload-btn {
-  padding: 4px 10px;
-  background-color: #28a745;
+  background: #28a745;
   color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
 }
 .ship-upload-btn:disabled {
   background-color: #ccc;
   cursor: not-allowed;
 }
 
+.ship-back-btn {
+  background-color: #6d4c41;
+  color: white;
+  margin-top: 32px;
+}
+.ship-back-btn:hover { background-color: #5d4037; }
 
-/* responsive grid */
-@media (max-width:640px){
-  .ship-edit-grid { grid-template-columns: 1fr; }
+.ship-loading,
+.ship-error {
+  text-align: center;
+  margin: 1rem 0;
+  color: #c62828;
+  font-weight: 500;
+}
+
+
+/* =============== RESPONSIVE BREAKPOINTS (17) =============== */
+
+/* 1 */ @media (max-width: 1440px) { .ship-detail-title { font-size: 1.9rem; } }
+/* 2 */ @media (max-width: 1366px) { .ship-detail-table td { padding: 10px 14px; } }
+/* 3 */ @media (max-width: 1280px) { .ship-detail-container { padding: 1.2rem; } }
+/* 4 */ @media (max-width: 1024px) { .ship-detail-table { font-size: 0.9rem; } }
+/* 5 */ @media (max-width: 992px) { .ship-detail-container { padding: 1rem; } }
+/* 6 */ @media (max-width: 912px) { .ship-detail-table td { font-size: 0.9rem; } }
+/* 7 */ @media (max-width: 896px) { .ship-detail-title { font-size: 1.8rem; } }
+/* 8 */ @media (max-width: 820px) { .ship-detail-actions { flex-direction: column; } }
+/* 9 */ @media (max-width: 800px) { .ship-detail-table { font-size: 0.88rem; } }
+/*10 */ @media (max-width: 768px) { .ship-detail-container { padding: 0.9rem; } }
+/*11 */ @media (max-width: 720px) { .ship-detail-title { font-size: 1.7rem; } }
+/*12 */ @media (max-width: 640px) { .ship-detail-table { min-width: 100%; } }
+/*13 */ @media (max-width: 600px) { .ship-detail-actions { flex-direction: column; } }
+/*14 */ @media (max-width: 540px) { .ship-detail-title { font-size: 1.6rem; } }
+/*15 */ @media (max-width: 480px) { .ship-detail-table td { padding: 8px 12px; } }
+/*16 */ @media (max-width: 430px) { .ship-detail-title { font-size: 1.5rem; } }
+/*17 */ @media (max-width: 360px) {
+  .ship-detail-container { padding: 0.75rem; }
+  .ship-detail-title { font-size: 1.4rem; }
+  .ship-detail-table td { padding: 6px 10px; }
+}
+
+/* Responsive Buttons & Box - Tambahan */
+.ship-detail-actions button,
+.ship-back-btn,
+.ship-upload-btn,
+.ship-confirm-btn,
+.ship-edit-btn,
+.ship-save-btn,
+.ship-cancel-btn {
+  width: auto;
+  min-width: 160px;
+  text-align: center;
+}
+
+/* Tombol lebih fleksibel di layar kecil */
+@media (max-width: 768px) {
+  .ship-detail-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .ship-detail-actions button,
+  .ship-back-btn {
+    width: 100%;
+    font-size: 0.95rem;
+  }
+
+  .ship-upload-btn,
+  .ship-confirm-btn {
+    width: 100%;
+    font-size: 0.95rem;
+  }
+
+  .ship-detail-container {
+    width: 94%;
+    padding: 1rem;
+  }
+
+  .ship-inline-input,
+  .ship-detail-table input,
+  .ship-detail-table textarea,
+  .ship-detail-table select {
+    font-size: 1rem;
+    padding: 10px;
+  }
+}
+
+/* Tambahan untuk layar sangat kecil */
+@media (max-width: 480px) {
+  .ship-detail-title {
+    font-size: 1.5rem;
+  }
+
+  .ship-detail-actions {
+    gap: 8px;
+  }
+
+  .ship-detail-actions button,
+  .ship-back-btn {
+    font-size: 0.88rem;
+    padding: 10px;
+    min-width: unset;
+  }
+
+  .ship-detail-table td {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .ship-detail-table {
+    font-size: 0.85rem;
+    border: none;
+  }
+
+  .ship-detail-table-wrapper {
+    padding-bottom: 1rem;
+  }
 }
