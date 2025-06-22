@@ -24,6 +24,8 @@ import Returns from './components/Returns/Returns'; // ✅ Tambahan menu Return
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import DetailPengiriman from './components/Pengiriman/DetailPengiriman';
 import DetailShipment from './components/Penyewaan/DetailShipment';
+import DetailPerpanjangan from './components/Penyewaan/Extensions';
+import AjukanPerpanjangan from './components/Penyewaan/AjukanPerpanjangan';
 
 function App() {
   return (
@@ -98,6 +100,20 @@ function App() {
               <div className="AppGlass">
               <Sidebar />
               <DetailShipment />
+              <RightSide />
+            </div>
+          } />
+          <Route path="/penyewaan/:id/extensions" element={
+              <div className="AppGlass">
+              <Sidebar />
+              <DetailPerpanjangan />
+              <RightSide />
+            </div>
+          } />
+          <Route path="/penyewaan/:id/extensions/pengajuan" element={
+              <div className="AppGlass">
+              <Sidebar />
+              <AjukanPerpanjangan />
               <RightSide />
             </div>
           } />
