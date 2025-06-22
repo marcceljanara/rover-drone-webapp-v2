@@ -192,8 +192,6 @@ const Payments = () => {
               onChange={(e) => setFormData({ ...formData, paymentStatus: e.target.value })}
             >
               <option value="completed">Completed</option>
-              <option value="pending">Pending</option>
-              <option value="cancelled">Cancelled</option>
             </select>
 
             <label>Metode Pembayaran</label>

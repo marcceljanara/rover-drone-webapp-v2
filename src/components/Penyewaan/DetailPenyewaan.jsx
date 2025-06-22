@@ -124,6 +124,9 @@ function DetailPenyewaan() {
   return (
     <div className="rental-detail-container">
       <h2 className="rental-detail-title">Detail Penyewaan</h2>
+        <button onClick={() => navigate(-1)} className="rental-back-btn">
+          Kembali
+        </button>
 
       <div className="rental-detail-table-wrapper">
         <table className="rental-detail-table">
@@ -168,11 +171,6 @@ function DetailPenyewaan() {
         style={{ marginTop: 10, backgroundColor: '#4a148c', color: '#fff' }}
       >
         Perpanjangan
-      </button>
-
-
-      <button onClick={() => navigate(-1)} className="rental-detail-back-btn">
-        Kembali
       </button>
     </div>
   );
