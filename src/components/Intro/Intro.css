@@ -3,139 +3,185 @@
   flex-direction: row;
   height: 73vh;
   margin-top: 4rem;
-  justify-content: space-between; 
-  padding: 0 2rem; 
-  width: 100%; 
-  }
-  
-  /* left side styling */
-  .i-left {
-    display: flex;
-    position: relative;
-    flex: 1;
-    flex-direction: column;
-    gap: 2rem;
-    align-items: flex-start; /* Menjaga elemen tidak terpusat */
-  }
-  .i-name {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    margin-top: 1rem;
-  }
-  .i-name > :nth-child(1) {
-    color: var(--black);
-    font-weight: bold;
-    font-size: 3rem;
-  }
-  .i-name > :nth-child(2) {
-    color: var(--orange);
-    font-weight: bold;
-    font-size: 3rem;
-  }
-  .i-name > :nth-child(3) {
-    font-weight: 100;
-    font-size: 14px;
-    color: var(--gray);
-    margin-top: 1.5rem;
-  }
-  .i-button {
-    width: 7rem;
-    height: 3rem;
-    text-decoration: none;
-    
-  }
-  .i-icons {
-    margin-top: 2rem;
-    display: flex;
-    gap: 0rem;
-  }
-  .i-icons > * {
-    transform: scale(0.5);
-  } 
-  .i-icons > *:hover {
-    cursor: pointer;
-  }
-  /* right side styling */
-  .i-right {
-    flex: 1;
-    position: relative;
-  }
-  .i-right > * {
-    position: absolute;
-    z-index: 1;
-  }
-  .i-right > :nth-child(1) {
-    transform: scale(0.69);
-    left: -15%;
-    top: -9%;
-  }
-  .i-right > :nth-child(2) {
-    top: -4.6rem;
-    transform: scale(0.67);
-    left: -3rem;
-  }
-  .i-right > :nth-child(3) {
-    transform: scale(1.4);
-    left: 28%;
-  }
-  .i-right > :nth-child(4) {
-    transform: scale(0.62);
-    top: -19%;
-    left: -24%;
-    border-radius: 50%;
-    padding: 0;
-  }
-  
-  /* blur */
-  .blur {
-    position: absolute;
-    width: 22rem;
-    height: 14rem;
-    border-radius: 50%;
-    background: #edd0ff;
-    filter: blur(212px);
-    z-index: -9;
-    top: -18%;
-    left: 56%;
-    filter: blur(72px);
-  }
-  
-/* Responsive adjustments */
-@media screen and (max-width: 480px) {
+  justify-content: space-between;
+  padding: 0 2rem;
+  width: 100%;
+}
+
+.i-left {
+  display: flex;
+  position: relative;
+  flex: 1;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.i-name {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: 1rem;
+}
+
+.i-name > :nth-child(1),
+.i-name > :nth-child(2) {
+  font-weight: bold;
+  font-size: 3rem;
+}
+
+.i-name > :nth-child(1) {
+  color: var(--black);
+}
+
+.i-name > :nth-child(2) {
+  color: var(--orange);
+}
+
+.i-name > :nth-child(3) {
+  font-weight: 100;
+  font-size: 14px;
+  color: var(--gray);
+  margin-top: 1.5rem;
+}
+
+.i-button {
+  width: 7rem;
+  height: 3rem;
+  text-decoration: none;
+}
+
+.i-icons {
+  margin-top: 2rem;
+  display: flex;
+  gap: 0rem;
+}
+
+.i-icons > * {
+  transform: scale(0.5);
+}
+
+.i-icons > *:hover {
+  cursor: pointer;
+}
+
+.i-right {
+  flex: 1;
+  position: relative;
+}
+
+.i-right > * {
+  position: absolute;
+  z-index: 1;
+}
+
+.i-right > :nth-child(1) {
+  transform: scale(0.69);
+  left: -15%;
+  top: -9%;
+}
+
+.i-right > :nth-child(2) {
+  top: -4.6rem;
+  transform: scale(0.67);
+  left: -3rem;
+}
+
+.i-right > :nth-child(3) {
+  transform: scale(1.4);
+  left: 28%;
+}
+
+.i-right > :nth-child(4) {
+  transform: scale(0.62);
+  top: -19%;
+  left: -24%;
+  border-radius: 50%;
+  padding: 0;
+}
+
+.blur {
+  position: absolute;
+  width: 22rem;
+  height: 14rem;
+  border-radius: 50%;
+  background: #edd0ff;
+  filter: blur(72px);
+  z-index: -9;
+  top: -18%;
+  left: 56%;
+}
+
+/* ============================= */
+/* RESPONSIVE STYLING SECTION   */
+/* ============================= */
+
+/* Semua layar responsif: hilangkan gambar */
+@media screen and (max-width: 1024px) {
   .Intro {
-    flex-direction: column; /* Susun vertikal di perangkat kecil */
-    align-items: center; /* Pusatkan semua elemen */
-    padding: 0 1rem; /* Kurangi padding */
-    height: auto; /* Sesuaikan tinggi secara otomatis */
-    margin-top: 2rem; /* Kurangi margin atas */
+    flex-direction: column;
+    align-items: center;
+    padding: 0 1rem;
+    height: auto;
+    margin-top: 2rem;
   }
 
-  .i-left, .i-right {
-    width: 100%; /* Gunakan lebar penuh untuk elemen kiri dan kanan */
-    align-items: center; /* Pusatkan elemen di perangkat kecil */
+  .i-left,
+  .i-right {
+    width: 100%;
+    align-items: center;
   }
 
   .i-name {
-    text-align: center; /* Pusatkan teks */
+    text-align: center;
     margin-top: 1rem;
   }
 
   .i-button {
-    width: 80%; /* Gunakan lebar tombol yang lebih besar untuk perangkat kecil */
+    width: 80%;
     height: auto;
-    padding: 10px 20px; /* Pastikan padding cukup */
+    padding: 10px 20px;
   }
 
-  .i-right > img {
-    transform: scale(0.8); /* Kurangi ukuran gambar */
-    left: 0; /* Pusatkan gambar */
-    top: 0;
-    display: none;
+  .i-right > img,
+  .i-right .blur,
+  .floating-div {
+    display: none !important;
   }
 
-  .i-right .blur {
-    display: none; /* Sembunyikan blur di perangkat kecil */
+  /* iPad khusus (landscape & portrait) */
+  @media screen and (min-width: 768px) and (max-width: 1024px) {
+    .i-left {
+      align-items: center;
+    }
+
+    .i-name {
+      text-align: center;
+    }
+
+    .i-button {
+      margin: 0 auto;
+    }
   }
 }
-  
+
+/* Surface Duo (540x720) */
+@media screen and (max-width: 540px) {
+  .Intro {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .i-left {
+    align-items: center;
+  }
+
+  .i-name {
+    text-align: center;
+  }
+
+  .i-button {
+    width: 90%;
+    padding: 12px;
+  }
+}
