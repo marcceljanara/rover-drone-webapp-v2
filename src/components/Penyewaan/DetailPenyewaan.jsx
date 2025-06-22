@@ -2,6 +2,66 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './DetailPenyewaan.css';
 
+const LABELS = {
+  id: 'ID Penyewaan',
+  user_id: 'ID Pengguna',
+  start_date: 'Tanggal Mulai',
+  end_date: 'Tanggal Selesai',
+  rental_status: 'Status Penyewaan',
+  reserved_until: 'Batas Bayar',
+  shipping_address_id: 'Alamat Pengiriman',
+  total_cost: 'Total Biaya',
+  base_cost: 'Biaya Dasar',
+  sensor_cost: 'Biaya Sensor',
+  shipping_cost: 'Biaya Pengiriman',
+  setup_cost: 'Biaya Pemasangan',
+  nama_penerima: 'Nama Penerima',
+  no_hp: 'No. HP',
+  full_address: 'Alamat Lengkap',
+};
+
+const STATUS_MAP = {
+  active: 'Aktif',
+  pending: 'Menunggu',
+  cancelled: 'Dibatalkan',
+  finished: 'Selesai',
+};
+
+const HIDDEN_KEYS = ['is_deleted', 'created_at', 'updated_at'];
+
+function formatValue(key, value) {
+  if (value == null) return '-';
+
+  // tanggal
+  if (/_date$|reserved_until/.test(key)) {
+    const date = new Date(value);
+    return date.toLocaleString('id-ID', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+      timeZone: 'Asia/Jakarta',
+    });
+  }
+
+  // uang
+  if (/_cost$/.test(key)) {
+    return Number(value).toLocaleString('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    });
+  }
+
+  // status
+  if (key === 'rental_status') return STATUS_MAP[value] || value;
+
+  return String(value);
+}
+
 function DetailPenyewaan() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -16,43 +76,30 @@ function DetailPenyewaan() {
 
     const fetchRental = async () => {
       try {
-        const response = await fetch(`https://dev-api.xsmartagrichain.com/v1/rentals/${id}`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
+        const resp = await fetch(`https://dev-api.xsmartagrichain.com/v1/rentals/${id}`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
         });
+        const json = await resp.json();
+        if (!resp.ok) throw new Error(json.message || 'Gagal mengambil detail penyewaan');
 
-        const res = await response.json();
+        const data = json.data.rental;
+        setRental(data);
 
-        if (!response.ok) {
-          throw new Error(res.message || 'Gagal mengambil detail penyewaan');
-        }
-
-        const rentalData = res.data.rental;
-        setRental(rentalData);
-
-        const reservedUntil = new Date(rentalData.reserved_until).getTime();
-        const now = new Date().getTime();
-
-        if (now > reservedUntil) {
-          setTimeLeft('Batas waktu pembayaran habis');
-          return;
-        }
-
-        const updateCountdown = () => {
-          const distance = reservedUntil - new Date().getTime();
-          if (distance <= 0) {
+        // hitung countdown batas bayar
+        const reservedUntil = new Date(data.reserved_until).getTime();
+        const tick = () => {
+          const sisa = reservedUntil - Date.now();
+          if (sisa <= 0) {
             setTimeLeft('Batas waktu pembayaran habis');
             clearInterval(interval);
           } else {
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            setTimeLeft(`${minutes}m ${seconds}s`);
+            const m = Math.floor((sisa % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((sisa % (1000 * 60)) / 1000);
+            setTimeLeft(`${m}m ${s}s`);
           }
         };
-
-        updateCountdown();
-        interval = setInterval(updateCountdown, 1000);
+        tick();
+        interval = setInterval(tick, 1000);
       } catch (err) {
         setError(err.message);
       }
@@ -62,33 +109,40 @@ function DetailPenyewaan() {
     return () => clearInterval(interval);
   }, [id, accessToken]);
 
-  if (error) {
+  if (error)
     return (
       <div className="rental-detail-container">
         <p className="rental-detail-error">{error}</p>
-        <button onClick={() => navigate(-1)} className="rental-detail-back-btn">Kembali</button>
+        <button onClick={() => navigate(-1)} className="rental-detail-back-btn">
+          Kembali
+        </button>
       </div>
     );
-  }
 
-  if (!rental) {
-    return <div className="rental-detail-container">Memuat detail penyewaan...</div>;
-  }
+  if (!rental) return <div className="rental-detail-container">Memuat detail penyewaan…</div>;
 
   return (
     <div className="rental-detail-container">
       <h2 className="rental-detail-title">Detail Penyewaan</h2>
+
       <div className="rental-detail-table-wrapper">
         <table className="rental-detail-table">
           <tbody>
-            {Object.entries(rental).map(([key, value]) => (
-              <tr key={key}>
-                <td data-label="Field"><strong>{key}</strong></td>
-                <td data-label={key}>{String(value)}</td>
-              </tr>
-            ))}
+            {Object.entries(rental)
+              .filter(([k]) => !HIDDEN_KEYS.includes(k))
+              .map(([key, value]) => (
+                <tr key={key}>
+                  <td data-label="Field">
+                    <strong>{LABELS[key] || key}</strong>
+                  </td>
+                  <td data-label={LABELS[key] || key}>{formatValue(key, value)}</td>
+                </tr>
+              ))}
+
             <tr>
-              <td data-label="Field"><strong>Sisa Waktu Pembayaran</strong></td>
+              <td data-label="Field">
+                <strong>Sisa Waktu Pembayaran</strong>
+              </td>
               <td
                 data-label="Sisa Waktu Pembayaran"
                 style={{ color: timeLeft === 'Batas waktu pembayaran habis' ? 'red' : 'black' }}
@@ -99,15 +153,18 @@ function DetailPenyewaan() {
           </tbody>
         </table>
       </div>
-      <button
-      onClick={() => navigate(`/penyewaan/${id}/shipment`)}
-      className="rental-detail-back-btn"
-      style={{ marginTop: '10px', backgroundColor: '#00796b', color: '#fff' }}
-    >
-      Pengiriman
-    </button>
-      <button onClick={() => navigate(-1)} className="rental-detail-back-btn">Kembali</button>
 
+      <button
+        onClick={() => navigate(`/penyewaan/${id}/shipment`)}
+        className="rental-detail-back-btn"
+        style={{ marginTop: 10, backgroundColor: '#00796b', color: '#fff' }}
+      >
+        Pengiriman
+      </button>
+
+      <button onClick={() => navigate(-1)} className="rental-detail-back-btn">
+        Kembali
+      </button>
     </div>
   );
 }
