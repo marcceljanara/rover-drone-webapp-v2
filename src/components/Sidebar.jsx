@@ -17,10 +17,9 @@ import {
   UilFileAlt,
   UilUsersAlt,
   UilTruck,
-  UilHistory, // ✅ Ikon untuk Return
+  UilHistory,
 } from "@iconscout/react-unicons";
 
-// Menu utama aplikasi
 const menuData = [
   { heading: "Dashboard", icon: UilEstate, link: "/dashboard" },
   { heading: "Power Data", icon: UilChart, link: "/power-data" },
@@ -31,21 +30,19 @@ const menuData = [
   { heading: "Laporan Keuangan", icon: UilFileAlt, link: "/reports" },
   { heading: "Manajemen Pengguna", icon: UilUsersAlt, link: "/admin" },
   { heading: "Pengiriman", icon: UilTruck, link: "/pengiriman" },
-  { heading: "Return", icon: UilHistory, link: "/returns" }, // ✅ Menu Return
+  { heading: "Return", icon: UilHistory, link: "/returns" },
 ];
 
 const Sidebar = () => {
   const [expanded, setExpanded] = useState(window.innerWidth > 768);
   const role = localStorage.getItem("role") || "guest";
 
-  // Filter menu sesuai role
   const filteredMenu = menuData.filter((item) =>
     role === "user"
       ? !["/payments", "/reports", "/admin"].includes(item.link)
       : true
   );
 
-  // Toggle menu responsif berdasarkan ukuran layar
   useEffect(() => {
     const handleResize = () => {
       setExpanded(window.innerWidth > 768);
@@ -56,12 +53,10 @@ const Sidebar = () => {
 
   return (
     <>
-      {/* Tombol Toggle untuk mobile */}
       <div className="bars" onClick={() => setExpanded((prev) => !prev)}>
         <UilBars />
       </div>
 
-      {/* Sidebar utama */}
       <div
         className={`sidebar ${expanded ? "open" : "closed"}`}
         style={{
@@ -70,7 +65,6 @@ const Sidebar = () => {
           zIndex: 100,
         }}
       >
-        {/* Logo dan Lokasi */}
         <div className="logo">
           <img src={Logo} alt="logo" className="logo-img" />
           <div className="logo-text">
@@ -83,10 +77,8 @@ const Sidebar = () => {
           </div>
         </div>
 
-        {/* Role Badge */}
         <div className="role-badge">Role: {role}</div>
 
-        {/* Daftar Menu Navigasi */}
         <div className="menu">
           {filteredMenu.map(({ heading, icon: Icon, link }) => (
             <NavLink
@@ -100,7 +92,6 @@ const Sidebar = () => {
             </NavLink>
           ))}
 
-          {/* Tombol Sign Out */}
           <div className="menuItem signout-section">
             <NavLink to="/" className="menuItemLink">
               <UilSignOutAlt />
