@@ -77,6 +77,7 @@ const DetailPembayaran = () => {
         <li><strong>Status:</strong> {detail.payment_status}</li>
         <li><strong>Tanggal Pembayaran:</strong> {detail.payment_date ? formatTanggalDanWaktuIndonesia(detail.payment_date) : 'Belum dibayar'}</li>
         <li><strong>Metode:</strong> {detail.payment_method || 'Tidak tersedia'}</li>
+        <li><strong>Jenis Pembayaran:</strong> {detail.payment_type === 'initial' ? 'Awal' : 'Perpanjangan'}</li>
         <li><strong>Deskripsi:</strong> {detail.transaction_description || 'Tidak tersedia'}</li>
         <li><strong>Dibuat Pada:</strong> {formatTanggalDanWaktuIndonesia(detail.created_at)}</li>
       </ul>
