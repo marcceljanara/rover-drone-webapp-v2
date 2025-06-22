@@ -142,9 +142,11 @@ const Payments = () => {
                   </td>
                   <td data-label="Rental Id">{item.rentalId}</td>
                   <td data-label="Biaya">
-                    {item.amount.toLocaleString('id-ID', {
+                    {Number(item.amount).toLocaleString('id-ID', {
                       style: 'currency',
                       currency: 'IDR',
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 0,
                     })}
                   </td>
                   <td data-label="Status Pembayaran">{item.payment_status}</td>

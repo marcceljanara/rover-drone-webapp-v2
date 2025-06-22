@@ -72,7 +72,8 @@ const DetailPembayaran = () => {
       <ul>
         <li><strong>ID:</strong> {detail.id}</li>
         <li><strong>Rental ID:</strong> {detail.rental_id}</li>
-        <li><strong>Jumlah:</strong> {Number(detail.amount).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</li>
+        <li><strong>Jumlah:</strong> {Number(detail.amount).toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0,
+                      maximumFractionDigits: 0, })}</li>
         <li><strong>Status:</strong> {detail.payment_status}</li>
         <li><strong>Tanggal Pembayaran:</strong> {detail.payment_date ? formatTanggalDanWaktuIndonesia(detail.payment_date) : 'Belum dibayar'}</li>
         <li><strong>Metode:</strong> {detail.payment_method || 'Tidak tersedia'}</li>
