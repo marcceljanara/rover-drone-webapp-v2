@@ -151,16 +151,18 @@ const Payments = () => {
                   </td>
                   <td data-label="Status Pembayaran">{item.payment_status}</td>
                   <td data-label="Tindakan">
-                    <button
-                      className={`edit-btn ${glowingButton === item.id ? 'glow' : ''}`}
-                      onClick={() => {
-                        setSelectedPaymentId(item.id);
-                        setShowModal(true);
-                        handleGlow(item.id);
-                      }}
-                    >
-                      Edit
-                    </button>
+                  <button
+                    className={`edit-btn ${glowingButton === item.id ? 'glow' : ''}`}
+                    onClick={() => {
+                      setSelectedPaymentId(item.id);
+                      setShowModal(true);
+                      handleGlow(item.id);
+                    }}
+                    disabled={['completed', 'failed'].includes(item.payment_status)}
+                  >
+                    Verifikasi
+                  </button>
+
                   </td>
                 </tr>
               ))
