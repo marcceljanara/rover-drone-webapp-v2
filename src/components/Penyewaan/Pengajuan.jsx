@@ -174,7 +174,7 @@ function KelolaPenyewaan() {
             </thead>
             <tbody>
               {filteredData.length > 0 ? (
-                filteredData.map(({ id, start_date, end_date, rental_status, cost }) => (
+                filteredData.map(({ id, start_date, end_date, rental_status, total_cost }) => (
                   <tr key={id}>
                     <td
                       className="clickable-id"
@@ -197,7 +197,7 @@ function KelolaPenyewaan() {
                         {rental_status}
                       </span>
                     </td>
-                    <td>{cost?.toLocaleString('id-ID')}</td>
+                    <td>{total_cost?.toLocaleString('id-ID')}</td>
                     <td>
                       <div className="action-wrapper">
                         {role === 'admin' && (

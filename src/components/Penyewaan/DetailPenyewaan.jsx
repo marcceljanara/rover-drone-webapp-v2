@@ -162,6 +162,15 @@ function DetailPenyewaan() {
         Pengiriman
       </button>
 
+            <button
+        onClick={() => navigate(`/penyewaan/${id}/extensions`)}
+        className="rental-detail-back-btn"
+        style={{ marginTop: 10, backgroundColor: '#4a148c', color: '#fff' }}
+      >
+        Perpanjangan
+      </button>
+
+
       <button onClick={() => navigate(-1)} className="rental-detail-back-btn">
         Kembali
       </button>

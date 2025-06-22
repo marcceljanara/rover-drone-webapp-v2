@@ -1,0 +1,163 @@
+/* =====================  DETAIL PERPANJANGAN  ===================== */
+
+/* ── Tata letak wadah ───────────────────────────────────────────── */
+.container {
+  background-color: #ffffff;           /* putih agar kontras dg gradien body */
+  padding: 2rem 1.5rem;
+  margin: 2rem auto;
+  max-width: 960px;
+  border-radius: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* ── Tombol “+ Ajukan Perpanjangan” ─────────────────────────────── */
+.action-btn.add-extension,
+.action-btn {                          /* fallback utk elemen .action-btn biasa */
+  background-color: #00796b;
+  color: #fff;
+  border: none;
+  padding: 0.55rem 1.1rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: inline-block;
+}
+
+.action-btn.add-extension:hover,
+.action-btn:hover {
+  background-color: #005e53;
+}
+
+/* ========== DATA TABLE (Perpanjangan) ========== */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.data-table th {
+  background-color: #c8e6c9; /* hijau muda */
+  color: #2e7d32;
+  font-weight: bold;
+  padding: 0.75rem;
+  border-bottom: 2px solid #a5d6a7;
+  text-align: center;
+}
+
+.data-table td {
+  padding: 0.75rem;
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.data-table tbody tr:hover {
+  background-color: #f1f8e9;
+}
+
+
+/* ── Badge status untuk perpanjangan ────────────────────────────── */
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: capitalize;
+  display: inline-block;
+}
+
+/* badge baru untuk status “waiting/approved/rejected” */
+.status-waiting   { background-color: #17a2b8; color: #fff; }
+.status-approved  { background-color: #28a745; color: #fff; }
+.status-rejected  { background-color: #dc3545; color: #fff; }
+
+/* =====================  RESPONSIVE  ============================== */
+@media (max-width: 768px) {
+  /* ubah tabel jadi kartu responsif */
+  .data-table,
+  .data-table thead,
+  .data-table tbody,
+  .data-table tr,
+  .data-table th,
+  .data-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .data-table thead {
+    display: none; /* sembunyikan header di mobile */
+  }
+
+  .data-table tr {
+    margin-bottom: 1rem;
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 0.5rem 0;
+  }
+
+  .data-table td {
+    text-align: left;
+    padding-left: 50%;
+    position: relative;
+    border-bottom: 1px solid #eee;
+  }
+
+  .data-table td:last-child {
+    border-bottom: none;
+  }
+
+  .data-table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 1rem;
+    top: 0.75rem;
+    font-weight: 700;
+    color: #333;
+  }
+}
+
+/* ========== TOOLBAR BUTTON WRAPPER ========== */
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Tombol kembali */
+.back-button {
+  background: #e0f2f1;
+  border: none;
+  color: #00796b;
+  font-size: 0.95rem;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.back-button:hover {
+  background: #b2dfdb;
+}
+
+/* Tambahan untuk tombol ajukan */
+.action-btn.add-extension {
+  background-color: #00796b;
+  color: white;
+  font-weight: bold;
+  font-size: 0.95rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: 0.4rem;
+  transition: background-color 0.2s ease;
+}
+
+.action-btn.add-extension:hover {
+  background-color: #005e53;
+}
