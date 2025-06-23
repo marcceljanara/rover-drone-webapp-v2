@@ -26,6 +26,7 @@ import DetailPengiriman from './components/Pengiriman/DetailPengiriman';
 import DetailShipment from './components/Penyewaan/DetailShipment';
 import DetailPerpanjangan from './components/Penyewaan/Extensions';
 import AjukanPerpanjangan from './components/Penyewaan/AjukanPerpanjangan';
+import DetailReturns from './components/Returns/DetailReturns';
 
 function App() {
   return (
@@ -203,6 +204,13 @@ function App() {
             <div className="AppGlass">
               <Sidebar />
               <Returns />
+              <RightSide />
+            </div>
+          } />
+          <Route path="/returns/:rentalId" element={
+            <div className="AppGlass">
+              <Sidebar />
+              <DetailReturns />
               <RightSide />
             </div>
           } />

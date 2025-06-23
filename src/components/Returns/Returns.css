@@ -1,146 +1,232 @@
-/* ===== Container Utama ===== */
-.returns-container {
-  max-width: 1000px;
-  margin: 10px auto; /* Naik ke atas */
-  padding: 20px;
-  font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, #ddffe8 0%, #e8ffe0 50%, #f0ffe8 100%);
-  border-radius: 12px;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+/* === Container & Title === */
+.ret-container {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 0 16px;
+  font-family: Arial, sans-serif;
 }
 
-/* ===== Input & Textarea ===== */
-.search-section input,
-.form-section input,
-.filter-section input,
-select,
-textarea {
-  padding: 10px;
-  margin: 5px 0;
-  width: 100%;
+.ret-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #00796b;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+/* === Search by ID === */
+.ret-search {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.ret-search input {
+  padding: 10px 12px;
+  border-radius: 6px;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
+  font-size: 14px;
+  min-width: 220px;
 }
 
-/* ===== Tombol Aksi ===== */
-.search-section button,
-.form-section button,
-.filter-section button {
-  padding: 10px 20px;
-  background-color: #007bff;
+.ret-search button {
+  padding: 10px 18px;
+  border-radius: 6px;
+  background: #0288d1;
   color: white;
   border: none;
-  border-radius: 4px;
-  margin-top: 10px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  font-weight: 600;
 }
 
-.search-section button:hover,
-.form-section button:hover,
-.filter-section button:hover {
-  background-color: #0056b3;
+.ret-search button:hover {
+  background-color: #01679d;
 }
 
-/* ===== Box Informasi & Form ===== */
-.return-info,
-.form-section,
-.filter-section {
-  background-color: #ffffffcc;
-  backdrop-filter: blur(5px);
-  padding: 15px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-}
-
-/* ===== Tabel Daftar Pengembalian ===== */
-.returns-list {
-  overflow-x: auto;
-}
-
-.returns-list table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-  background-color: white;
-  min-width: 600px;
+/* === Detail box === */
+.ret-detail {
+  background: #f4fdfb;
+  border: 1px solid #c8e6c9;
+  padding: 14px 18px;
   border-radius: 6px;
-  overflow: hidden;
+  margin-bottom: 24px;
 }
 
-.returns-list th,
-.returns-list td {
-  padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
+/* === Admin area === */
+.ret-admin {
+  background: #fff7e6;
+  border: 1px solid #ffe0b2;
+  padding: 18px;
+  border-radius: 6px;
+  margin-bottom: 28px;
 }
 
-.returns-list th {
-  background-color: #007bff;
+.ret-subtitle {
+  font-size: 20px;
+  margin-bottom: 12px;
+  color: #bf360c;
+  text-align: center;
+}
+
+.ret-form {
+  margin-bottom: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.ret-form input,
+.ret-form textarea,
+.ret-form select {
+  flex: 1 1 200px;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.ret-form button {
+  padding: 8px 14px;
+  background: #00796b;
   color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
 }
 
-/* ===== Notifikasi Pesan ===== */
-.message {
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #e0f7fa;
-  border-left: 5px solid #00796b;
-  color: #004d40;
+.ret-form button:hover { background: #005e53; }
+
+/* === Filter list === */
+.ret-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.ret-filter select,
+.ret-filter input {
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  flex: 1 1 180px;
+}
+
+.ret-filter button {
+  padding: 10px 18px;
+  border-radius: 6px;
+  background: #00796b;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.ret-filter button:hover { background: #005e53; }
+
+/* === Table === */
+.ret-table-wrapper {
+  overflow-x: auto;
+  display: flex;
+  justify-content: center;
+}
+
+.ret-table {
+  width: 100%;
+  max-width: 960px;
+  border-collapse: collapse;
+  font-size: 14px;
+  background: white;
+}
+
+.ret-table th,
+.ret-table td {
+  padding: 12px 16px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+  white-space: nowrap;
+}
+
+.ret-table thead th {
+  background-color: #f0f0f0;
   font-weight: bold;
-  border-radius: 4px;
 }
 
-/* ===== Responsive Breakpoints ===== */
+.ret-table tr:hover { background: #f4fdfb; }
+
+.ret-loading,
+.ret-empty {
+  text-align: center;
+  padding: 16px;
+  color: #777;
+}
+
+.ret-link {
+  color: #0288d1;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  padding: 0;
+}
+
+.ret-link:hover {
+  text-decoration: underline;
+}
+
+.ret-error   { text-align: center; color: #c62828; font-weight: 600; margin-bottom: 12px; }
+.ret-message { text-align: center; color: #2e7d32; font-weight: 600; margin-bottom: 12px; }
+
+/* === Responsive (mirip Pengiriman.css) === */
 @media (max-width: 768px) {
-  .returns-container {
-    padding: 15px;
-  }
-
-  .search-section,
-  .form-section,
-  .filter-section {
-    padding: 10px;
-  }
-
-  .returns-list table {
-    font-size: 14px;
-  }
-
-  .returns-list th,
-  .returns-list td {
-    padding: 10px;
-  }
-
-  .search-section button,
-  .form-section button,
-  .filter-section button {
+  .ret-table,
+  .ret-table thead,
+  .ret-table tbody,
+  .ret-table tr,
+  .ret-table td {
+    display: block;
     width: 100%;
   }
-}
 
-@media (max-width: 480px) {
-  .returns-list table {
-    min-width: 100%;
-    font-size: 13px;
+  .ret-table thead { display: none; }
+
+  .ret-table tr {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 14px;
   }
 
-  .search-section input,
-  .form-section input,
-  .filter-section input,
-  select,
-  textarea {
+  .ret-table td {
+    padding: 10px 16px 10px 45%;
+    position: relative;
+    text-align: left;
+    border: none;
+    border-bottom: 1px solid #eee;
     font-size: 14px;
   }
 
-  .returns-list th,
-  .returns-list td {
-    padding: 8px;
-  }
+  .ret-table td:last-child { border-bottom: none; }
 
-  .message {
-    font-size: 14px;
+  .ret-table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: 600;
+    color: #444;
+    width: 40%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
+
+

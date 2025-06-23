@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./DetailPengiriman.css";
 import { formatTanggalDanWaktuIndonesia } from "../../utils/datetimeIndonesia";
+
+const BASE = "https://dev-api.xsmartagrichain.com";
 
 export default function DetailPengiriman() {
   const { rentalId } = useParams();     // ← param di <Route path="/pengiriman/:rentalId" ... />
@@ -29,9 +31,7 @@ export default function DetailPengiriman() {
 
 
   /* ──────────── ambil detail pertama kali ──────────── */
-  useEffect(() => { fetchDetail(); }, [rentalId, token]);
-
-  const fetchDetail = async () => {
+  const fetchDetail = useCallback(async () => {
     try {
       setError("");
       const res  = await fetch(
@@ -54,7 +54,9 @@ export default function DetailPengiriman() {
     } catch (e) {
       setError(e.message); setData(null);
     }
-  };
+  }, [rentalId, token]);
+
+  useEffect(() => { fetchDetail(); }, [fetchDetail, rentalId, token]);
 
   /* ──────────── aksi penyimpanan ──────────── */
   const handleInfoSave = async () => {
@@ -182,6 +184,8 @@ export default function DetailPengiriman() {
               <tbody>
                 <tr><td>ID Pengiriman</td><td>{data.id}</td></tr>
                 <tr><td>Rental ID</td><td>{data.rental_id}</td></tr>
+                <tr><td>Nama Penerima</td><td>{data.nama_penerima}</td></tr>
+                <tr><td>Nomor Telepon</td><td>{data.no_hp}</td></tr>
                 <tr><td>Alamat Pengiriman</td><td>{data.full_address}</td></tr>
 
                 {/* kurir / layanan */}
@@ -271,40 +275,49 @@ export default function DetailPengiriman() {
                   </td>
                 </tr>
 
-                {/* bukti */}
-                <tr>
-                  <td>Bukti Pengiriman</td>
-                  <td>
-                    {'https://dev-api.xsmartagrichain.com'+ data.delivery_proof_url ? (
-                      <>
-                        <a href={'https://dev-api.xsmartagrichain.com'+ data.delivery_proof_url} target="_blank" rel="noopener noreferrer">
-                          <img
-                            src={'https://dev-api.xsmartagrichain.com'+ data.delivery_proof_url}
-                            alt="Bukti Pengiriman"
-                            style={{ width: "120px", height: "auto", border: "1px solid #ccc", borderRadius: "4px" }}
+                  {/* ====== Bukti Pengiriman ====== */}
+                  <tr>
+                    <td>Bukti Pengiriman</td>
+                    <td>
+                      {data.delivery_proof_url ? (           /* ← cek benar-benar ada */
+                        <>
+                          <a
+                            href={`${BASE}${data.delivery_proof_url}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                              src={`${BASE}${data.delivery_proof_url}`}
+                              alt="Bukti Pengiriman"
+                              style={{
+                                width: "120px",
+                                height: "auto",
+                                border: "1px solid #ccc",
+                                borderRadius: "4px",
+                              }}
+                            />
+                          </a>
+                        </>
+                      ) : (
+                        <>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => setSelectedFile(e.target.files[0])}
+                            style={{ marginBottom: "6px" }}
                           />
-                        </a>
-                      </>
-                    ) : (
-                      <>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => setSelectedFile(e.target.files[0])}
-                          style={{ marginBottom: "6px" }}
-                        />
-                        <br />
-                        <button
-                          onClick={handleUploadProof}
-                          className="ship-upload-btn"
-                          disabled={uploading}
-                        >
-                          {uploading ? "Mengunggah..." : "Upload Bukti"}
-                        </button>
-                      </>
-                    )}
-                  </td>
-                </tr>
+                          <br />
+                          <button
+                            onClick={handleUploadProof}
+                            className="ship-upload-btn"
+                            disabled={uploading}
+                          >
+                            {uploading ? "Mengunggah..." : "Upload Bukti"}
+                          </button>
+                        </>
+                      )}
+                    </td>
+                  </tr>
 
 
 

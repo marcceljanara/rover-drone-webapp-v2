@@ -22,15 +22,15 @@ import {
 
 const menuData = [
   { heading: "Dashboard", icon: UilEstate, link: "/dashboard" },
-  { heading: "Power Data", icon: UilChart, link: "/power-data" },
-  { heading: "Non Fungible Token", icon: UilUsdCircle, link: "/non-fungible-token" },
   { heading: "Perangkat", icon: UilRocket, link: "/devices" },
   { heading: "Penyewaan", icon: UilCar, link: "/penyewaan" },
   { heading: "Pembayaran", icon: UilMoneyBill, link: "/payments" },
-  { heading: "Laporan Keuangan", icon: UilFileAlt, link: "/reports" },
-  { heading: "Manajemen Pengguna", icon: UilUsersAlt, link: "/admin" },
   { heading: "Pengiriman", icon: UilTruck, link: "/pengiriman" },
   { heading: "Return", icon: UilHistory, link: "/returns" },
+  { heading: "Laporan Keuangan", icon: UilFileAlt, link: "/reports" },
+  { heading: "Manajemen Pengguna", icon: UilUsersAlt, link: "/admin" },
+  { heading: "Non Fungible Token", icon: UilUsdCircle, link: "/non-fungible-token" },
+  { heading: "Power Data", icon: UilChart, link: "/power-data" },
 ];
 
 const Sidebar = () => {

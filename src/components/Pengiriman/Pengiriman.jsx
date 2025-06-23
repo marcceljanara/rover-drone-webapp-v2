@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Pengiriman.css";
 
@@ -13,7 +13,7 @@ export default function Shipments() {
   const [courier, setCourier] = useState("");
   const navigate = useNavigate();
 
-  const fetchShipments = async () => {
+  const fetchShipments = useCallback(async () => {
     setLoading(true);
     setError("");
     try {
@@ -34,11 +34,11 @@ export default function Shipments() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [status, courier, token]);
 
   useEffect(() => {
     fetchShipments();
-  }, []);
+  }, [fetchShipments]);
 
   return (
     <div className="ship-container">
