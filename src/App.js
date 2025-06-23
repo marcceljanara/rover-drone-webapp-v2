@@ -27,6 +27,7 @@ import DetailShipment from './components/Penyewaan/DetailShipment';
 import DetailPerpanjangan from './components/Penyewaan/Extensions';
 import AjukanPerpanjangan from './components/Penyewaan/AjukanPerpanjangan';
 import DetailReturns from './components/Returns/DetailReturns';
+import DetailReturnsUser from './components/Penyewaan/DetailPengembalian';
 
 function App() {
   return (
@@ -101,6 +102,13 @@ function App() {
               <div className="AppGlass">
               <Sidebar />
               <DetailShipment />
+              <RightSide />
+            </div>
+          } />
+          <Route path="/penyewaan/:id/returns" element={
+              <div className="AppGlass">
+              <Sidebar />
+              <DetailReturnsUser />
               <RightSide />
             </div>
           } />
