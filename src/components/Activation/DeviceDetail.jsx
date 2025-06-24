@@ -319,7 +319,7 @@ const DeviceDetail = () => {
       <div className="timer-box">
         <p><strong>Used Hours:</strong> {liveUsedTime}</p>
         <p><strong>Status:</strong> {statusText}</p>
-        {countdown && <p><strong>Cooldown:</strong> {countdown}</p>}
+        {countdown && <p><strong>Cooldownn:</strong> {countdown}</p>}
         <progress value={usedHours} max="4"></progress>
         <div className={`saving-status ${savingStatus}`}></div>
       </div>
