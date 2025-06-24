@@ -1,16 +1,16 @@
 .device-detail-container {
+  flex: 1;
+  padding: 40px 20px;
+  background: linear-gradient(to bottom right, #e0ffe0, #f0fff0);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px 20px;
-  background: linear-gradient(to bottom right, #e0ffe0, #f0fff0);
-  min-height: 100vh;
 }
 
 .device-detail-container h2 {
   font-size: 32px;
-  color: #2c3e50;
   margin-bottom: 30px;
+  color: #2c3e50;
   text-align: center;
 }
 
@@ -18,28 +18,28 @@
   width: 100%;
   max-width: 800px;
   background-color: #fff;
-  border-radius: 12px;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
   padding: 30px;
   margin-bottom: 30px;
-  overflow-x: auto;
+  font-size: 16px;
 }
 
 .detail-item {
+  margin-bottom: 16px;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   flex-wrap: wrap;
-  padding-bottom: 10px;
-  margin-bottom: 16px;
   border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
 }
 
 .detail-item strong {
   width: 180px;
+  color: #333;
   flex-shrink: 0;
   font-weight: 600;
-  color: #333;
 }
 
 .detail-value,
@@ -52,28 +52,28 @@
 
 .topic-with-button {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: row;
   align-items: center;
   gap: 10px;
-  margin-top: 16px;
-  flex-direction: row;
+  flex-wrap: wrap;
 }
 
 .topic-with-button button {
+  padding: 6px 12px;
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 6px;
-  padding: 6px 12px;
-  font-size: 14px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
 }
 
 .topic-with-button button:hover {
   background-color: #0056b3;
 }
 
+/* Toggle Buttons */
 .toggle-buttons {
   display: flex;
   flex-wrap: wrap;
@@ -91,13 +91,14 @@
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .on-btn {
   background-color: #90ee90;
   color: black;
 }
+
 .off-btn {
   background-color: #ff8080;
   color: black;
@@ -107,106 +108,106 @@
   background-color: #00cc00;
   transform: scale(1.03);
 }
+
 .off-btn:hover {
   background-color: #cc0000;
   transform: scale(1.03);
 }
 
-.on-btn.active {
+.toggle-buttons .on-btn.active {
   background-color: #00cc00;
   color: white;
   box-shadow: 0 0 10px 2px rgba(0, 204, 0, 0.6);
 }
 
-.off-btn.active {
+.toggle-buttons .off-btn.active {
   background-color: #cc0000;
   color: white;
   box-shadow: 0 0 10px 2px rgba(204, 0, 0, 0.6);
 }
 
+/* Status Badge */
 .status-badge {
-  display: inline-block;
   padding: 6px 14px;
   border-radius: 20px;
-  font-size: 14px;
   font-weight: bold;
-  text-align: center;
   text-transform: capitalize;
+  font-size: 14px;
+  display: inline-block;
   min-width: 80px;
+  text-align: center;
 }
 
 .status-badge.active {
   background-color: #28a745;
   color: #fff;
 }
+
 .status-badge.inactive {
   background-color: #d6d6d6;
   color: #333;
 }
+
 .status-badge.offline {
   background-color: #dc3545;
   color: #fff;
 }
+
 .status-badge.unknown {
   background-color: #999;
   color: #fff;
 }
 
-.timer-box {
-  margin-top: 20px;
-  background-color: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 1rem 1.5rem;
-  max-width: 300px;
-  width: 100%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  text-align: center;
+/* Tiny Boxes & Countdown */
+.tiny-box-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 2rem auto;
   position: relative;
-  font-size: 0.95rem;
-}
-
-.timer-box p {
-  margin: 0.4rem 0;
-  color: #374151;
-  font-weight: 500;
-}
-
-.timer-box progress {
   width: 100%;
-  height: 1rem;
-  margin-top: 0.5rem;
-  border-radius: 6px;
-  appearance: none;
+  max-width: 400px;
 }
 
-.timer-box progress::-webkit-progress-bar {
-  background-color: #e5e7eb;
-  border-radius: 6px;
-}
-.timer-box progress::-webkit-progress-value {
-  background-color: #10b981;
-  border-radius: 6px;
+.tiny-box-group {
+  display: flex;
+  gap: 6px;
 }
 
-.saving-status {
+.tiny-box-group.left,
+.tiny-box-group.right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.tiny-box {
+  width: 6px;
+  height: 6px;
+  background-color: red;
+  border-radius: 2px;
+  transition: transform 0.2s ease;
+}
+
+/* Optional: Appear larger on active */
+/* .tiny-box.active {
+  transform: scale(1.6);
+} */
+
+.countdown-timer {
   position: absolute;
-  bottom: -22px;
-  left: 0;
-  right: 0;
-  text-align: center;
-  font-size: 0.75rem;
-  color: #6b7280;
-}
-.saving-status.saving::before {
-  content: '💾 Menyimpan...';
-  color: #007bff;
-}
-.saving-status.saved::before {
-  content: '✅ Tersimpan';
-  color: #10b981;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  box-shadow: 0 0 4px rgba(0,0,0,0.2);
+  font-weight: bold;
+  font-size: 18px;
 }
 
+/* Notification Popup */
 .notification-popup {
   position: fixed;
   bottom: 20px;
@@ -219,9 +220,9 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  animation: fadeInOut 3s ease forwards;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   z-index: 999;
-  animation: fadeInOut 3s ease forwards;
 }
 
 .notification-popup.error {
@@ -233,6 +234,7 @@
 .popup-icon {
   font-size: 20px;
 }
+
 .popup-content {
   display: flex;
   flex-direction: column;
@@ -245,7 +247,7 @@
   100% { opacity: 0; transform: translateY(20px); }
 }
 
-/* Responsive */
+/* Responsiveness */
 @media (max-width: 600px) {
   .device-detail-container {
     padding: 20px 10px;
@@ -280,7 +282,12 @@
     width: 100%;
   }
 
-  .timer-box {
-    max-width: 100%;
+  .tiny-box-wrapper {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .tiny-box-group {
+    justify-content: center;
   }
 }
