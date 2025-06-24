@@ -12,21 +12,15 @@ const Activation = () => {
   const [editingId, setEditingId] = useState(null);
   const [notification, setNotification] = useState(null);
   const [glowingButton, setGlowingButton] = useState(null);
+  const [dailyData, setDailyData] = useState(null);
   const navigate = useNavigate();
 
   const fetchDevices = async () => {
     const accessToken = localStorage.getItem('accessToken');
     try {
       const response = await fetch('https://dev-api.xsmartagrichain.com/v1/devices', {
-        method: 'GET',
         headers: { Authorization: `Bearer ${accessToken}` },
       });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Gagal memuat data perangkat');
-      }
-
       const result = await response.json();
       const devices = result.data.devices.map(device => ({
         id: device.id,
@@ -35,7 +29,6 @@ const Activation = () => {
         lastIssue: device.last_reported_issue ?? 'null',
         lastActive: device.last_active,
       }));
-
       setData(devices);
     } catch (error) {
       alert(`Gagal memuat data: ${error.message}`);
@@ -44,7 +37,24 @@ const Activation = () => {
 
   useEffect(() => { fetchDevices(); }, []);
 
-  const handleEdit = (id) => setEditingId(id);
+  const fetchDailyStatus = async (id) => {
+    const accessToken = localStorage.getItem('accessToken');
+    try {
+      const res = await fetch(`https://dev-api.xsmartagrichain.com/v1/devices/${id}/daily`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      const result = await res.json();
+      setDailyData(result.data);
+      setNotification(`Data harian berhasil dimuat untuk ID: ${id}`);
+      setTimeout(() => setNotification(null), 3000);
+    } catch (error) {
+      alert(`Gagal mengambil data harian: ${error.message}`);
+    }
+  };
+
+  const handleEdit = (id) => {
+    setEditingId(id);
+  };
 
   const handleStatusChange = async (id, newStatus) => {
     const accessToken = localStorage.getItem('accessToken');
@@ -58,16 +68,16 @@ const Activation = () => {
         body: JSON.stringify({ status: newStatus }),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Gagal mengubah status perangkat');
-      }
-
       const result = await response.json();
       setNotification(result.message || 'Status berhasil diubah');
       setTimeout(() => setNotification(null), 3000);
       setEditingId(null);
       await fetchDevices();
+
+      // Cek dan panggil API daily jika status jadi "active"
+      if (newStatus === 'active') {
+        fetchDailyStatus(id);
+      }
     } catch (error) {
       alert(`Error: ${error.message}`);
     }
@@ -80,11 +90,6 @@ const Activation = () => {
         method: 'PUT',
         headers: { Authorization: `Bearer ${accessToken}` },
       });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Gagal menghapus perangkat');
-      }
 
       const result = await response.json();
       setNotification(result.message || 'Perangkat berhasil dihapus');
@@ -105,11 +110,6 @@ const Activation = () => {
           'Content-Type': 'application/json',
         },
       });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Gagal menambahkan perangkat');
-      }
 
       setNotification('Perangkat berhasil ditambahkan');
       setTimeout(() => setNotification(null), 3000);
@@ -178,7 +178,7 @@ const Activation = () => {
                 <td data-label="Status">
                   {editingId === item.id ? (
                     <select
-                      value={item.status}
+                      defaultValue={item.status}
                       onChange={(e) => handleStatusChange(item.id, e.target.value)}
                       onBlur={() => setEditingId(null)}
                       className="status-dropdown"
