@@ -5,15 +5,22 @@ import './DeviceDetail.css';
 const DeviceDetail = () => {
   const { id } = useParams();
   const [device, setDevice] = useState(null);
+  const [isOn, setIsOn] = useState(false);
   const [localStatus, setLocalStatus] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [popupMessage, setPopupMessage] = useState('');
   const [popupType, setPopupType] = useState('success');
   const [showPopup, setShowPopup] = useState(false);
-  const [isOn, setIsOn] = useState(false);
   const [dailyData, setDailyData] = useState({ deviceId: '', usedHoursToday: 0 });
   const [loadingDaily, setLoadingDaily] = useState(true);
+
+  const triggerPopup = (message, type = 'success') => {
+    setPopupMessage(message);
+    setPopupType(type);
+    setShowPopup(true);
+    setTimeout(() => setShowPopup(false), 3000);
+  };
 
   const fetchDevice = async () => {
     const token = localStorage.getItem('accessToken');
@@ -24,10 +31,14 @@ const DeviceDetail = () => {
           Accept: 'application/json',
         },
       });
-
       const result = await res.json();
-      if (!res.ok || !result.data?.device) throw new Error(result.message || 'Gagal memuat detail perangkat');
-      setDevice(result.data.device);
+      if (!res.ok || !result.data?.device) {
+        throw new Error(result.message || 'Gagal memuat detail perangkat');
+      }
+      const deviceData = result.data.device;
+      setDevice(deviceData);
+      setIsOn(deviceData.status?.toLowerCase() === 'active');
+      setLocalStatus(deviceData.status);
     } catch (err) {
       setError(err.message || 'Terjadi kesalahan saat mengambil data perangkat');
     } finally {
@@ -45,23 +56,15 @@ const DeviceDetail = () => {
           Accept: 'application/json',
         },
       });
-
       const result = await res.json();
-
-      if (res.status === 400) throw new Error('Permintaan tidak valid (400)');
-      if (res.status === 401) throw new Error('Token tidak valid atau sesi kedaluwarsa (401)');
-      if (res.status === 404) throw new Error('Perangkat tidak ditemukan (404)');
-      if (res.status === 500) throw new Error('Server error (500)');
-
       if (!res.ok || result.status !== 'success') {
         throw new Error(result.message || 'Gagal ambil data harian');
       }
-
       const data = result?.data || {};
-      const deviceId = data.deviceId || data.deviceid || 'Tidak diketahui';
-      const usedHoursToday = typeof data.usedHoursToday === 'number' ? data.usedHoursToday : 0;
-
-      setDailyData({ deviceId, usedHoursToday });
+      setDailyData({
+        deviceId: data.deviceId || data.deviceid || 'Tidak diketahui',
+        usedHoursToday: typeof data.usedHoursToday === 'number' ? data.usedHoursToday : 0,
+      });
     } catch (err) {
       triggerPopup(err.message || 'Gagal mengambil data harian', 'error');
     } finally {
@@ -69,41 +72,26 @@ const DeviceDetail = () => {
     }
   };
 
-  const triggerPopup = (message, type = 'success') => {
-    setPopupMessage(message);
-    setPopupType(type);
-    setShowPopup(true);
-    setTimeout(() => setShowPopup(false), 3000);
-  };
-
-  const updateDeviceStatus = async (newStatus) => {
+  const updateDeviceStatus = async (status) => {
     const token = localStorage.getItem('accessToken');
     try {
-      const res = await fetch(`https://dev-api.xsmartagrichain.com/v1/devices/${id}/status`, {
+      const res = await fetch(`https://dev-api.xsmartagrichain.com/v1/devices/${id}/control`, {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ status: newStatus }),
+        body: JSON.stringify({ command: 'power', action: status ? 'on' : 'off' }),
       });
 
       const result = await res.json();
-      if (!res.ok) throw new Error(result.message);
-      setLocalStatus(newStatus);
-      triggerPopup(`Status berhasil diubah ke ${newStatus}`);
+      if (!res.ok) throw new Error(result.message || 'Permintaan gagal');
+
+      setIsOn(status);
+      triggerPopup(`Perangkat berhasil ${status ? 'dinyalakan' : 'dimatikan'}`);
+      fetchDevice(); // Refresh detail setelah status berubah
     } catch (err) {
       triggerPopup(`Gagal mengubah status: ${err.message}`, 'error');
-    }
-  };
-
-  const handleToggle = async (status) => {
-    if (status) {
-      setIsOn(true);
-      await updateDeviceStatus('active');
-    } else {
-      setIsOn(false);
-      await updateDeviceStatus('inactive');
     }
   };
 
@@ -126,6 +114,11 @@ const DeviceDetail = () => {
     }
   };
 
+  const formatDateTime = (value) => {
+    const date = new Date(value);
+    return !isNaN(date) ? date.toLocaleString('id-ID') : 'Tidak tersedia';
+  };
+
   useEffect(() => {
     if (!id) {
       setError('ID perangkat tidak ditemukan.');
@@ -137,13 +130,6 @@ const DeviceDetail = () => {
     fetchDailyData();
   }, [id]);
 
-  useEffect(() => {
-    if (device?.status) {
-      setLocalStatus(device.status);
-      setIsOn(device.status.toLowerCase() === 'active');
-    }
-  }, [device]);
-
   if (loading) return <div className="loading-message">🔄 Memuat data perangkat...</div>;
   if (error) return <div className="error-message">❌ {error}</div>;
 
@@ -154,14 +140,26 @@ const DeviceDetail = () => {
       {device ? (
         <div className="device-detail-card">
           <div className="detail-item"><strong>ID Perangkat:</strong><div className="detail-value">{device.id}</div></div>
-          <div className="detail-item"><strong>Status:</strong><div className={`status-badge ${localStatus ? localStatus.toLowerCase() : 'unknown'}`}>{localStatus || 'Unknown'}</div></div>
+          <div className="detail-item"><strong>Status:</strong><div className={`status-badge ${localStatus.toLowerCase()}`}>{localStatus}</div></div>
           <div className="detail-item"><strong>Rental ID:</strong><div className="detail-value">{device.rental_id || 'Tidak tersedia'}</div></div>
           <div className="detail-item"><strong>Last Issue:</strong><div className="detail-value">{device.last_reported_issue || 'Tidak ada'}</div></div>
-          <div className="detail-item"><strong>Last Active:</strong><div className="detail-value">{device.last_active ? new Date(device.last_active).toLocaleString() : 'Tidak tersedia'}</div></div>
-          <div className="detail-item"><strong>Sensor Topic:</strong><div className="topic-with-button"><span>{device.sensor_topic}</span><button onClick={() => handleChangeTopic('sensor')}>Change</button></div></div>
-          <div className="detail-item"><strong>Control Topic:</strong><div className="topic-with-button"><span>{device.control_topic}</span><button onClick={() => handleChangeTopic('control')}>Change</button></div></div>
-          <div className="detail-item"><strong>Created:</strong><div className="detail-value">{device.created_at ? new Date(device.created_at).toLocaleString() : 'Tidak tersedia'}</div></div>
-          <div className="detail-item"><strong>Updated:</strong><div className="detail-value">{device.updated_at ? new Date(device.updated_at).toLocaleString() : 'Tidak tersedia'}</div></div>
+          <div className="detail-item"><strong>Last Active:</strong><div className="detail-value">{formatDateTime(device.last_active)}</div></div>
+          <div className="detail-item">
+            <strong>Sensor Topic:</strong>
+            <div className="topic-with-button">
+              <span>{device.sensor_topic}</span>
+              <button onClick={() => handleChangeTopic('sensor')}>Change</button>
+            </div>
+          </div>
+          <div className="detail-item">
+            <strong>Control Topic:</strong>
+            <div className="topic-with-button">
+              <span>{device.control_topic}</span>
+              <button onClick={() => handleChangeTopic('control')}>Change</button>
+            </div>
+          </div>
+          <div className="detail-item"><strong>Created At:</strong><div className="detail-value">{formatDateTime(device.created_at)}</div></div>
+          <div className="detail-item"><strong>Updated At:</strong><div className="detail-value">{formatDateTime(device.updated_at)}</div></div>
           <div className="detail-item"><strong>Group ID:</strong><div className="detail-value">{device.group_id || 'Tidak tersedia'}</div></div>
         </div>
       ) : (
@@ -169,8 +167,8 @@ const DeviceDetail = () => {
       )}
 
       <div className="toggle-buttons">
-        <button className={`on-btn ${isOn ? 'active' : ''}`} onClick={() => handleToggle(true)}>ON</button>
-        <button className={`off-btn ${!isOn ? 'active' : ''}`} onClick={() => handleToggle(false)} disabled={!isOn}>OFF</button>
+        <button className={`on-btn ${isOn ? 'active' : ''}`} onClick={() => updateDeviceStatus(true)}>ON</button>
+        <button className={`off-btn ${!isOn ? 'active' : ''}`} onClick={() => updateDeviceStatus(false)}>OFF</button>
       </div>
 
       <div className="daily-data">
