@@ -182,7 +182,7 @@ const DeviceDetail = () => {
             {dailyData.usedHoursToday === 0 ? (
               <p><strong>Perangkat belum digunakan hari ini.</strong></p>
             ) : (
-              <p><strong>Used Hours Today:</strong> {dailyData.usedHoursToday.toFixed(2)} jam</p>
+              <p><strong>Waktu Penggunaan Perangkat Hari Ini:</strong> {dailyData.usedHoursToday.toFixed(2)} jam</p>
             )}
           </>
         )}
