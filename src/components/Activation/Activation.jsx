@@ -35,7 +35,24 @@ const Activation = () => {
     }
   };
 
-  useEffect(() => { fetchDevices(); }, []);
+  useEffect(() => {
+    fetchDevices();
+
+    // Real-time sync from localStorage event
+    const handleStorageUpdate = (event) => {
+      if (event.key === 'deviceStatusUpdate') {
+        const updated = JSON.parse(event.newValue);
+        setData(prevData =>
+          prevData.map(item =>
+            item.id === updated.id ? { ...item, status: updated.status } : item
+          )
+        );
+      }
+    };
+
+    window.addEventListener('storage', handleStorageUpdate);
+    return () => window.removeEventListener('storage', handleStorageUpdate);
+  }, []);
 
   const fetchDailyStatus = async (id) => {
     const accessToken = localStorage.getItem('accessToken');
@@ -52,9 +69,7 @@ const Activation = () => {
     }
   };
 
-  const handleEdit = (id) => {
-    setEditingId(id);
-  };
+  const handleEdit = (id) => setEditingId(id);
 
   const handleStatusChange = async (id, newStatus) => {
     const accessToken = localStorage.getItem('accessToken');
@@ -72,12 +87,17 @@ const Activation = () => {
       setNotification(result.message || 'Status berhasil diubah');
       setTimeout(() => setNotification(null), 3000);
       setEditingId(null);
-      await fetchDevices();
 
-      // Cek dan panggil API daily jika status jadi "active"
-      if (newStatus === 'active') {
-        fetchDailyStatus(id);
-      }
+      // Update local data without re-fetch
+      setData(prev =>
+        prev.map(item =>
+          item.id === id ? { ...item, status: newStatus } : item
+        )
+      );
+
+      // Optional: Notify other tabs via localStorage event
+      localStorage.setItem('deviceStatusUpdate', JSON.stringify({ id, status: newStatus }));
+      if (newStatus === 'active') fetchDailyStatus(id);
     } catch (error) {
       alert(`Error: ${error.message}`);
     }
@@ -90,7 +110,6 @@ const Activation = () => {
         method: 'PUT',
         headers: { Authorization: `Bearer ${accessToken}` },
       });
-
       const result = await response.json();
       setNotification(result.message || 'Perangkat berhasil dihapus');
       setTimeout(() => setNotification(null), 3000);
@@ -103,14 +122,13 @@ const Activation = () => {
   const handleAdd = async () => {
     const accessToken = localStorage.getItem('accessToken');
     try {
-      const response = await fetch('https://dev-api.xsmartagrichain.com/v1/devices', {
+      await fetch('https://dev-api.xsmartagrichain.com/v1/devices', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
       });
-
       setNotification('Perangkat berhasil ditambahkan');
       setTimeout(() => setNotification(null), 3000);
       await fetchDevices();
@@ -125,7 +143,7 @@ const Activation = () => {
   };
 
   const filteredData = data.filter((item) =>
-    item.id.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.status.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.lastIssue.toLowerCase().includes(searchTerm.toLowerCase())
   );
