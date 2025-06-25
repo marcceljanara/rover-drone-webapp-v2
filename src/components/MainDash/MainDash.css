@@ -1,59 +1,82 @@
-.MainDash {
+.main-dash {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
   padding: 2rem;
+  min-height: 100vh;
+  box-sizing: border-box;
+  background-color: #f9fafb;
 }
 
 .dashboard-title {
-  align-self: flex-start;
-  margin-bottom: 0.5rem;
-  font-size: 2rem;
-  font-weight: bold;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  width: 100%;
 }
 
 .search-input {
-  align-self: flex-start;
   width: 100%;
-  max-width: 400px;
+  max-width: 450px;
   padding: 0.75rem 1rem;
-  border-radius: 10px;
-  border: 1px solid #ccc;
+  border-radius: 12px;
+  border: 1px solid #d1d5db;
   font-size: 1rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  box-sizing: border-box;
 }
 
 .cards-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
   width: 100%;
-  max-width: 1000px;
+  max-width: 1200px;
 }
 
 .device-card {
-  padding: 1.5rem;
+  padding: 1.25rem;
   border-radius: 1rem;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: #111827;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background-color: white;
 }
 
 .device-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-6px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
 }
 
-/* Media queries for responsiveness */
-@media screen and (max-width: 1200px) {
+/* ===== Responsive Breakpoints ===== */
+
+/* Laptops / Desktops */
+@media screen and (max-width: 1280px) {
   .cards-container {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   }
 }
 
-@media screen and (max-width: 992px) {
-  .MainDash {
+/* iPad Pro, Surface Pro */
+@media screen and (max-width: 1024px) {
+  .dashboard-title {
+    font-size: 2rem;
+  }
+
+  .search-input {
+    max-width: 400px;
+  }
+
+  .cards-container {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+}
+
+/* Tablets (iPad Air, Mini, S8+, Galaxy Fold) */
+@media screen and (max-width: 834px) {
+  .main-dash {
     padding: 1.5rem;
   }
 
@@ -62,27 +85,7 @@
   }
 
   .search-input {
-    max-width: 300px;
-  }
-
-  .cards-container {
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .MainDash {
-    padding: 1rem;
-    align-items: flex-start;
-  }
-
-  .dashboard-title {
-    font-size: 1.5rem;
-  }
-
-  .search-input {
     max-width: 100%;
-    margin-bottom: 1rem;
   }
 
   .cards-container {
@@ -90,21 +93,48 @@
   }
 }
 
-@media screen and (max-width: 480px) {
-  .MainDash {
-    padding: 0.5rem;
+/* Mobile Devices (iPhone, Pixel, A51) */
+@media screen and (max-width: 600px) {
+  .dashboard-title {
+    font-size: 1.6rem;
+  }
+
+  .search-input {
+    font-size: 0.95rem;
+    padding: 0.6rem 1rem;
+  }
+
+  .device-card {
+    padding: 1rem;
+  }
+}
+
+/* Small Phones (iPhone SE) */
+@media screen and (max-width: 375px) {
+  .dashboard-title {
+    font-size: 1.4rem;
+  }
+
+  .search-input {
+    font-size: 0.85rem;
+    padding: 0.5rem 0.8rem;
+  }
+}
+
+/* Smart Displays (Nest Hub) */
+@media screen and (max-width: 1024px) and (orientation: landscape) {
+  .cards-container {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+}
+
+/* Foldables & Duo */
+@media screen and (max-width: 540px) {
+  .cards-container {
+    grid-template-columns: 1fr;
   }
 
   .dashboard-title {
     font-size: 1.3rem;
-  }
-
-  .search-input {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.9rem;
-  }
-
-  .cards-container {
-    grid-template-columns: 1fr;
   }
 }

@@ -33,41 +33,40 @@ const MainDash = () => {
   const getStatusColor = (status) => {
     switch (status) {
       case "active":
-        return "#34D399"; // hijau terang
+        return "#34D399"; // green
       case "inactive":
-        return "#F87171"; // merah terang
+        return "#F87171"; // red
       default:
-        return "#D1D5DB"; // abu-abu (gray-300)
+        return "#D1D5DB"; // gray
     }
   };
-  
 
   return (
-<div className="MainDash">
-  <h1 className="dashboard-title">Dashboard</h1>
+    <div className="main-dash">
+      <h1 className="dashboard-title">Dashboard</h1>
 
-  <input
-    type="text"
-    placeholder="Cari ID device..."
-    className="search-input"
-    value={searchTerm}
-    onChange={(e) => setSearchTerm(e.target.value)}
-  />
+      <input
+        type="text"
+        placeholder="Cari ID device..."
+        className="search-input"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
 
-  <div className="cards-container">
-    {filteredDevices.map((device) => (
-      <div
-        key={device.id}
-        className="device-card"
-        onClick={() => navigate(`/dashboard/${device.id}`)}
-        style={{ backgroundColor: getStatusColor(device.status) }}
-      >
-        <h3>{device.id}</h3>
-        <p>Status: {device.status}</p>
+      <div className="cards-container">
+        {filteredDevices.map((device) => (
+          <div
+            key={device.id}
+            className="device-card"
+            onClick={() => navigate(`/dashboard/${device.id}`)}
+            style={{ backgroundColor: getStatusColor(device.status) }}
+          >
+            <h3>{device.id}</h3>
+            <p>Status: {device.status}</p>
+          </div>
+        ))}
       </div>
-    ))}
-  </div>
-</div>
+    </div>
   );
 };
 
