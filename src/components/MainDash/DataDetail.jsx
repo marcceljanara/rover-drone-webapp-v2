@@ -75,32 +75,41 @@ const DataDetail = () => {
 
   const getSeriesData = (key) => sensorData.map(item => item[key]);
 
-  const cardConfigs = [
-    {
-      title: "Lux",
-      icon: UilSun,
-      color: "linear-gradient(180deg, #bb67ff 0%, #c484f3 100%)",
-      series: getSeriesData("light_intensity"),
-      value: sensorData.at(0)?.light_intensity,
-      satuan: " lx",
-    },
-    {
-      title: "Temperature",
-      icon: UilTemperature,
-      color: "linear-gradient(180deg, #FF919D 0%, #FC929D 100%)",
-      series: getSeriesData("temperature"),
-      value: sensorData.at(0)?.temperature,
-      satuan: " °C",
-    },
-    {
-      title: "Humidity",
-      icon: UilTear,
-      color: "linear-gradient(rgb(248, 212, 154) -146.42%, rgb(255 202 113) -46.42%)",
-      series: getSeriesData("humidity"),
-      value: sensorData.at(0)?.humidity,
-      satuan: " %",
-    },
-  ];
+  const rawCardConfigs = [
+  {
+    title: "Lux",
+    icon: UilSun,
+    color: "linear-gradient(180deg, #bb67ff 0%, #c484f3 100%)",
+    key: "light_intensity",
+    satuan: " lx",
+  },
+  {
+    title: "Temperature",
+    icon: UilTemperature,
+    color: "linear-gradient(180deg, #FF919D 0%, #FC929D 100%)",
+    key: "temperature",
+    satuan: " °C",
+  },
+  {
+    title: "Humidity",
+    icon: UilTear,
+    color: "linear-gradient(rgb(248, 212, 154) -146.42%, rgb(255 202 113) -46.42%)",
+    key: "humidity",
+    satuan: " %",
+  },
+];
+
+const cardConfigs = rawCardConfigs
+  .map(card => {
+    const series = getSeriesData(card.key);
+    if (!series || series.length === 0 || series.every(v => v === null || v === undefined)) return null;
+    return {
+      ...card,
+      value: sensorData.at(0)?.[card.key],
+      series,
+    };
+  })
+  .filter(Boolean); // buang yang null
 
   return (
     <div className="data-detail">
@@ -119,21 +128,28 @@ const DataDetail = () => {
       </div>
 
       <div className="cards-section">
-        {cardConfigs.map((card, idx) => (
-          <Card
-            key={idx}
-            title={card.title}
-            color={{ backGround: card.color }}
-            barValue={70}
-            value={card.value}
-            satuan={card.satuan}
-            png={card.icon}
-            xaxis={timestamps}
-            series={[{ name: card.title, data: card.series }]}
-            interval={interval}
-          />
-        ))}
+        {cardConfigs.length > 0 ? (
+          cardConfigs.map((card, idx) => (
+            <Card
+              key={idx}
+              title={card.title}
+              color={{ backGround: card.color }}
+              barValue={70}
+              value={card.value}
+              satuan={card.satuan}
+              png={card.icon}
+              xaxis={timestamps}
+              series={[{ name: card.title, data: card.series }]}
+              interval={interval}
+            />
+          ))
+        ) : (
+          <p style={{ textAlign: "center", marginTop: "2rem" }}>
+            Tidak ada data sensor tersedia untuk ditampilkan.
+          </p>
+        )}
       </div>
+
 
       <h3>Latest Sensor Data</h3>
       <table className="sensor-table">
