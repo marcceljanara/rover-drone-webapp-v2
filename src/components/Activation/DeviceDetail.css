@@ -6,6 +6,11 @@
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: hidden;
+   height: 165vh;
+  position: relative;
 }
 
 .device-detail-container h2 {
@@ -24,6 +29,7 @@
   padding: 30px;
   margin-bottom: 30px;
   font-size: 16px;
+  box-sizing: border-box;
 }
 
 .detail-item {
@@ -136,25 +142,10 @@
   text-align: center;
 }
 
-.status-badge.active {
-  background-color: #28a745;
-  color: #fff;
-}
-
-.status-badge.inactive {
-  background-color: #d6d6d6;
-  color: #333;
-}
-
-.status-badge.offline {
-  background-color: #dc3545;
-  color: #fff;
-}
-
-.status-badge.unknown {
-  background-color: #999;
-  color: #fff;
-}
+.status-badge.active { background-color: #28a745; color: #fff; }
+.status-badge.inactive { background-color: #d6d6d6; color: #333; }
+.status-badge.offline { background-color: #dc3545; color: #fff; }
+.status-badge.unknown { background-color: #999; color: #fff; }
 
 .notification-popup {
   position: fixed;
@@ -195,6 +186,7 @@
   100% { opacity: 0; transform: translateY(20px); }
 }
 
+/* PENTING: Agar box Penggunaan Hari Ini tidak bertumpuk */
 .daily-data {
   margin-top: 30px;
   padding: 20px;
@@ -203,8 +195,13 @@
   border-radius: 8px;
   max-width: 600px;
   width: 100%;
+  box-sizing: border-box;
   box-shadow: 0 2px 8px rgba(0, 128, 0, 0.1);
   text-align: center;
+  flex-shrink: 0;
+  flex-grow: 1;
+  position: relative;
+  z-index: 2;
 }
 
 .daily-data h3 {
@@ -242,51 +239,60 @@
   .device-detail-container {
     padding: 20px 10px;
   }
+
   .device-detail-card {
     padding: 20px;
   }
+
   .detail-item {
     flex-direction: column;
     align-items: flex-start;
   }
+
   .detail-item strong {
     width: 100%;
     margin-bottom: 5px;
   }
+
   .topic-with-button {
     flex-direction: column;
     align-items: flex-start;
   }
+
   .toggle-buttons {
     flex-direction: column;
     gap: 20px;
   }
+
   .on-btn,
   .off-btn {
     width: 100%;
   }
+
   .daily-data {
     width: 100%;
     padding: 16px;
+    margin-top: 24px;
   }
+
   .refresh-daily-button {
     width: 100%;
   }
 }
 
 /* 17 Device-Specific Layouts */
-@media screen and (max-width: 376px) { .device-detail-container { padding: 16px 8px; } } /* iPhone SE */
-@media screen and (max-width: 415px) { .device-detail-container { padding: 18px 10px; } } /* iPhone XR */
-@media screen and (max-width: 391px) { .device-detail-container { padding: 18px 10px; } } /* iPhone 12 Pro */
-@media screen and (max-width: 431px) { .device-detail-container { padding: 18px 10px; } } /* iPhone 14 Pro Max */
-@media screen and (max-width: 413px) { .device-detail-container { padding: 18px 10px; } } /* Pixel 7, Galaxy S20 Ultra, A51/71 */
-@media screen and (max-width: 361px) { .device-detail-container { padding: 14px 6px; } } /* Galaxy S8+ */
-@media screen and (max-width: 769px) { .device-detail-container { padding: 22px 12px; } } /* iPad Mini */
-@media screen and (max-width: 821px) { .device-detail-container { padding: 24px 14px; } } /* iPad Air */
-@media screen and (max-width: 1025px) { .device-detail-container { padding: 28px 16px; } } /* iPad Pro */
-@media screen and (max-width: 913px) { .device-detail-container { padding: 26px 14px; } } /* Surface Pro 7 */
-@media screen and (max-width: 541px) { .device-detail-container { padding: 18px 10px; } } /* Surface Duo */
-@media screen and (max-width: 374px) { .device-detail-container { padding: 14px 6px; } } /* Galaxy Z Fold 5 */
-@media screen and (max-width: 1281px) { .device-detail-container { padding: 30px 18px; } } /* Asus Zenbook Fold */
-@media screen and (max-width: 1025px) and (max-height: 601px) { .device-detail-container { padding: 20px 12px; } } /* Nest Hub */
-@media screen and (max-width: 1281px) and (max-height: 801px) { .device-detail-container { padding: 22px 14px; } } /* Nest Hub Max */
+@media screen and (max-width: 376px) { .device-detail-container { padding: 16px 8px; } }
+@media screen and (max-width: 415px) { .device-detail-container { padding: 18px 10px; } }
+@media screen and (max-width: 391px) { .device-detail-container { padding: 18px 10px; } }
+@media screen and (max-width: 431px) { .device-detail-container { padding: 18px 10px; } }
+@media screen and (max-width: 413px) { .device-detail-container { padding: 18px 10px; } }
+@media screen and (max-width: 361px) { .device-detail-container { padding: 14px 6px; } }
+@media screen and (max-width: 769px) { .device-detail-container { padding: 22px 12px; } }
+@media screen and (max-width: 821px) { .device-detail-container { padding: 24px 14px; } }
+@media screen and (max-width: 1025px) { .device-detail-container { padding: 28px 16px; } }
+@media screen and (max-width: 913px) { .device-detail-container { padding: 26px 14px; } }
+@media screen and (max-width: 541px) { .device-detail-container { padding: 18px 10px; } }
+@media screen and (max-width: 374px) { .device-detail-container { padding: 14px 6px; } }
+@media screen and (max-width: 1281px) { .device-detail-container { padding: 30px 18px; } }
+@media screen and (max-width: 1025px) and (max-height: 601px) { .device-detail-container { padding: 20px 12px; } }
+@media screen and (max-width: 1281px) and (max-height: 801px) { .device-detail-container { padding: 22px 14px; } }
