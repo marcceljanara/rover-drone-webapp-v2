@@ -20,14 +20,35 @@
   color: #333;
 }
 
-/* 1200px ke bawah (Small Desktop - Tablet Landscape) */
+/* Parent container harus pakai flex juga agar order: 2 bisa berfungsi */
+.dashboard-layout {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+/* Konten utama (misal konten kiri) */
+.main-content {
+  flex: 1;
+  min-width: 300px;
+}
+
+/* RightSide default (di kanan) */
+.RightSide {
+  flex: 0 0 300px;
+}
+
+/* ============ RESPONSIVE BREAKPOINTS ============ */
+
+/* 1200px ke bawah */
 @media screen and (max-width: 1200px) {
   .RightSide {
     margin-top: 3rem;
   }
 }
 
-/* 1024px ke bawah (Tablet Portrait) */
+/* 1024px ke bawah */
 @media screen and (max-width: 1024px) {
   .RightSide {
     padding: 1.5rem;
@@ -44,12 +65,18 @@
   }
 }
 
-/* 768px ke bawah (Tablet Portrait - Large Mobile) */
+/* 768px ke bawah (turunkan RightSide ke bawah konten utama) */
 @media screen and (max-width: 768px) {
+  .dashboard-layout {
+    flex-direction: column;
+  }
+
   .RightSide {
+    order: 2;
     width: 100%;
     padding-top: 1rem;
-    gap: 1.5rem;
+    align-items: center;
+    margin-top: 2rem;
   }
 
   .RightSide > .section {
@@ -68,7 +95,7 @@
   }
 }
 
-/* 600px ke bawah (Medium Mobile) */
+/* 600px ke bawah */
 @media screen and (max-width: 600px) {
   .section-title {
     font-size: 16px;
@@ -80,7 +107,7 @@
   }
 }
 
-/* 480px ke bawah (Small Mobile) */
+/* 480px ke bawah */
 @media screen and (max-width: 480px) {
   .RightSide {
     padding-top: 0.5rem;
@@ -92,7 +119,7 @@
   }
 }
 
-/* 375px ke bawah (Very Small Devices like iPhone SE) */
+/* 375px ke bawah */
 @media screen and (max-width: 375px) {
   .section-title {
     font-size: 14px;
@@ -103,7 +130,7 @@
   }
 }
 
-/* 320px ke bawah (Extra Small Mobile / Foldable phones) */
+/* 320px ke bawah */
 @media screen and (max-width: 320px) {
   .section-title {
     font-size: 13px;

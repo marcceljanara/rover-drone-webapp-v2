@@ -1,3 +1,4 @@
+// MainDash.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./MainDash.css";
@@ -33,11 +34,11 @@ const MainDash = () => {
   const getStatusColor = (status) => {
     switch (status) {
       case "active":
-        return "#34D399"; // green
+        return "#34D399";
       case "inactive":
-        return "#F87171"; // red
+        return "#F87171";
       default:
-        return "#D1D5DB"; // gray
+        return "#D1D5DB";
     }
   };
 

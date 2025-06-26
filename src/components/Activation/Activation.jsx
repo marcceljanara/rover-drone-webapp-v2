@@ -11,141 +11,90 @@ const Activation = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [editingId, setEditingId] = useState(null);
   const [notification, setNotification] = useState(null);
-  const [glowingButton, setGlowingButton] = useState(null);
-  const [dailyData, setDailyData] = useState(null);
   const navigate = useNavigate();
 
-  const fetchDevices = async () => {
-    const accessToken = localStorage.getItem('accessToken');
-    try {
-      const response = await fetch('https://dev-api.xsmartagrichain.com/v1/devices', {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      const result = await response.json();
-      const devices = result.data.devices.map(device => ({
-        id: device.id,
-        rentalId: device.rental_id ?? 'null',
-        status: device.status,
-        lastIssue: device.last_reported_issue ?? 'null',
-        lastActive: device.last_active,
-      }));
-      setData(devices);
-    } catch (error) {
-      alert(`Gagal memuat data: ${error.message}`);
-    }
-  };
-
   useEffect(() => {
-    fetchDevices();
-
-    // Real-time sync from localStorage event
-    const handleStorageUpdate = (event) => {
-      if (event.key === 'deviceStatusUpdate') {
-        const updated = JSON.parse(event.newValue);
-        setData(prevData =>
-          prevData.map(item =>
-            item.id === updated.id ? { ...item, status: updated.status } : item
-          )
-        );
+    const fetchDevices = async () => {
+      const token = localStorage.getItem('accessToken');
+      try {
+        const res = await fetch('https://dev-api.xsmartagrichain.com/v1/devices', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const result = await res.json();
+        const devices = result.data.devices.map(device => ({
+          id: device.id,
+          rentalId: device.rental_id || 'null',
+          status: device.status,
+          lastIssue: device.last_reported_issue || 'null',
+          lastActive: device.last_active,
+        }));
+        setData(devices);
+      } catch (err) {
+        alert(`Gagal memuat data: ${err.message}`);
       }
     };
 
-    window.addEventListener('storage', handleStorageUpdate);
-    return () => window.removeEventListener('storage', handleStorageUpdate);
+    fetchDevices();
   }, []);
-
-  const fetchDailyStatus = async (id) => {
-    const accessToken = localStorage.getItem('accessToken');
-    try {
-      const res = await fetch(`https://dev-api.xsmartagrichain.com/v1/devices/${id}/daily`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      const result = await res.json();
-      setDailyData(result.data);
-      setNotification(`Data harian berhasil dimuat untuk ID: ${id}`);
-      setTimeout(() => setNotification(null), 3000);
-    } catch (error) {
-      alert(`Gagal mengambil data harian: ${error.message}`);
-    }
-  };
 
   const handleEdit = (id) => setEditingId(id);
 
   const handleStatusChange = async (id, newStatus) => {
-    const accessToken = localStorage.getItem('accessToken');
+    const token = localStorage.getItem('accessToken');
     try {
-      const response = await fetch(`https://dev-api.xsmartagrichain.com/v1/devices/${id}/status`, {
+      await fetch(`https://dev-api.xsmartagrichain.com/v1/devices/${id}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ status: newStatus }),
       });
-
-      const result = await response.json();
-      setNotification(result.message || 'Status berhasil diubah');
+      setNotification(`Status perangkat ${id} diubah menjadi ${newStatus}`);
       setTimeout(() => setNotification(null), 3000);
+      setData(prev => prev.map(item => item.id === id ? { ...item, status: newStatus } : item));
       setEditingId(null);
-
-      // Update local data without re-fetch
-      setData(prev =>
-        prev.map(item =>
-          item.id === id ? { ...item, status: newStatus } : item
-        )
-      );
-
-      // Optional: Notify other tabs via localStorage event
-      localStorage.setItem('deviceStatusUpdate', JSON.stringify({ id, status: newStatus }));
-      if (newStatus === 'active') fetchDailyStatus(id);
-    } catch (error) {
-      alert(`Error: ${error.message}`);
+    } catch (err) {
+      alert(`Gagal ubah status: ${err.message}`);
     }
   };
 
   const handleDelete = async (id) => {
-    const accessToken = localStorage.getItem('accessToken');
+    const token = localStorage.getItem('accessToken');
     try {
-      const response = await fetch(`https://dev-api.xsmartagrichain.com/v1/devices/${id}`, {
+      await fetch(`https://dev-api.xsmartagrichain.com/v1/devices/${id}`, {
         method: 'PUT',
-        headers: { Authorization: `Bearer ${accessToken}` },
+        headers: { Authorization: `Bearer ${token}` },
       });
-      const result = await response.json();
-      setNotification(result.message || 'Perangkat berhasil dihapus');
+      setNotification(`Perangkat ${id} berhasil dihapus`);
       setTimeout(() => setNotification(null), 3000);
-      await fetchDevices();
-    } catch (error) {
-      alert(`Error: ${error.message}`);
+      setData(prev => prev.filter(item => item.id !== id));
+    } catch (err) {
+      alert(`Gagal menghapus: ${err.message}`);
     }
   };
 
   const handleAdd = async () => {
-    const accessToken = localStorage.getItem('accessToken');
+    const token = localStorage.getItem('accessToken');
     try {
       await fetch('https://dev-api.xsmartagrichain.com/v1/devices', {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
       });
       setNotification('Perangkat berhasil ditambahkan');
       setTimeout(() => setNotification(null), 3000);
-      await fetchDevices();
-    } catch (error) {
-      alert(`Error: ${error.message}`);
+      window.location.reload();
+    } catch (err) {
+      alert(`Gagal menambahkan: ${err.message}`);
     }
-  };
-
-  const handleGlow = (type) => {
-    setGlowingButton(type);
-    setTimeout(() => setGlowingButton(null), 1000);
   };
 
   const filteredData = data.filter((item) =>
     item.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.status.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.lastIssue.toLowerCase().includes(searchTerm.toLowerCase())
+    item.status.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -153,88 +102,75 @@ const Activation = () => {
   const currentData = filteredData.slice(startIndex, startIndex + itemsPerPage);
 
   return (
-    <div className="container">
-      <h2>Kelola Perangkat Rover Drone</h2>
+    <div className="activation-container">
+      <h2 className="activation-title">Kelola Perangkat Rover Drone</h2>
 
-      <div className="search-add-bar">
-        <input
-          type="text"
-          placeholder="Cari Drone Rover"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <button
-          className={`add-btn ${glowingButton === 'add' ? 'glow' : ''}`}
-          onClick={() => {
-            handleAdd();
-            handleGlow('add');
-          }}
-        >
-          + Tambah Perangkat
-        </button>
-      </div>
+      <div className="activation-box">
+        <div className="search-add">
+          <input
+            type="text"
+            placeholder="Cari perangkat..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <button className="add-btn" onClick={handleAdd}>+ Tambah</button>
+        </div>
 
-      {notification && <div className="notification">{notification}</div>}
+        {notification && <div className="notif">{notification}</div>}
 
-      <div className="responsive-table-wrapper">
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>Id</th>
-              <th>Rental Id</th>
-              <th>Status</th>
-              <th>Last Issue</th>
-              <th>Last Active</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentData.map((item) => (
-              <tr key={item.id}>
-                <td data-label="Id" className="clickable-id" onClick={() => navigate(`/devices/${item.id}`)}>{item.id}</td>
-                <td data-label="Rental Id">{item.rentalId}</td>
-                <td data-label="Status">
-                  {editingId === item.id ? (
-                    <select
-                      defaultValue={item.status}
-                      onChange={(e) => handleStatusChange(item.id, e.target.value)}
-                      onBlur={() => setEditingId(null)}
-                      className="status-dropdown"
-                    >
-                      <option value="" disabled>Pilih status</option>
-                      {statusOptions.map((opt) => (
-                        <option key={opt} value={opt}>{opt.charAt(0).toUpperCase() + opt.slice(1)}</option>
-                      ))}
-                    </select>
-                  ) : (
-                    <span
-                      className={`status-badge status-${item.status}`}
-                      onClick={() => handleEdit(item.id)}
-                    >
-                      {item.status}
-                    </span>
-                  )}
-                </td>
-                <td data-label="Last Issue">{item.lastIssue}</td>
-                <td data-label="Last Active">{item.lastActive}</td>
-                <td data-label="Aksi">
-                  <button className={`edit-btn ${glowingButton === 'edit' ? 'glow' : ''}`} onClick={() => { handleEdit(item.id); handleGlow('edit'); }}>Edit</button>
-                  <button className={`delete-btn ${glowingButton === 'delete' ? 'glow' : ''}`} onClick={() => { handleDelete(item.id); handleGlow('delete'); }}>Hapus</button>
-                </td>
+        <div className="table-wrapper">
+          <table className="activation-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Rental ID</th>
+                <th>Status</th>
+                <th>Masalah Terakhir</th>
+                <th>Aktif Terakhir</th>
+                <th>Aksi</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {currentData.map(item => (
+                <tr key={item.id}>
+                  <td className="clickable" onClick={() => navigate(`/devices/${item.id}`)}>{item.id}</td>
+                  <td>{item.rentalId}</td>
+                  <td>
+                    {editingId === item.id ? (
+                      <select
+                        defaultValue={item.status}
+                        onChange={(e) => handleStatusChange(item.id, e.target.value)}
+                        onBlur={() => setEditingId(null)}
+                      >
+                        <option disabled>Pilih status</option>
+                        {statusOptions.map(opt => (
+                          <option key={opt} value={opt}>{opt}</option>
+                        ))}
+                      </select>
+                    ) : (
+                      <span className={`badge ${item.status}`} onClick={() => handleEdit(item.id)}>
+                        {item.status}
+                      </span>
+                    )}
+                  </td>
+                  <td>{item.lastIssue}</td>
+                  <td>{item.lastActive}</td>
+                  <td className="action-col">
+                    <button className="delete-btn" onClick={() => handleDelete(item.id)}>Hapus</button>
+                    <button className="edit-btn" onClick={() => handleEdit(item.id)}>Edit</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-      <div className="footer">
-        <span>
-          Menampilkan {startIndex + 1} - {Math.min(startIndex + itemsPerPage, filteredData.length)} dari {filteredData.length}
-        </span>
         <div className="pagination">
-          <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1}>◀</button>
-          <span className="page-number">Page {String(currentPage).padStart(2, '0')}</span>
-          <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>▶</button>
+          <span>Halaman {currentPage} dari {totalPages}</span>
+          <div>
+            <button onClick={() => setCurrentPage(p => Math.max(p - 1, 1))} disabled={currentPage === 1}>◀</button>
+            <button onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages}>▶</button>
+          </div>
         </div>
       </div>
     </div>
