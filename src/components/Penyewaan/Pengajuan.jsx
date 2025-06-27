@@ -132,7 +132,7 @@ function KelolaPenyewaan() {
 
   return (
     <main className="container" role="main">
-      <h2>Kelola Penyewaan Rover Drone</h2>
+      <h2 className="page-title">Kelola Penyewaan Rover Drone</h2>
 
       <div className="search-add-bar">
         <input
@@ -161,7 +161,11 @@ function KelolaPenyewaan() {
         </div>
       ) : (
         <div className="table-wrapper">
-          <table className="data-table" role="table" aria-label="Daftar penyewaan rover drone">
+          <table
+            className="data-table"
+            role="table"
+            aria-label="Daftar penyewaan rover drone"
+          >
             <thead>
               <tr>
                 <th>ID</th>
@@ -178,6 +182,7 @@ function KelolaPenyewaan() {
                   <tr key={id}>
                     <td
                       className="clickable-id"
+                      data-label="ID"
                       tabIndex={0}
                       role="button"
                       aria-label={`Lihat detail penyewaan ${id}`}
@@ -190,15 +195,21 @@ function KelolaPenyewaan() {
                     >
                       {id}
                     </td>
-                    <td>{new Date(start_date).toLocaleDateString('id-ID')}</td>
-                    <td>{new Date(end_date).toLocaleDateString('id-ID')}</td>
-                    <td>
+                    <td data-label="Tanggal Mulai">
+                      {new Date(start_date).toLocaleDateString('id-ID')}
+                    </td>
+                    <td data-label="Tanggal Berakhir">
+                      {new Date(end_date).toLocaleDateString('id-ID')}
+                    </td>
+                    <td data-label="Status">
                       <span className={`status-badge status-${rental_status}`}>
                         {rental_status}
                       </span>
                     </td>
-                    <td>{total_cost?.toLocaleString('id-ID')}</td>
-                    <td>
+                    <td data-label="Biaya (Rp)">
+                      {total_cost?.toLocaleString('id-ID')}
+                    </td>
+                    <td data-label="Aksi">
                       <div className="action-wrapper">
                         {role === 'admin' && (
                           <button
