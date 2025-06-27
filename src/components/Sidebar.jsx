@@ -1,6 +1,6 @@
 // Sidebar.jsx
 import React, { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import "./Sidebar.css";
 
 import Logo from "../imgs/rover2.png";
@@ -37,6 +37,8 @@ const menuData = [
 const Sidebar = () => {
   const [expanded, setExpanded] = useState(window.innerWidth > 768);
   const role = localStorage.getItem("role") || "guest";
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const filteredMenu = menuData.filter((item) =>
     role === "user"
@@ -51,6 +53,17 @@ const Sidebar = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  const handleIconLokasiClick = () => {
+    if (location.pathname === "/addresses" && window.innerWidth <= 768) {
+      setExpanded(false);
+    } else {
+      navigate("/addresses");
+      if (window.innerWidth <= 768) {
+        setExpanded(true);
+      }
+    }
+  };
 
   return (
     <>
@@ -72,9 +85,12 @@ const Sidebar = () => {
             <span className="brand-name">
               Ro<span>o</span>ne
             </span>
-            <NavLink to="/addresses">
-              <img src={IconLokasi} className="icon-lokasi" alt="lokasi" />
-            </NavLink>
+            <img
+              src={IconLokasi}
+              className={`icon-lokasi ${location.pathname === "/addresses" ? "active" : ""}`}
+              alt="lokasi"
+              onClick={handleIconLokasiClick}
+            />
           </div>
         </div>
 

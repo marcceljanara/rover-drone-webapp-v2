@@ -11,8 +11,9 @@ html, body {
   width: 100%;
   min-height: 100vh;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow-x: hidden;
+  overflow-y: hidden;
   background: transparent !important;
-  overflow-x: auto;
 }
 
 /* ========== CONTAINER ========== */
@@ -24,15 +25,6 @@ html, body {
   background: transparent !important;
 }
 
-/* ========== BOX RESPONSIVE ========== */
-.responsive-box {
-  background: transparent !important;
-  box-shadow: none !important;
-  border: none !important;
-  padding: 0 !important;
-  margin-bottom: 1rem;
-}
-
 /* ========== JUDUL HALAMAN ========== */
 .page-title {
   text-align: center;
@@ -40,25 +32,21 @@ html, body {
   font-weight: bold;
   color: #333;
   margin-bottom: 1.5rem;
-  background: transparent !important;
 }
 
-/* ========== WRAPPER PENCARIAN ========== */
+/* ========== PENCARIAN ========== */
 .search-wrapper {
   border: 2px solid #28a745;
-  background: transparent !important;
   border-radius: 12px;
   padding: 1rem;
   margin-bottom: 1.5rem;
-  width: 100%;
+  background: transparent !important;
 }
 
-/* ========== BAR PENCARIAN + TOMBOL ========== */
 .search-add-bar {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
-  width: 100%;
   background: transparent !important;
 }
 
@@ -97,11 +85,12 @@ html, body {
 /* ========== TABEL ========== */
 .table-wrapper {
   width: 100%;
-  overflow-x: auto;
   border: 2px solid #28a745;
   border-radius: 12px;
-  background: transparent !important;
   padding: 1rem;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  background: transparent !important;
 }
 
 .data-table {
@@ -111,29 +100,20 @@ html, body {
   background: transparent !important;
 }
 
-.data-table th,
-.data-table td {
-  border: 1.5px solid #ccc;
-  padding: 0.75rem;
-  text-align: left;
-  white-space: nowrap;
-
-}
-
 .data-table th {
+  background-color: #28a745;
+  color: white;
   font-weight: bold;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  white-space: nowrap;
 }
 
-/* ========== ID LINK ========== */
-.clickable-id {
-  color: #007bff;
-  text-decoration: underline;
-  cursor: pointer;
+.data-table td {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  white-space: nowrap;
   background: transparent !important;
-}
-
-.clickable-id:hover {
-  color: #0056b3;
 }
 
 /* ========== STATUS BADGES ========== */
@@ -185,47 +165,16 @@ html, body {
 .notification { background: #28a745; }
 .notification.error { background: #dc3545; }
 
-/* ========== TIDAK ADA DATA ========== */
-.no-data {
-  text-align: center;
-  font-weight: 500;
-  color: #555;
-  padding: 1rem;
-  background: transparent !important;
-}
-
-/* ========== RESPONSIVE (≤768px) ========== */
+/* ========== RESPONSIVE MODE (≤768px) ========== */
 @media (max-width: 768px) {
-  .container {
-    padding: 1rem;
-  }
-
-  .responsive-box {
-    padding: 0 !important;
-    margin: 0 !important;
-    background: transparent !important;
-  }
-
-  .page-title {
-    text-align: left;
-    font-size: 1.6rem;
-    margin-left: 0.5rem;
-  }
-
-  .search-wrapper {
-    padding: 0.75rem;
-  }
-
-  .search-add-bar {
-    flex-direction: column;
-  }
-
-  .search-add-bar input,
-  .add-btn {
-    width: 100%;
+  html, body {
+    overflow-y: auto !important;
+    overflow-x: auto !important;
   }
 
   .table-wrapper {
+    overflow-x: auto !important;
+    overflow-y: auto !important;
     padding: 0.5rem;
   }
 
