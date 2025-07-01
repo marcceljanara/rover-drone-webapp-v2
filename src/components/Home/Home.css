@@ -1,6 +1,6 @@
 /* Wrapper untuk mencegah scroll horizontal */
 .home-wrapper {
-  width: 100vw;
+  width: 1000vw;
   height: 100vh;
   overflow-x: hidden; /* Hapus scroll horizontal */
   overflow-y: auto;   /* Aktifkan scroll vertikal */
