@@ -1,10 +1,19 @@
+/* Wrapper untuk mencegah scroll horizontal */
+.home-wrapper {
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden; /* Hapus scroll horizontal */
+  overflow-y: auto;   /* Aktifkan scroll vertikal */
+}
+
+/* Container utama konten Home */
 .home {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: stretch;
-  min-height: 100vh;
-  width: 100vw;
+  min-height: 100%;
+  width: 100%;
   padding: 0.5rem 3.5rem;
   color: var(--black);
   background: linear-gradient(106.37deg, #bcffd8 29.63%, #e6ffcf 51.55%, #c6f3c8 90.85%);
