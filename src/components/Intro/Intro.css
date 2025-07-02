@@ -1,10 +1,9 @@
 .Intro {
   display: flex;
   flex-direction: row;
-  height: 73vh;
-  margin-top: 4rem;
   justify-content: space-between;
-  padding: 0 2rem;
+  padding: 10vh 2rem 0 2rem; /* ✅ ini penting: agar konten turun 10% dari atas */
+  height: 73vh;
   width: 100%;
 }
 
@@ -116,14 +115,12 @@
 /* RESPONSIVE STYLING SECTION   */
 /* ============================= */
 
-/* Semua layar responsif: hilangkan gambar */
 @media screen and (max-width: 1024px) {
   .Intro {
     flex-direction: column;
     align-items: center;
-    padding: 0 1rem;
+    padding: 10vh 1rem 0 1rem; /* ✅ tetap beri padding top */
     height: auto;
-    margin-top: 2rem;
   }
 
   .i-left,
@@ -134,7 +131,6 @@
 
   .i-name {
     text-align: center;
-    margin-top: 1rem;
   }
 
   .i-button {
@@ -148,24 +144,8 @@
   .floating-div {
     display: none !important;
   }
-
-  /* iPad khusus (landscape & portrait) */
-  @media screen and (min-width: 768px) and (max-width: 1024px) {
-    .i-left {
-      align-items: center;
-    }
-
-    .i-name {
-      text-align: center;
-    }
-
-    .i-button {
-      margin: 0 auto;
-    }
-  }
 }
 
-/* Surface Duo (540x720) */
 @media screen and (max-width: 540px) {
   .Intro {
     flex-direction: column;

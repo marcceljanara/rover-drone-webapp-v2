@@ -45,17 +45,17 @@ const Intro = () => {
           <button className="button">Dashboard</button>
         </Link>
         <div className="i-icons">
-          <img src={Github} alt="" />
-          <img src={LinkedIn} alt="" />
-          <img src={Instagram} alt="" />
+          <img src={Github} alt="GitHub" />
+          <img src={LinkedIn} alt="LinkedIn" />
+          <img src={Instagram} alt="Instagram" />
         </div>
       </div>
       <div className="i-right">
-        <img src={Vector1} alt="" />
-        <img src={Vector2} alt="" />
+        <img src={Vector1} alt="vector1" />
+        <img src={Vector2} alt="vector2" />
         <motion.img
           src={boy}
-          alt=""
+          alt="boy"
           initial={{ y: 0 }}
           animate={isAnimated ? { y: [0, -100, 0] } : { y: 0 }}
           transition={transition}
@@ -66,7 +66,7 @@ const Intro = () => {
           whileInView={{ left: "-24%" }}
           transition={transition}
           src={glassesimoji}
-          alt=""
+          alt="emoji"
         />
         <motion.div
           initial={{ top: "-4%", left: "60%" }}

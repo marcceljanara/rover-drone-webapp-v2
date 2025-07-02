@@ -215,9 +215,11 @@ const Navbar = () => {
   };
 
   return (
-    <div className="n-wrapper" id="Navbar">
+    <div className={`n-wrapper ${isMenuOpen ? "menu-open" : ""}`} id="Navbar">
       {/* NAVIGATION */}
-      <div className="n-left"><div className="n-name">Roone</div></div>
+      <div className="n-left">
+        <div className="n-name">Roone</div>
+      </div>
       <div className="hamburger" onClick={toggleMenu}>☰</div>
 
       <div className={`n-right ${isMenuOpen ? "open" : ""}`}>
