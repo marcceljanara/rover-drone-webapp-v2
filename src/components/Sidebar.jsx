@@ -42,7 +42,7 @@ const Sidebar = () => {
 
   const filteredMenu = menuData.filter((item) =>
     role === "user"
-      ? !["/payments", "/reports", "/admin"].includes(item.link)
+      ? !["/payments", "/reports", "/admin", "/pengiriman", "/returns"].includes(item.link)
       : true
   );
 
