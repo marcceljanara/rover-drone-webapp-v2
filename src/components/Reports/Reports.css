@@ -60,7 +60,7 @@ h2 {
 /* === TABEL === */
 .table-wrapper {
   width: 100%;
-  overflow-x: hidden;         /* ✅ Tidak ada scroll horizontal */
+  overflow-x: hidden;
   background-color: transparent;
   border-radius: 0;
   box-shadow: none;
@@ -70,7 +70,8 @@ h2 {
 .responsive-table {
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed;        /* ✅ Batasi lebar tabel */
+  table-layout: fixed;
+  background-color: transparent; /* ✅ Transparan agar menyatu dengan background halaman */
 }
 
 .responsive-table th,
@@ -80,6 +81,7 @@ h2 {
   text-align: center;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  background-color: transparent; /* ✅ Pastikan setiap sel transparan */
 }
 
 .responsive-table th {
@@ -115,6 +117,7 @@ h2 {
     position: relative;
     border: none;
     border-bottom: 1px solid #ccc;
+    background-color: transparent;
   }
 
   .responsive-table td:last-child {
@@ -184,17 +187,15 @@ h2 {
   justify-content: center;
   align-items: center;
   gap: 15px;
-  margin-top: 20px;
-  .delete-btn {
-  margin-right: 90px;  /* Geser tombol Hapus */
 }
 
-.cancel-btn {
-  margin-left: 40px;   /* Geser tombol Batal */
-}
+.modal-actions .delete-btn {
+  margin-right: 90px; /* Geser tombol Hapus */
 }
 
-
+.modal-actions .cancel-btn {
+  margin-left: 40px;  /* Geser tombol Batal */
+}
 
 .delete-btn,
 .cancel-btn {
