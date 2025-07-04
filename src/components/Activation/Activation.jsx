@@ -112,6 +112,7 @@ const Activation = () => {
             placeholder="Cari perangkat..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            className="search-input"
           />
           <button className="add-btn" onClick={handleAdd}>+ Tambah</button>
         </div>

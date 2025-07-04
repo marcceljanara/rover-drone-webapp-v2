@@ -1,47 +1,53 @@
-/* ========== Container ========== */
 .activation-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 2rem;
   min-height: 100vh;
+  background: linear-gradient(to bottom right, #eaffea, #e9fce9);
   box-sizing: border-box;
   overflow-x: hidden;
-  background: linear-gradient(to bottom right, #eaffea, #f5fff5);
 }
 
-/* ========== Title ========== */
 .activation-title {
-  text-align: center;
   font-size: 26px;
-  margin-bottom: 1.5rem;
   font-weight: bold;
   color: #2c552c;
+  margin-bottom: 1.5rem;
+  text-align: center;
 }
 
-/* ========== Box ========== */
 .activation-box {
   width: 100%;
   max-width: 1000px;
   box-sizing: border-box;
 }
 
-/* ========== Search & Add ========== */
 .search-add {
   display: flex;
   justify-content: space-between;
-  flex-wrap: wrap;
   gap: 1rem;
+  flex-wrap: wrap;
   margin-bottom: 1rem;
+  margin-top: 3rem;
+  max-width: 490px;
 }
 
-.search-add input {
+.search-input {
   flex: 1;
-  min-width: 200px;
-  padding: 0.5rem;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 10px 14px;
+  font-size: 15px;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+  max-width: 100%;
+  box-sizing: border-box;
+  background-color: transparent; /* ⬅️ menghilangkan warna putih */
+  color: #2c552c; /* agar teks tetap terlihat jelas */
+}
+
+.search-input::placeholder {
+  color: #5c7a5c; /* ⬅️ placeholder menyatu dengan tema hijau */
+  opacity: 0.8;
 }
 
 .add-btn {
@@ -54,68 +60,60 @@
   cursor: pointer;
 }
 
-/* ========== Notifikasi ========== */
 .notif {
+  background-color: #d4edda;
+  color: #155724;
   padding: 0.75rem;
-  border: 1px solid #b2e0b2;
-  color: #2f7032;
+  border: 1px solid #c3e6cb;
   border-radius: 5px;
   margin-bottom: 1rem;
 }
 
-/* ========== Table Wrapper ========== */
 .table-wrapper {
   width: 100%;
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
 }
 
-/* ========== Table ========== */
 .activation-table {
   width: 100%;
   min-width: 800px;
   border-collapse: collapse;
   table-layout: fixed;
-  background-color: transparent; /* ✅ Diubah agar menyatu dengan background halaman */
+  background-color: transparent;
 }
 
-/* ========== Header & Cell ========== */
 .activation-table th,
 .activation-table td {
   padding: 0.8rem;
+  font-size: 14px;
   text-align: left;
   border-bottom: 1px solid #ddd;
-  font-size: 14px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  background-color: transparent; /* ✅ Pastikan juga sel menyatu */
+  background-color: transparent;
 }
 
 .activation-table th {
-  position: sticky;
-  top: 0;
   background-color: #dff0df;
   color: #166a16;
+  position: sticky;
+  top: 0;
+  z-index: 1;
   font-weight: bold;
-  z-index: 2;
-  border-bottom: 2px solid #ccc;
 }
 
-/* ========== Klikable Cell ========== */
 .clickable {
   color: #007bff;
   cursor: pointer;
 }
 
-/* ========== Badge Status ========== */
 .badge {
   padding: 0.3rem 0.6rem;
   border-radius: 12px;
   font-weight: bold;
-  display: inline-block;
   text-transform: capitalize;
+  display: inline-block;
   cursor: pointer;
 }
 
@@ -124,46 +122,43 @@
 .badge.maintenance { background: #ffc107; color: black; }
 .badge.error { background: #dc3545; color: white; }
 
-/* ========== Tombol Aksi ========== */
 .action-col {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   gap: 6px;
+  align-items: flex-start;
 }
 
 .edit-btn,
 .delete-btn {
   font-size: 13px;
   padding: 0.4rem 0.8rem;
-  border: none;
   border-radius: 4px;
+  border: none;
   color: white;
   cursor: pointer;
   width: 90px;
-  max-width: 100%;
   text-align: center;
 }
 
 .edit-btn { background-color: #007bff; }
 .delete-btn { background-color: #dc3545; }
 
-/* ========== Pagination ========== */
 .pagination {
   margin-top: 1.5rem;
   display: flex;
   justify-content: space-between;
+  font-size: 14px;
   flex-wrap: wrap;
   gap: 0.5rem;
-  font-size: 14px;
 }
 
 .pagination button {
   padding: 0.4rem 0.8rem;
-  border: none;
   background-color: #007bff;
   color: white;
   border-radius: 5px;
+  border: none;
   cursor: pointer;
 }
 
@@ -172,7 +167,7 @@
   cursor: not-allowed;
 }
 
-/* ========== Responsive Styles ========== */
+/* Responsive */
 @media (max-width: 768px) {
   .search-add {
     flex-direction: column;
@@ -182,11 +177,6 @@
     min-width: 750px;
   }
 
-  .activation-table th,
-  .activation-table td {
-    font-size: 13px;
-  }
-
   .edit-btn,
   .delete-btn {
     font-size: 12px;
@@ -194,15 +184,15 @@
     width: 100%;
     max-width: 90px;
   }
-
-  .action-col {
-    flex-direction: column-reverse;
-    align-items: stretch;
-    gap: 4px;
-  }
 }
 
 @media (max-width: 480px) {
+  .search-input {
+    font-size: 14px;
+    padding: 10px;
+    width: 100%;
+  }
+
   .activation-table {
     min-width: 700px;
   }
@@ -210,19 +200,5 @@
   .activation-table th,
   .activation-table td {
     font-size: 12px;
-  }
-
-  .edit-btn,
-  .delete-btn {
-    font-size: 12px;
-    width: 100%;
-    max-width: 90px;
-    padding: 0.25rem 0.5rem;
-  }
-
-  .action-col {
-    align-items: stretch;
-    flex-direction: column-reverse;
-    gap: 4px;
   }
 }
