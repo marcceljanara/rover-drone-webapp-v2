@@ -11,9 +11,21 @@ function KelolaPenyewaan() {
   const [notification, setNotification] = useState('');
   const [showNotification, setShowNotification] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const itemsPerPage = 5;
 
   const role = localStorage.getItem('role');
   const token = localStorage.getItem('accessToken');
+
+  const allColumns = [
+    { key: 'id', label: 'ID' },
+    { key: 'start_date', label: 'Tanggal Mulai' },
+    { key: 'end_date', label: 'Tanggal Berakhir' },
+    { key: 'rental_status', label: 'Status' },
+    { key: 'total_cost', label: 'Biaya (Rp)' },
+    { key: 'action', label: 'Aksi' },
+  ];
 
   useEffect(() => {
     if (!token) {
@@ -32,7 +44,6 @@ function KelolaPenyewaan() {
           },
         });
         const result = await response.json();
-
         if (!response.ok) throw new Error(result.message || 'Gagal memuat data penyewaan.');
         setData(result.data?.rentals || []);
         setError('');
@@ -55,7 +66,6 @@ function KelolaPenyewaan() {
 
   const handleAction = async (id) => {
     if (!token) return;
-
     try {
       const isAdmin = role === 'admin';
       const url = isAdmin
@@ -73,7 +83,6 @@ function KelolaPenyewaan() {
 
       const response = await fetch(url, options);
       const result = await response.json();
-
       if (!response.ok) throw new Error(result.message || 'Gagal mengubah status sewa.');
 
       setNotification(result.message);
@@ -94,7 +103,6 @@ function KelolaPenyewaan() {
 
   const handleComplete = async (id) => {
     if (!token) return;
-
     try {
       const response = await fetch(
         `https://dev-api.xsmartagrichain.com/v1/rentals/${id}/status`,
@@ -107,9 +115,7 @@ function KelolaPenyewaan() {
           body: JSON.stringify({ rentalStatus: 'completed' }),
         }
       );
-
       const result = await response.json();
-
       if (!response.ok) throw new Error(result.message || 'Gagal menyelesaikan sewa.');
 
       setNotification(result.message);
@@ -130,6 +136,11 @@ function KelolaPenyewaan() {
     item.id.toString().toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+
   return (
     <main className="container" role="main">
       <h2 className="page-title">Kelola Penyewaan Rover Drone</h2>
@@ -138,16 +149,14 @@ function KelolaPenyewaan() {
         <input
           type="text"
           placeholder="Cari ID Penyewaan"
-          aria-label="Cari ID Penyewaan"
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+            setCurrentPage(1);
+          }}
         />
         {role === 'user' && (
-          <button
-            className="add-btn"
-            onClick={() => navigate('/penyewaan/lanjutan')}
-            aria-label="Ajukan Penyewaan Baru"
-          >
+          <button className="add-btn" onClick={() => navigate('/penyewaan/lanjutan')}>
             + Ajukan Penyewaan Baru
           </button>
         )}
@@ -156,93 +165,106 @@ function KelolaPenyewaan() {
       {loading ? (
         <p>Memuat data...</p>
       ) : error ? (
-        <div className="notification error" role="alert" aria-live="assertive">
-          {error}
-        </div>
+        <div className="notification error">{error}</div>
       ) : (
-        <div className="table-wrapper">
-          <table
-            className="data-table"
-            role="table"
-            aria-label="Daftar penyewaan rover drone"
-          >
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Tanggal Mulai</th>
-                <th>Tanggal Berakhir</th>
-                <th>Status</th>
-                <th>Biaya (Rp)</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredData.length > 0 ? (
-                filteredData.map(({ id, start_date, end_date, rental_status, total_cost }) => (
-                  <tr key={id}>
-                    <td
-                      className="clickable-id"
-                      data-label="ID"
-                      tabIndex={0}
-                      role="button"
-                      aria-label={`Lihat detail penyewaan ${id}`}
-                      onClick={() => navigate(`/penyewaan/${id}`)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          navigate(`/penyewaan/${id}`);
-                        }
-                      }}
-                    >
-                      {id}
-                    </td>
-                    <td data-label="Tanggal Mulai">
-                      {new Date(start_date).toLocaleDateString('id-ID')}
-                    </td>
-                    <td data-label="Tanggal Berakhir">
-                      {new Date(end_date).toLocaleDateString('id-ID')}
-                    </td>
-                    <td data-label="Status">
-                      <span className={`status-badge status-${rental_status}`}>
-                        {rental_status}
-                      </span>
-                    </td>
-                    <td data-label="Biaya (Rp)">
-                      {total_cost?.toLocaleString('id-ID')}
-                    </td>
-                    <td data-label="Aksi">
-                      <div className="action-wrapper">
-                        {role === 'admin' && (
-                          <button
-                            className="action-btn admin"
-                            onClick={() => handleComplete(id)}
-                            disabled={rental_status !== 'active'}
-                            aria-disabled={rental_status !== 'active'}
-                          >
-                            Selesaikan
-                          </button>
-                        )}
-                        <button
-                          className={`action-btn ${role}`}
-                          onClick={() => handleAction(id)}
-                          disabled={role === 'user' && rental_status !== 'pending'}
-                          aria-disabled={role === 'user' && rental_status !== 'pending'}
-                        >
-                          {role === 'admin' ? 'Hapus Sewa' : 'Batalkan'}
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              ) : (
+        <>
+          <div className="table-wrapper">
+            <table className="data-table">
+              <thead>
                 <tr>
-                  <td colSpan="6" style={{ textAlign: 'center' }}>
-                    Data penyewaan tidak ditemukan.
-                  </td>
+                  {allColumns.map((col) => (
+                    <th key={col.key}>{col.label}</th>
+                  ))}
                 </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {currentItems.map((item) => (
+                  <tr key={item.id}>
+                    {allColumns.map((col) => {
+                      const key = col.key;
+                      const label = col.label;
+
+                      if (key === 'action') {
+                        return (
+                          <td key="action" data-label={label}>
+                            <div className="action-wrapper">
+                              {role === 'admin' && (
+                                <button
+                                  className="action-btn admin"
+                                  onClick={() => handleComplete(item.id)}
+                                  disabled={item.rental_status !== 'active'}
+                                >
+                                  Selesaikan
+                                </button>
+                              )}
+                              <button
+                                className={`action-btn ${role}`}
+                                onClick={() => handleAction(item.id)}
+                                disabled={role === 'user' && item.rental_status !== 'pending'}
+                              >
+                                {role === 'admin' ? 'Hapus Sewa' : 'Batalkan'}
+                              </button>
+                            </div>
+                          </td>
+                        );
+                      }
+
+                      if (key === 'rental_status') {
+                        return (
+                          <td key="status" data-label={label}>
+                            <span className={`status-badge status-${item.rental_status}`}>
+                              {item.rental_status}
+                            </span>
+                          </td>
+                        );
+                      }
+
+                      if (key === 'start_date' || key === 'end_date') {
+                        return (
+                          <td key={key} data-label={label}>
+                            {new Date(item[key]).toLocaleDateString('id-ID')}
+                          </td>
+                        );
+                      }
+
+                      if (key === 'total_cost') {
+                        return (
+                          <td key={key} data-label={label}>
+                            {item[key]?.toLocaleString('id-ID')}
+                          </td>
+                        );
+                      }
+
+                      return (
+                        <td
+                          key={key}
+                          data-label={label}
+                          className={key === 'id' ? 'clickable-id' : ''}
+                          onClick={key === 'id' ? () => navigate(`/penyewaan/${item.id}`) : null}
+                        >
+                          {item[key]}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="pagination-controls">
+            <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1}>
+              Baris Sebelumnya
+            </button>
+            <span>Halaman {currentPage} dari {totalPages}</span>
+            <button
+              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+              disabled={currentPage === totalPages}
+            >
+              Baris Selanjutnya
+            </button>
+          </div>
+        </>
       )}
 
       {showNotification && (

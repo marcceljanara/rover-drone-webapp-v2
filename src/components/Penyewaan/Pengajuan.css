@@ -1,4 +1,4 @@
-/* ========== GLOBAL RESET ========== */
+/* ========== RESET ========== */
 *,
 *::before,
 *::after {
@@ -9,20 +9,22 @@ html, body {
   margin: 0;
   padding: 0;
   width: 100%;
-  min-height: 100vh;
+  height: 100%;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   overflow-x: hidden;
-  overflow-y: hidden;
+  overflow-y: hidden; /* HILANGKAN scroll vertikal di desktop */
   background: transparent !important;
 }
 
-/* ========== CONTAINER ========== */
+/* ========== LAYOUT CONTAINER ========== */
 .container {
   width: 100%;
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 1.5rem;
   background: transparent !important;
+  height: 100%; 
+  overflow-y: hidden;
 }
 
 /* ========== JUDUL HALAMAN ========== */
@@ -34,36 +36,27 @@ html, body {
   margin-bottom: 1.5rem;
 }
 
-/* ========== PENCARIAN ========== */
-.search-wrapper {
-  border: 2px solid #28a745;
-  border-radius: 12px;
-  padding: 1rem;
-  margin-bottom: 1.5rem;
-  background: transparent !important;
-}
-
+/* ========== SEARCH BAR & TOMBOL ========== */
 .search-add-bar {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  background: transparent !important;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .search-add-bar input {
   flex: 1;
-  min-width: 200px;
+  min-width: 250px;
   padding: 0.5rem 1rem;
   font-size: 1rem;
-  height: 44px;
-  border-radius: 8px;
   border: 2px solid #28a745;
-  background: transparent !important;
+  border-radius: 8px;
   color: #333;
+  background: transparent !important;
 }
 
 .search-add-bar input::placeholder {
-  color: #999;
+  color: #aaa;
 }
 
 .add-btn {
@@ -76,20 +69,20 @@ html, body {
   background-color: #28a745;
   color: white;
   cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
 .add-btn:hover {
   background-color: #218838;
 }
 
-/* ========== TABEL ========== */
+/* ========== TABEL PENYEWAAN ========== */
 .table-wrapper {
   width: 100%;
+  overflow-x: auto;
   border: 2px solid #28a745;
   border-radius: 12px;
   padding: 1rem;
-  overflow-x: hidden;
-  overflow-y: hidden;
   background: transparent !important;
 }
 
@@ -97,15 +90,17 @@ html, body {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.95rem;
+  min-width: 700px;
   background: transparent !important;
 }
 
 .data-table th {
-  background-color: #28a745;
-  color: white;
+  background-color: #d4edda;
+  color: #155724;
   font-weight: bold;
   padding: 0.75rem;
   border: 1px solid #ccc;
+  text-align: left;
   white-space: nowrap;
 }
 
@@ -116,7 +111,7 @@ html, body {
   background: transparent !important;
 }
 
-/* ========== STATUS BADGES ========== */
+/* ========== BADGE STATUS ========== */
 .status-badge {
   display: inline-block;
   padding: 0.25rem 0.75rem;
@@ -126,12 +121,12 @@ html, body {
   text-transform: capitalize;
 }
 
-.status-active { background: #17a2b8; color: white; }
-.status-pending { background: #ffc107; color: black; }
+.status-active    { background: #17a2b8; color: white; }
+.status-pending   { background: #ffc107; color: black; }
 .status-cancelled { background: #dc3545; color: white; }
 .status-completed { background: #28a745; color: white; }
 
-/* ========== BUTTON AKSI ========== */
+/* ========== AKSI BUTTON ========== */
 .action-wrapper {
   display: flex;
   flex-wrap: wrap;
@@ -146,12 +141,26 @@ html, body {
   border: none;
   cursor: pointer;
   max-width: 130px;
+  transition: background-color 0.2s ease;
 }
 
-.action-btn.admin { background: #dc3545; color: white; }
-.action-btn.admin:hover { background: #bd2130; }
-.action-btn.user { background: #ffc107; color: black; }
-.action-btn.user:hover { background: #e0a800; }
+.action-btn.admin {
+  background: #dc3545;
+  color: white;
+}
+
+.action-btn.admin:hover {
+  background: #bd2130;
+}
+
+.action-btn.user {
+  background: #ffc107;
+  color: black;
+}
+
+.action-btn.user:hover {
+  background: #e0a800;
+}
 
 /* ========== NOTIFIKASI ========== */
 .notification,
@@ -160,62 +169,113 @@ html, body {
   margin-top: 1rem;
   border-radius: 0.5rem;
   color: white;
+  background: transparent;
 }
 
-.notification { background: #28a745; }
-.notification.error { background: #dc3545; }
+.notification {
+  background: #28a745;
+}
 
-/* ========== RESPONSIVE MODE (≤768px) ========== */
+.notification.error,
+.error-notification {
+  background: #dc3545;
+}
+
+/* ========== PAGINATION ========== */
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  font-size: 1rem;
+}
+
+.pagination-controls button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.pagination-controls button:disabled {
+  background-color: #a5d6a7;
+  cursor: not-allowed;
+}
+
+.pagination-controls span {
+  font-weight: 500;
+}
+
+/* ========== RESPONSIVE TABLE (≤768px) ========== */
 @media (max-width: 768px) {
   html, body {
-    overflow-y: auto !important;
-    overflow-x: auto !important;
+    overflow-y: auto !important; /* Aktifkan scroll vertikal di mobile */
   }
 
-  .table-wrapper {
-    overflow-x: auto !important;
+  .container {
     overflow-y: auto !important;
-    padding: 0.5rem;
+    height: auto;
   }
 
   .data-table {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    font-size: 0.85rem;
+    display: block;
   }
 
   .data-table thead {
     display: none;
   }
 
-  .data-table tr {
+  .data-table tbody tr {
     display: block;
     margin-bottom: 1rem;
     border: 1px solid #ccc;
     border-radius: 8px;
-    padding: 0.5rem;
-    background: transparent !important;
+    padding: 0.75rem;
+    background-color: transparent !important;
   }
 
   .data-table td {
     display: flex;
     justify-content: space-between;
-    padding: 0.5rem;
+    align-items: center;
+    padding: 0.5rem 0;
     border: none;
     border-bottom: 1px solid #ddd;
     background: transparent !important;
   }
 
+  .data-table td:last-child {
+    border-bottom: none;
+  }
+
   .data-table td::before {
     content: attr(data-label);
     font-weight: bold;
-    color: #444;
-    flex: 1;
-    margin-right: 1rem;
+    color: #333;
+    flex-basis: 50%;
+  }
+
+  .action-wrapper {
+    flex-direction: column;
   }
 
   .action-btn {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .search-add-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-add-bar input,
+  .add-btn {
     width: 100%;
   }
 }
