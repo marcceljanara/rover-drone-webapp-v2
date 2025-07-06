@@ -114,9 +114,9 @@ p, li {
   margin-top: 10px;
   padding: 10px;
   width: 100%;
-  background: #fff;
+  background: none; /* HAPUS background putih */
   border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: none;  /* HAPUS bayangan */
   overflow-x: auto;
 }
 
@@ -132,7 +132,7 @@ p, li {
 }
 
 .rental-table thead {
-  background-color: #f2f2f2;
+  background-color: transparent; /* HAPUS background putih */
 }
 
 .rental-table th,
@@ -200,7 +200,7 @@ p, li {
   text-align: center;
 }
 
-/* ========== LOCATION BOX (FORM LOKASI) ========== */
+/* ========== LOCATION BOX ========== */
 .lokasi-box-container {
   background: #fff;
   border: 1px solid #ddd;
@@ -215,7 +215,6 @@ p, li {
   z-index: 10;
 }
 
-/* Tambahan area untuk tempat klik dan geser */
 .drag-handle {
   background-color: #00796b;
   color: #fff;
@@ -223,7 +222,7 @@ p, li {
   font-weight: bold;
   border-radius: 6px 6px 0 0;
   cursor: move;
-  margin: -20px -20px 10px -20px; /* supaya penuh di atas box */
+  margin: -20px -20px 10px -20px;
 }
 
 .lokasi-section {
@@ -266,8 +265,7 @@ p, li {
   border-radius: 6px;
 }
 
-
-/* ANIMASI */
+/* ========== ANIMASI ========== */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -311,7 +309,7 @@ p, li {
   .rental-table tr {
     margin-bottom: 20px;
     padding: 10px;
-    background: #fafafa;
+    background: none; /* HAPUS warna abu responsive */
     border: 1px solid #ccc;
     border-radius: 8px;
   }
@@ -370,4 +368,3 @@ p, li {
     font-size: 14px;
   }
 }
-
