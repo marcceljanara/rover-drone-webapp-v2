@@ -80,11 +80,11 @@ const MainDash = () => {
 
           <div className="pagination-controls">
             <button onClick={handlePrev} disabled={currentPage === 1}>
-              Prev
+              ←
             </button>
             <span>Halaman {currentPage} dari {totalPages}</span>
             <button onClick={handleNext} disabled={currentPage === totalPages}>
-              Next
+              →
             </button>
           </div>
         </div>
@@ -111,7 +111,7 @@ const MainDash = () => {
   }
 };
 
-// === Updates Component Internal ===
+// === Updates Component ===
 const Updates = () => {
   const UpdatesData = useGithubCommits();
 
