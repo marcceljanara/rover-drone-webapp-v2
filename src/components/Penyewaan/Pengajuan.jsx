@@ -254,14 +254,14 @@ function KelolaPenyewaan() {
 
           <div className="pagination-controls">
             <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1}>
-              Baris Sebelumnya
+              ←
             </button>
             <span>Halaman {currentPage} dari {totalPages}</span>
             <button
               onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
               disabled={currentPage === totalPages}
             >
-              Baris Selanjutnya
+              →
             </button>
           </div>
         </>
