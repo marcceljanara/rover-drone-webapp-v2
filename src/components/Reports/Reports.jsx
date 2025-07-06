@@ -170,9 +170,19 @@ const Reports = () => {
           Menampilkan {startIndex + 1} - {Math.min(startIndex + itemsPerPage, filteredData.length)} dari {filteredData.length}
         </span>
         <div className="pagination">
-          <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>◀</button>
-          <span className="page-number">Page {String(currentPage).padStart(2, '0')}</span>
-          <button onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>▶</button>
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+          >
+            ←
+          </button>
+          <span className="page-number">Halaman {String(currentPage).padStart(2, '0')}</span>
+          <button
+            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+          >
+            →
+          </button>
         </div>
       </div>
 
