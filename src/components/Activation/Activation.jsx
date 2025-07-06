@@ -1,3 +1,4 @@
+// Activation.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Activation.css';
@@ -131,12 +132,12 @@ const Activation = () => {
                 <th>Aksi</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="table-content">
               {currentData.map(item => (
                 <tr key={item.id}>
-                  <td className="clickable" onClick={() => navigate(`/devices/${item.id}`)}>{item.id}</td>
-                  <td>{item.rentalId}</td>
-                  <td>
+                  <td data-label="ID" className="clickable" onClick={() => navigate(`/devices/${item.id}`)}>{item.id}</td>
+                  <td data-label="Rental ID">{item.rentalId}</td>
+                  <td data-label="Status">
                     {editingId === item.id ? (
                       <select
                         defaultValue={item.status}
@@ -149,14 +150,12 @@ const Activation = () => {
                         ))}
                       </select>
                     ) : (
-                      <span className={`badge ${item.status}`} onClick={() => handleEdit(item.id)}>
-                        {item.status}
-                      </span>
+                      <span className={`badge ${item.status}`} onClick={() => handleEdit(item.id)}>{item.status}</span>
                     )}
                   </td>
-                  <td>{item.lastIssue}</td>
-                  <td>{item.lastActive}</td>
-                  <td className="action-col">
+                  <td data-label="Masalah Terakhir">{item.lastIssue}</td>
+                  <td data-label="Aktif Terakhir">{item.lastActive}</td>
+                  <td data-label="Aksi" className="action-col">
                     <button className="delete-btn" onClick={() => handleDelete(item.id)}>Hapus</button>
                     <button className="edit-btn" onClick={() => handleEdit(item.id)}>Edit</button>
                   </td>

@@ -1,3 +1,4 @@
+/* ========== CONTAINER UTAMA ========== */
 .activation-container {
   display: flex;
   flex-direction: column;
@@ -7,6 +8,7 @@
   background: linear-gradient(to bottom right, #eaffea, #e9fce9);
   box-sizing: border-box;
   overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .activation-title {
@@ -23,14 +25,13 @@
   box-sizing: border-box;
 }
 
+/* ========== SEARCH DAN TAMBAH ========== */
 .search-add {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
   flex-wrap: wrap;
-  margin-bottom: 1rem;
-  margin-top: 3rem;
-  max-width: 490px;
+  margin: 2rem 0 1rem;
 }
 
 .search-input {
@@ -39,14 +40,12 @@
   font-size: 15px;
   border: 1px solid #aaa;
   border-radius: 6px;
-  max-width: 100%;
-  box-sizing: border-box;
-  background-color: transparent; /* ⬅️ menghilangkan warna putih */
-  color: #2c552c; /* agar teks tetap terlihat jelas */
+  background-color: transparent;
+  color: #2c552c;
 }
 
 .search-input::placeholder {
-  color: #5c7a5c; /* ⬅️ placeholder menyatu dengan tema hijau */
+  color: #5c7a5c;
   opacity: 0.8;
 }
 
@@ -60,6 +59,7 @@
   cursor: pointer;
 }
 
+/* ========== NOTIFIKASI ========== */
 .notif {
   background-color: #d4edda;
   color: #155724;
@@ -69,6 +69,7 @@
   margin-bottom: 1rem;
 }
 
+/* ========== TABEL NORMAL VIEW ========== */
 .table-wrapper {
   width: 100%;
   overflow-x: auto;
@@ -76,38 +77,85 @@
 
 .activation-table {
   width: 100%;
-  min-width: 800px;
+  min-width: 350px;
   border-collapse: collapse;
-  table-layout: fixed;
-  background-color: transparent;
 }
 
 .activation-table th,
 .activation-table td {
-  padding: 0.8rem;
-  font-size: 14px;
+  padding: 0.9rem -2rem; /* Lebih rapat: atas-bawah 0.3rem, kiri-kanan 0.1rem */
+  font-size: 13.5px;       /* Sedikit lebih kecil untuk efisiensi ruang */
+  line-height: 1.2;        /* Spasi baris dikompres */
   text-align: left;
   border-bottom: 1px solid #ddd;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  background-color: transparent;
 }
+
 
 .activation-table th {
   background-color: #dff0df;
   color: #166a16;
+  font-weight: bold;
   position: sticky;
   top: 0;
   z-index: 1;
-  font-weight: bold;
 }
 
-.clickable {
-  color: #007bff;
-  cursor: pointer;
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  .activation-table,
+  .activation-table thead,
+  .activation-table tbody,
+  .activation-table th,
+  .activation-table td,
+  .activation-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  .activation-table thead {
+    display: none;
+  }
+
+  .activation-table tr {
+    margin-bottom: 1.2rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 0.6rem 1rem;
+    background-color: #f9fff9;
+  }
+
+  .activation-table td {
+    border: none;
+    border-bottom: 1px solid #eee;
+    position: relative;
+    padding-left: 50%;
+    white-space: normal;
+    word-wrap: break-word;
+  }
+
+  .activation-table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 1rem;
+    top: 0.6rem;
+    font-weight: bold;
+    color: #166a16;
+    white-space: nowrap;
+    font-size: 13px;
+  }
+
+  .edit-btn,
+  .delete-btn {
+    width: 100%;
+    max-width: 90px;
+    font-size: 13px;
+  }
 }
 
+/* ========== BADGE STATUS ========== */
 .badge {
   padding: 0.3rem 0.6rem;
   border-radius: 12px;
@@ -122,6 +170,7 @@
 .badge.maintenance { background: #ffc107; color: black; }
 .badge.error { background: #dc3545; color: white; }
 
+/* ========== AKSI BUTTON ========== */
 .action-col {
   display: flex;
   flex-direction: column;
@@ -138,12 +187,12 @@
   color: white;
   cursor: pointer;
   width: 90px;
-  text-align: center;
 }
 
 .edit-btn { background-color: #007bff; }
 .delete-btn { background-color: #dc3545; }
 
+/* ========== PAGINASI ========== */
 .pagination {
   margin-top: 1.5rem;
   display: flex;
@@ -165,40 +214,4 @@
 .pagination button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .search-add {
-    flex-direction: column;
-  }
-
-  .activation-table {
-    min-width: 750px;
-  }
-
-  .edit-btn,
-  .delete-btn {
-    font-size: 12px;
-    padding: 0.3rem 0.6rem;
-    width: 100%;
-    max-width: 90px;
-  }
-}
-
-@media (max-width: 480px) {
-  .search-input {
-    font-size: 14px;
-    padding: 10px;
-    width: 100%;
-  }
-
-  .activation-table {
-    min-width: 700px;
-  }
-
-  .activation-table th,
-  .activation-table td {
-    font-size: 12px;
-  }
 }
