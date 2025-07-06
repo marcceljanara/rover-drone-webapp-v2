@@ -151,18 +151,17 @@ const Payments = () => {
                   </td>
                   <td data-label="Status Pembayaran">{item.payment_status}</td>
                   <td data-label="Tindakan">
-                  <button
-                    className={`edit-btn ${glowingButton === item.id ? 'glow' : ''}`}
-                    onClick={() => {
-                      setSelectedPaymentId(item.id);
-                      setShowModal(true);
-                      handleGlow(item.id);
-                    }}
-                    disabled={['completed', 'failed'].includes(item.payment_status)}
-                  >
-                    Verifikasi
-                  </button>
-
+                    <button
+                      className={`edit-btn ${glowingButton === item.id ? 'glow' : ''}`}
+                      onClick={() => {
+                        setSelectedPaymentId(item.id);
+                        setShowModal(true);
+                        handleGlow(item.id);
+                      }}
+                      disabled={['completed', 'failed'].includes(item.payment_status)}
+                    >
+                      Verifikasi
+                    </button>
                   </td>
                 </tr>
               ))
@@ -175,10 +174,10 @@ const Payments = () => {
         <span className="page-number">Halaman {currentPage} dari {totalPages}</span>
         <div className="pagination">
           <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1}>
-            Sebelumnya
+            ←
           </button>
           <button onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages}>
-            Berikutnya
+            →
           </button>
         </div>
       </div>
