@@ -1,7 +1,7 @@
 /* ------------ LAYOUT UTAMA ------------ */
 .services {
   position: relative;
-  padding: 1rem 2rem 6rem 3rem; /* Atas: 3rem, Kanan: 2rem, Bawah: 6rem, Kiri: 3rem */
+  padding: 1rem 2rem 6rem 3rem;
   margin-top: 12rem;
   margin-bottom: 5rem;
   display: flex;
@@ -10,18 +10,17 @@
   flex-wrap: wrap;
   color: var(--black);
   box-sizing: border-box;
-  /* Hapus background dari sini, nanti diganti di ::before */
   background: none;
   border-radius: 1rem;
-  overflow: visible; /* supaya ::before bisa keluar */
+  overflow: visible;
 }
 
 .services::before {
   content: "";
   position: absolute;
   top: 0;
-  left: -50vw; /* geser ke kiri setengah viewport */
-  right: -50vw; /* geser ke kanan setengah viewport */
+  left: -50vw;
+  right: -50vw;
   bottom: 0;
   background: linear-gradient(
     106.37deg,
@@ -32,7 +31,6 @@
   border-radius: 1rem;
   z-index: -1;
 }
-
 
 /* ------------ LEFT SIDE ------------ */
 .awesome {
@@ -78,16 +76,17 @@
   gap: 2rem;
   justify-content: center;
   position: relative;
+  transition: transform 0.3s ease-in-out;
 }
 
-/* Awalnya semua card disembunyikan (sampai terdeteksi via Intersection Observer) */
+/* Card default style */
 .cards > * {
   position: static;
   transition: transform 0.4s ease, box-shadow 0.4s ease;
   opacity: 0;
 }
 
-/* Animasi hover */
+/* Hover effect */
 .cards > *:hover {
   transform: translateY(-10px);
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
@@ -116,7 +115,6 @@
   }
 }
 
-/* Kelas akan ditambahkan dari React berdasarkan index card */
 .visible-left {
   animation: slideInLeft 0.8s ease-out forwards;
 }
@@ -162,8 +160,8 @@
 @media screen and (max-width: 768px) {
   .services {
     flex-direction: column;
-    align-items: center;
-    padding: 2rem 1rem 6rem 1rem; /* sesuaikan padding bawah di mobile */
+    align-items: flex-start;
+    padding: 2rem 1rem 6rem 2rem;
   }
 
   .awesome {
@@ -175,10 +173,12 @@
     flex-direction: column;
     gap: 2rem;
     margin-top: 2rem;
+    align-items: flex-start;
+    padding-left: 1rem; /* geser ke kanan sedikit */
   }
 
   .cards > * {
-    width: 100%;
+    width: 90%;
   }
 
   .s-blur1,
@@ -201,6 +201,11 @@
   .s-button {
     font-size: 0.9rem;
     padding: 0.4rem 1rem;
+  }
+
+  .cards {
+    align-items: flex-start;
+    padding-left: 1.5rem; /* geser lebih ke kanan di mobile */
   }
 
   .cards > * {
