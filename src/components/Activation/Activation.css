@@ -79,13 +79,14 @@
   width: 100%;
   min-width: 350px;
   border-collapse: collapse;
+  background-color: transparent; /* HAPUS background utama tabel */
 }
 
 .activation-table th,
 .activation-table td {
-  padding: 0.9rem -2rem; /* Lebih rapat: atas-bawah 0.3rem, kiri-kanan 0.1rem */
-  font-size: 13.5px;       /* Sedikit lebih kecil untuk efisiensi ruang */
-  line-height: 1.2;        /* Spasi baris dikompres */
+  padding: 0.6rem 1rem;
+  font-size: 13.5px;
+  line-height: 1.4;
   text-align: left;
   border-bottom: 1px solid #ddd;
   white-space: nowrap;
@@ -93,9 +94,8 @@
   text-overflow: ellipsis;
 }
 
-
 .activation-table th {
-  background-color: #dff0df;
+  background-color: #dff0df; /* Tetap pertahankan warna header */
   color: #166a16;
   font-weight: bold;
   position: sticky;
@@ -124,7 +124,7 @@
     border: 1px solid #ccc;
     border-radius: 8px;
     padding: 0.6rem 1rem;
-    background-color: #f9fff9;
+    background-color: transparent; /* HAPUS warna pada responsive card */
   }
 
   .activation-table td {
@@ -134,6 +134,7 @@
     padding-left: 50%;
     white-space: normal;
     word-wrap: break-word;
+    background-color: transparent; /* pastikan td tetap transparan */
   }
 
   .activation-table td::before {
