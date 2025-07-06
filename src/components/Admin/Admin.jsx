@@ -152,9 +152,21 @@ const Admin = () => {
           Menampilkan {users.length} pengguna di halaman {currentPage} dari {totalPages}
         </span>
         <div className="pagination">
-          <button onClick={() => setCurrentPage(p => Math.max(p - 1, 1))} disabled={currentPage === 1}>◀</button>
-          <span className="page-number">Halaman {String(currentPage).padStart(2, '0')}</span>
-          <button onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages}>▶</button>
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+            disabled={currentPage === 1}
+          >
+            ←
+          </button>
+          <span className="page-number">
+            Halaman {String(currentPage).padStart(2, '0')}
+          </span>
+          <button
+            onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+            disabled={currentPage === totalPages}
+          >
+            →
+          </button>
         </div>
       </div>
     </div>
