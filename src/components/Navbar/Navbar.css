@@ -4,22 +4,17 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
-  top: 0;
-  width: 100%;
   padding: 0 2rem;
-  background-color: transparent;
-  border: none;
-  box-shadow: none;
+  width: 100%;
   position: relative;
   z-index: 100;
+  background-color: transparent;
 }
 
 .n-left {
   flex: 1;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
   gap: 2rem;
 }
 
@@ -29,7 +24,6 @@
   color: black;
 }
 
-/* Sembunyikan .n-name saat menu hamburger terbuka */
 .n-wrapper.menu-open .n-name {
   display: none;
 }
@@ -37,7 +31,6 @@
 .n-right {
   flex: 1;
   display: flex;
-  align-items: center;
   justify-content: flex-end;
   font-weight: 400;
 }
@@ -48,23 +41,52 @@
 
 .n-list > ul {
   display: flex;
-  gap: 2rem;
-  margin-right: 4rem;
   align-items: center;
+  gap: 2rem;
   list-style: none;
+  margin-right: 4rem;
   padding: 0;
 }
 
 .n-list > ul li {
-  display: flex;
-  align-items: center;
+  cursor: pointer;
 }
 
 .n-list > ul li:hover {
   color: var(--orange);
-  cursor: pointer;
 }
 
+/* ========== BUTTON ========== */
+.n-button {
+  background-color: #808080;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+}
+
+.n-button.clicked,
+.n-button:hover {
+  background-color: #f80808;
+}
+
+.contact-button {
+  background-color: #0e6419;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  transform: translateX(-40px);
+  transition: background-color 0.3s ease-in-out;
+}
+
+.contact-button:hover {
+  background-color: #0b4f15;
+}
+
+/* ========== TOGGLE PASSWORD ========== */
 .password-toggle {
   position: relative;
 }
@@ -88,76 +110,7 @@
   user-select: none;
 }
 
-/* ========== BUTTONS ========== */
-.n-button {
-  background-color: #808080;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 25px;
-  cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
-}
-
-.n-button.clicked {
-  background-color: #f80808;
-}
-
-.n-button:hover {
-  background-color: #f80808;
-}
-
-.contact-button {
-  background-color: #0e6419;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 25px;
-  cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
-  transform: translateX(-40px);
-}
-
-.contact-button:hover {
-  background-color: #0e6419;
-}
-
-/* ========== LOGIN / SIGN UP FORM ========== */
-.login-form {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #fff;
-  padding: 20px 30px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 400px;
-  z-index: 1000;
-}
-
-.login-form .close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: #f44336;
-  color: #fff;
-  border: none;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  font-size: 18px;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.login-form .close-btn:hover {
-  background: #d32f2f;
-}
-
+/* ========== OVERLAY ========== */
 .login-overlay {
   position: fixed;
   top: 0;
@@ -173,27 +126,54 @@
   display: block;
 }
 
-.login-form h2 {
-  font-size: 24px;
-  color: #333;
-  margin-bottom: 20px;
-  text-align: center;
+/* ========== FORMS (Login / Signup / OTP) ========== */
+.login-form,
+.signup-form,
+.verify-form {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px 30px;
+  max-width: 400px;
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  z-index: 1000;
 }
 
-.login-form .form-group {
+.signup-form {
+  top: calc(50% + 260px);
+}
+
+.verify-form {
+  top: calc(50% + 500px);
+}
+
+.login-form h2,
+.signup-form h2,
+.verify-form h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.form-group {
   margin-bottom: 15px;
 }
 
-.login-form label {
+label {
   display: block;
   font-size: 14px;
-  color: #555;
   margin-bottom: 5px;
+  color: #555;
 }
 
-.login-form input[type="text"],
-.login-form input[type="email"],
-.login-form input[type="password"] {
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"] {
   width: 100%;
   padding: 10px;
   font-size: 14px;
@@ -202,52 +182,99 @@
   box-sizing: border-box;
 }
 
-.login-form input[type="text"]:focus,
-.login-form input[type="password"]:focus {
-  border-color: #007bff;
+input:focus {
   outline: none;
+  border-color: #007bff;
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
 }
 
-.login-form input[type="checkbox"] {
+input[type="checkbox"] {
   margin-right: 10px;
 }
 
-.login-form label[for="remember-me"] {
+label[for="remember-me"] {
   font-size: 12px;
   color: #666;
 }
 
-.login-form .login-btn {
+.login-btn {
   width: 100%;
-  background-color: #007bff;
-  color: #fff;
   padding: 10px;
-  font-size: 16px;
+  background-color: #007bff;
+  color: white;
   border: none;
+  font-size: 16px;
   border-radius: 4px;
   cursor: pointer;
-  text-align: center;
-}
-
-.login-form .login-btn:hover {
-  background-color: #0056b3;
-}
-
-.login-form p {
-  font-size: 12px;
-  color: #777;
-  text-align: center;
   margin-top: 10px;
 }
 
-.login-form p a {
+.login-btn:hover {
+  background-color: #0056b3;
+}
+
+.login-form p,
+.signup-form p,
+.verify-form p {
+  text-align: center;
+  font-size: 12px;
+  color: #777;
+  margin-top: 10px;
+}
+
+.login-form p a,
+.signup-form p a,
+.verify-form p a {
   color: #007bff;
   text-decoration: none;
 }
 
-.login-form p a:hover {
+.login-form p a:hover,
+.signup-form p a:hover,
+.verify-form p a:hover {
   text-decoration: underline;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #f44336;
+  color: white;
+  border: none;
+  width: 30px;
+  height: 30px;
+  font-size: 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-btn:hover {
+  background: #d32f2f;
+}
+
+/* ========== OTP RESEND ========== */
+.resend-otp {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.resend-btn {
+  background-color: #ffc107;
+  color: #000;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.resend-btn[disabled] {
+  background-color: #e0e0e0;
+  color: #999;
+  cursor: not-allowed;
 }
 
 /* ========== NOTIFICATION ========== */
@@ -255,18 +282,14 @@
   position: fixed;
   top: 20px;
   right: 20px;
+  background-color: #4caf50;
+  color: white;
   padding: 12px 20px;
   border-radius: 8px;
   font-size: 14px;
   font-weight: 500;
-  color: #fff;
   z-index: 9999;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s ease-in-out;
-}
-
-.notification.success {
-  background-color: #4caf50;
 }
 
 .notification.error {
@@ -277,7 +300,6 @@
 @media screen and (max-width: 768px) {
   .hamburger {
     display: flex;
-    font-size: 28px;
     position: absolute;
     top: 15px;
     right: 20px;
@@ -296,9 +318,6 @@
     align-items: stretch;
     padding: 0;
     height: auto;
-    position: relative;
-    z-index: 102;
-    background-color: transparent;
   }
 
   .n-right {
@@ -308,13 +327,12 @@
     position: relative;
     left: 50%;
     margin-left: -50vw;
-    top: auto;
     background-color: #fff;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     border-top: 1px solid #ccc;
-    z-index: 100;
     padding-left: 30px;
     align-items: flex-start;
+    z-index: 100;
   }
 
   .n-right.open {
@@ -324,58 +342,36 @@
   .n-list {
     width: 100%;
     padding: 1rem 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
   }
 
   .n-list > ul {
-    width: 100%;
-    display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
     padding: 0;
-    margin: 0 0 1rem 0;
+    margin: 0;
   }
 
   .n-list ul li a {
     font-size: 1.25rem;
     color: #333;
-    padding-left: 0;
     text-align: left;
   }
 
   .n-button {
     width: 100%;
-    padding: 0.75rem 2rem 0.75rem 10rem;
-    margin-top: 0;
     text-align: left;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+    padding: 0.75rem 2rem;
     font-size: 1rem;
     font-weight: 600;
-    transition: background-color 0.3s ease;
-    position: relative;
-    top: -8px;
+    margin-top: -8px;
   }
 
   .contact-button {
-    padding: 0.5rem 1rem;
     margin-left: 75px;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 600;
-    position: relative;
-    top: -8px;
+    padding: 0.5rem 1rem;
     width: auto;
-    display: inline-block;
-    text-align: center;
+    font-size: 1rem;
   }
 }
 
@@ -384,19 +380,11 @@
     font-size: 1rem;
   }
 
-  .n-button {
-    width: 100%;
+  .n-button,
+  .contact-button {
     padding: 1rem;
     text-align: left;
-    top: -5px;
-  }
-
-  .contact-button {
-    width: auto;
-    padding: 0.5rem 1rem;
-    text-align: center;
-    top: -5px;
-    display: inline-block;
+    width: 100%;
   }
 
   .n-left {

@@ -18,7 +18,6 @@ const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showPasswordLogin, setShowPasswordLogin] = useState(false);
-  const [showPasswordSignUp, setShowPasswordSignUp] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [emailLogin, setEmailLogin] = useState("");
   const [passwordLogin, setPasswordLogin] = useState("");
@@ -36,12 +35,10 @@ const Navbar = () => {
           setIsLoggedIn(true);
         }
       } catch (error) {
-        console.error("Token invalid:", error);
         handleLogout();
       }
     }
 
-    // Cek dan isi ulang email & password jika Remember Me aktif
     const savedEmail = localStorage.getItem("rememberEmail");
     const savedPassword = localStorage.getItem("rememberPassword");
     if (savedEmail && savedPassword) {
@@ -71,21 +68,6 @@ const Navbar = () => {
     showSuccessNotification("🔒 Anda telah berhasil keluar.");
   };
 
-  const closeLoginForm = () => {
-    setShowLoginForm(false);
-    setLoginClicked(false);
-  };
-
-  const handleSignUpClick = () => {
-    setShowLoginForm(false);
-    setShowVerify(false);
-    setShowSignUpForm(true);
-  };
-
-  const closeSignUpForm = () => {
-    setShowSignUpForm(false);
-  };
-
   const closeAllForms = () => {
     setShowLoginForm(false);
     setShowSignUpForm(false);
@@ -102,7 +84,6 @@ const Navbar = () => {
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const response = await fetch("https://dev-api.xsmartagrichain.com/v1/authentications", {
         method: "POST",
@@ -120,15 +101,9 @@ const Navbar = () => {
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
 
-      try {
-        const decoded = jwtDecode(accessToken);
-        const role = decoded.role;
-        if (role) localStorage.setItem("role", role);
-      } catch (err) {
-        console.error("Gagal decode token:", err);
-      }
+      const decoded = jwtDecode(accessToken);
+      if (decoded.role) localStorage.setItem("role", decoded.role);
 
-      // Simpan email dan password jika Remember Me aktif
       if (rememberMe) {
         localStorage.setItem("rememberEmail", emailLogin);
         localStorage.setItem("rememberPassword", passwordLogin);
@@ -137,14 +112,18 @@ const Navbar = () => {
         localStorage.removeItem("rememberPassword");
       }
 
-      showSuccessNotification(`✅ Login berhasil! Selamat datang kembali ${localStorage.getItem("role")}`);
-      setShowLoginForm(false);
-      setLoginClicked(false);
+      showSuccessNotification(`✅ Login berhasil! Selamat datang kembali ${decoded.role}`);
+      closeAllForms();
       setIsLoggedIn(true);
     } catch (error) {
-      console.error("Login Error:", error);
       showSuccessNotification(`❌ ${error.message}`, "error");
     }
+  };
+
+  const handleSignUpClick = () => {
+    setShowLoginForm(false);
+    setShowVerify(false);
+    setShowSignUpForm(true);
   };
 
   const handleSignUpSubmit = async (e) => {
@@ -171,7 +150,6 @@ const Navbar = () => {
       setRegisteredEmail(email);
       showSuccessNotification("✅ Sign Up berhasil! Silakan verifikasi email Anda.");
     } catch (error) {
-      console.error("Sign Up Error:", error);
       showSuccessNotification(error.message || "❌ Pendaftaran gagal.", "error");
     }
   };
@@ -194,8 +172,7 @@ const Navbar = () => {
       } else {
         showSuccessNotification("❌ OTP salah atau kadaluarsa.", "error");
       }
-    } catch (error) {
-      console.error("Error verifikasi OTP:", error);
+    } catch {
       showSuccessNotification("❌ Terjadi kesalahan jaringan saat verifikasi.", "error");
     }
   };
@@ -219,9 +196,8 @@ const Navbar = () => {
       const data = await response.json();
       showSuccessNotification("✅ " + data.message);
       setResendCooldown(60);
-
       const interval = setInterval(() => {
-        setResendCooldown((prev) => {
+        setResendCooldown(prev => {
           if (prev <= 1) {
             clearInterval(interval);
             return 0;
@@ -230,25 +206,21 @@ const Navbar = () => {
         });
       }, 1000);
     } catch (error) {
-      console.error("Resend OTP error:", error);
       showSuccessNotification(error.message, "error");
     }
   };
 
   return (
     <div className={`n-wrapper ${isMenuOpen ? "menu-open" : ""}`} id="Navbar">
-      {/* NAVIGATION */}
-      <div className="n-left">
-        <div className="n-name">Roone</div>
-      </div>
+      <div className="n-left"><div className="n-name">Roone</div></div>
       <div className="hamburger" onClick={toggleMenu}>☰</div>
 
       <div className={`n-right ${isMenuOpen ? "open" : ""}`}>
         <div className="n-list">
           <ul>
-            <li><Link activeClass="active" to="Navbar" spy={true} smooth={true}>Home</Link></li>
-            <li><Link to="services" spy={true} smooth={true}>Services</Link></li>
-            <li><Link to="works" spy={true} smooth={true}>Experience</Link></li>
+            <li><Link to="Navbar" spy smooth>Home</Link></li>
+            <li><Link to="services" spy smooth>Services</Link></li>
+            <li><Link to="works" spy smooth>Experience</Link></li>
             <li>
               <button className={`button n-button ${loginClicked ? "clicked" : ""}`} onClick={handleLoginClick}>
                 {isLoggedIn ? "Log Out" : "Login"}
@@ -271,38 +243,22 @@ const Navbar = () => {
       {/* LOGIN FORM */}
       {showLoginForm && (
         <div className="login-form">
-          <button className="close-btn" onClick={closeLoginForm}>&times;</button>
+          <button className="close-btn" onClick={closeAllForms}>&times;</button>
           <h2>Sign In</h2>
           <form onSubmit={handleLoginSubmit}>
-            <div className="form-group"><label>Email</label>
-              <input
-                type="email"
-                name="email"
-                value={emailLogin}
-                onChange={(e) => setEmailLogin(e.target.value)}
-                required
-              />
+            <div className="form-group">
+              <label>Email</label>
+              <input type="email" value={emailLogin} onChange={e => setEmailLogin(e.target.value)} required />
             </div>
             <div className="form-group password-toggle">
               <label>Password</label>
-              <input
-                type={showPasswordLogin ? "text" : "password"}
-                name="password"
-                value={passwordLogin}
-                onChange={(e) => setPasswordLogin(e.target.value)}
-                required
-              />
-              <button type="button" className="eye-toggle" onClick={() => setShowPasswordLogin(prev => !prev)}>
+              <input type={showPasswordLogin ? "text" : "password"} value={passwordLogin} onChange={e => setPasswordLogin(e.target.value)} required />
+              <button type="button" className="eye-toggle" onClick={() => setShowPasswordLogin(p => !p)}>
                 {showPasswordLogin ? "🙈" : "👁️"}
               </button>
             </div>
             <div className="form-group">
-              <input
-                type="checkbox"
-                id="remember-me"
-                checked={rememberMe}
-                onChange={() => setRememberMe(!rememberMe)}
-              />
+              <input type="checkbox" id="remember-me" checked={rememberMe} onChange={() => setRememberMe(!rememberMe)} />
               <label htmlFor="remember-me">Remember me</label>
             </div>
             <button type="submit" className="login-btn">Sign In</button>
@@ -312,10 +268,40 @@ const Navbar = () => {
       )}
 
       {/* SIGN UP FORM */}
-      {/* ... tetap sama ... */}
+      {showSignUpForm && (
+        <div className="signup-form">
+          <button className="close-btn" onClick={closeAllForms}>&times;</button>
+          <h2>Sign Up</h2>
+          <form onSubmit={handleSignUpSubmit}>
+            <div className="form-group"><label>Full Name</label><input type="text" name="fullname" required /></div>
+            <div className="form-group"><label>Username</label><input type="text" name="username" required /></div>
+            <div className="form-group"><label>Email</label><input type="email" name="email-signup" required /></div>
+            <div className="form-group"><label>Password</label><input type="password" name="password-signup" required /></div>
+            <button type="submit" className="login-btn">Register</button>
+          </form>
+          <p>Already have an account? <a href="#" onClick={() => {
+            setShowSignUpForm(false);
+            setShowLoginForm(true);
+          }}>Sign in</a></p>
+        </div>
+      )}
 
-      {/* OTP VERIFIKASI */}
-      {/* ... tetap sama ... */}
+      {/* VERIFIKASI OTP */}
+      {showVerify && (
+        <div className="verify-form">
+          <button className="close-btn" onClick={closeAllForms}>&times;</button>
+          <h2>Verify Email</h2>
+          <form onSubmit={handleVerifySubmit}>
+            <div className="form-group"><label>Kode OTP</label><input type="text" name="otp" required /></div>
+            <button type="submit" className="login-btn">Verifikasi</button>
+          </form>
+          <div className="resend-otp">
+            <button className="resend-btn" onClick={handleResendOTP} disabled={resendCooldown > 0}>
+              {resendCooldown > 0 ? `Kirim ulang dalam ${resendCooldown}s` : "Kirim Ulang OTP"}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
