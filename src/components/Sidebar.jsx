@@ -1,4 +1,3 @@
-// Sidebar.jsx
 import React, { useState, useEffect } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import "./Sidebar.css";
@@ -47,9 +46,7 @@ const Sidebar = () => {
   );
 
   useEffect(() => {
-    const handleResize = () => {
-      setExpanded(window.innerWidth > 768);
-    };
+    const handleResize = () => setExpanded(window.innerWidth > 768);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -59,9 +56,7 @@ const Sidebar = () => {
       setExpanded(false);
     } else {
       navigate("/addresses");
-      if (window.innerWidth <= 768) {
-        setExpanded(true);
-      }
+      if (window.innerWidth <= 768) setExpanded(true);
     }
   };
 
