@@ -111,7 +111,6 @@ const MainDash = () => {
   }
 };
 
-// === Updates Component ===
 const Updates = () => {
   const UpdatesData = useGithubCommits();
 
