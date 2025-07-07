@@ -1,4 +1,4 @@
-/* ========== NAVBAR ========== */
+/* ========== NAVBAR WRAPPER ========== */
 .n-wrapper {
   height: 10vh;
   display: flex;
@@ -11,6 +11,7 @@
   background-color: transparent;
 }
 
+/* ========== NAVBAR LEFT ========== */
 .n-left {
   flex: 1;
   display: flex;
@@ -28,6 +29,7 @@
   display: none;
 }
 
+/* ========== NAVBAR RIGHT ========== */
 .n-right {
   flex: 1;
   display: flex;
@@ -35,6 +37,7 @@
   font-weight: 400;
 }
 
+/* ========== NAVIGATION LIST ========== */
 .n-list {
   flex: 10;
 }
@@ -56,7 +59,7 @@
   color: var(--orange);
 }
 
-/* ========== BUTTON ========== */
+/* ========== BUTTON STYLING ========== */
 .n-button {
   background-color: #808080;
   color: white;
@@ -72,18 +75,24 @@
   background-color: #f80808;
 }
 
-.contact-button {
-  background-color: #0e6419;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 25px;
-  cursor: pointer;
-  transform: translateX(-40px);
-  transition: background-color 0.3s ease-in-out;
-}
+/* ========== CONTACT BUTTON - NORMAL SCREEN ONLY ========== */
+/* ⬇️ Posisi default tombol kontak di layar lebar (desktop) */
+@media screen and (min-width: 769px) {
+  .contact-button {
+    background-color: #0e6419;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    transform: translateX(-40px); /* Geser sedikit ke kiri */
+    transition: background-color 0.3s ease-in-out;
+    margin-top: 14px;             /* Turunkan sedikit dari tombol lainnya */
+    font-size: 1rem;
+  }
 
-.contact-button:hover {
-  background-color: #0b4f15;
+  .contact-button:hover {
+    background-color: #0b4f15;
+  }
 }
 
 /* ========== TOGGLE PASSWORD ========== */
@@ -110,7 +119,7 @@
   user-select: none;
 }
 
-/* ========== OVERLAY ========== */
+/* ========== LOGIN OVERLAY ========== */
 .login-overlay {
   position: fixed;
   top: 0;
@@ -126,7 +135,7 @@
   display: block;
 }
 
-/* ========== FORMS (Login / Signup / OTP) ========== */
+/* ========== FORMS ========== */
 .login-form,
 .signup-form,
 .verify-form {
@@ -139,7 +148,7 @@
   max-width: 400px;
   width: 100%;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   z-index: 1000;
 }
 
@@ -159,6 +168,7 @@
   margin-bottom: 20px;
 }
 
+/* ========== FORM ELEMENTS ========== */
 .form-group {
   margin-bottom: 15px;
 }
@@ -197,6 +207,7 @@ label[for="remember-me"] {
   color: #666;
 }
 
+/* ========== BUTTON: LOGIN ========== */
 .login-btn {
   width: 100%;
   padding: 10px;
@@ -235,6 +246,7 @@ label[for="remember-me"] {
   text-decoration: underline;
 }
 
+/* ========== CLOSE BUTTON ========== */
 .close-btn {
   position: absolute;
   top: 10px;
@@ -296,7 +308,7 @@ label[for="remember-me"] {
   background-color: #f44336;
 }
 
-/* ========== RESPONSIVE NAVBAR ========== */
+/* ========== RESPONSIVE - TABLET & MOBILE ========== */
 @media screen and (max-width: 768px) {
   .hamburger {
     display: flex;
@@ -328,8 +340,8 @@ label[for="remember-me"] {
     left: 50%;
     margin-left: -50vw;
     background-color: #fff;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    border-top: 1px solid #ccc;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-top: px solid #ccc;
     padding-left: 30px;
     align-items: flex-start;
     z-index: 100;
@@ -367,14 +379,18 @@ label[for="remember-me"] {
     margin-top: -8px;
   }
 
+  /* ========== CONTACT BUTTON - RESPONSIVE (<=768px) ========== */
   .contact-button {
-    margin-left: 75px;
+    margin-left: 20px;       /* ⇨ Geser kanan agar tidak mentok */
+    margin-top: 2px;        /* ⇩ Turunkan sedikit */
     padding: 0.5rem 1rem;
     width: auto;
     font-size: 1rem;
+    transform: translateX(0); /* Reset posisi */
   }
 }
 
+/* ========== RESPONSIVE - MOBILE KECIL (<= 480px) ========== */
 @media screen and (max-width: 480px) {
   .n-name {
     font-size: 1rem;
@@ -395,5 +411,9 @@ label[for="remember-me"] {
   .hamburger {
     top: 10px;
     right: 15px;
+  }
+
+  .contact-button {
+    margin-top: 0px; /* ⇩ Tambahan jarak agar tidak menempel */
   }
 }
