@@ -1,22 +1,39 @@
-/* ========== NAVBAR WRAPPER ========== */
+/* Navbar.css - FULL CSS UPDATED */
+
+/* ====================== GENERAL RESET ====================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #007bff;
+  --danger: #f44336;
+  --success: #4caf50;
+  --warning: #ffc107;
+  --gray: #ccc;
+  --text: #333;
+  --bg-overlay: rgba(0, 100, 0, 0.8);
+}
+
 .n-wrapper {
-  height: 10vh;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 2rem;
-  width: 100%;
+  padding: 1rem 2rem;
   position: relative;
   z-index: 100;
   background-color: transparent;
+  width: 100%;
+  flex-wrap: wrap;
 }
 
-/* ========== NAVBAR LEFT ========== */
 .n-left {
-  flex: 1;
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 1rem;
+  flex: 1;
 }
 
 .n-name {
@@ -25,93 +42,6 @@
   color: black;
 }
 
-.n-wrapper.menu-open .n-name {
-  display: none;
-}
-
-/* ========== NAVBAR RIGHT ========== */
-.n-right {
-  flex: 1;
-  display: flex;
-  justify-content: flex-end;
-  font-weight: 400;
-}
-
-/* ========== NAVIGATION LIST ========== */
-.n-list {
-  flex: 10;
-}
-
-.n-list > ul {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  list-style: none;
-  margin-right: 4rem;
-  padding: 0;
-}
-
-.n-list > ul li {
-  cursor: pointer;
-}
-
-.n-list > ul li:hover {
-  color: var(--orange);
-}
-
-/* ========== BUTTON STYLING ========== */
-.n-button {
-  background-color: #808080;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 25px;
-  cursor: pointer;
-  transition: 0.3s ease-in-out;
-}
-
-.n-button.clicked,
-.n-button:hover {
-  background-color: #f80808;
-}
-
-/* ========== CONTACT BUTTON - NORMAL SCREEN ONLY ========== */
-/* ⬇️ Posisi default tombol kontak di layar lebar (desktop) */
-@media screen and (min-width: 769px) {
-  .contact-button {
-    background-color: #0e6419;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 25px;
-    cursor: pointer;
-    transform: translateX(-40px); /* Geser sedikit ke kiri */
-    transition: background-color 0.3s ease-in-out;
-    margin-top: 14px;             /* Turunkan sedikit dari tombol lainnya */
-    font-size: 1rem;
-  }
-
-  .contact-button:hover {
-    background-color: #0b4f15;
-  }
-}
-
-/* ========== TOGGLE PASSWORD ========== */
-.password-toggle {
-  position: relative;
-}
-
-.eye-toggle {
-  position: absolute;
-  right: 10px;
-  top: 70%;
-  transform: translateY(-50%);
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  font-size: 1.1rem;
-}
-
-/* ========== HAMBURGER ========== */
 .hamburger {
   display: none;
   font-size: 28px;
@@ -119,23 +49,58 @@
   user-select: none;
 }
 
-/* ========== LOGIN OVERLAY ========== */
-.login-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 100, 0, 0.8);
-  z-index: 999;
-  display: none;
+.n-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex: 2;
 }
 
-.login-overlay.active {
-  display: block;
+.n-list ul {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+  align-items: center;
+  padding-right: 1rem;
 }
 
-/* ========== FORMS ========== */
+.n-list ul li {
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.n-list ul li:hover {
+  color: var(--primary);
+}
+
+.n-button {
+  background: gray;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.n-button.clicked,
+.n-button:hover {
+  background: red;
+}
+
+.contact-button {
+  background-color: #0e6419;
+  padding: 10px 20px;
+  border-radius: 25px;
+  color: white;
+  margin-left: 1rem;
+  transition: background-color 0.3s;
+}
+
+.contact-button:hover {
+  background-color: #0b4f15;
+}
+
 .login-form,
 .signup-form,
 .verify-form {
@@ -144,114 +109,19 @@
   left: 50%;
   transform: translate(-50%, -50%);
   background: white;
-  padding: 20px 30px;
+  padding: 30px;
   max-width: 400px;
-  width: 100%;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  border-radius: 10px;
   z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
-.signup-form {
-  top: calc(50% + 260px);
-}
-
-.verify-form {
-  top: calc(50% + 500px);
-}
-
-.login-form h2,
-.signup-form h2,
-.verify-form h2 {
-  text-align: center;
-  color: #333;
-  margin-bottom: 20px;
-}
-
-/* ========== FORM ELEMENTS ========== */
-.form-group {
-  margin-bottom: 15px;
-}
-
-label {
-  display: block;
-  font-size: 14px;
-  margin-bottom: 5px;
-  color: #555;
-}
-
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="number"] {
-  width: 100%;
-  padding: 10px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-input:focus {
-  outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
-}
-
-input[type="checkbox"] {
-  margin-right: 10px;
-}
-
-label[for="remember-me"] {
-  font-size: 12px;
-  color: #666;
-}
-
-/* ========== BUTTON: LOGIN ========== */
-.login-btn {
-  width: 100%;
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  font-size: 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-.login-btn:hover {
-  background-color: #0056b3;
-}
-
-.login-form p,
-.signup-form p,
-.verify-form p {
-  text-align: center;
-  font-size: 12px;
-  color: #777;
-  margin-top: 10px;
-}
-
-.login-form p a,
-.signup-form p a,
-.verify-form p a {
-  color: #007bff;
-  text-decoration: none;
-}
-
-.login-form p a:hover,
-.signup-form p a:hover,
-.verify-form p a:hover {
-  text-decoration: underline;
-}
-
-/* ========== CLOSE BUTTON ========== */
 .close-btn {
   position: absolute;
   top: 10px;
   right: 10px;
-  background: #f44336;
+  background: var(--danger);
   color: white;
   border: none;
   width: 30px;
@@ -259,138 +129,167 @@ label[for="remember-me"] {
   font-size: 18px;
   border-radius: 50%;
   cursor: pointer;
+}
+
+form .form-group {
+  margin-bottom: 15px;
+}
+
+form label {
+  font-size: 14px;
+  margin-bottom: 5px;
+  display: block;
+  color: var(--text);
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="password"],
+form input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--gray);
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+form input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+.login-btn {
+  width: 100%;
+  background: var(--primary);
+  color: white;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.login-btn:hover {
+  background: #0056b3;
+}
+
+.password-toggle {
+  position: relative;
+}
+
+.eye-toggle {
+  position: absolute;
+  right: 10px;
+  top: 65%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding-left: 0.5rem;
   display: flex;
   align-items: center;
-  justify-content: center;
 }
 
-.close-btn:hover {
-  background: #d32f2f;
+.eye-toggle svg {
+  filter: grayscale(100%);
+  stroke: #000;
+  transition: transform 0.2s ease;
 }
 
-/* ========== OTP RESEND ========== */
+.eye-toggle:hover svg {
+  transform: scale(1.1);
+}
+
+.login-overlay.active {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background: var(--bg-overlay);
+  z-index: 999;
+}
+
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: var(--success);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  z-index: 9999;
+  font-size: 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+}
+
+.notification.error {
+  background-color: var(--danger);
+}
+
 .resend-otp {
   text-align: center;
   margin-top: 10px;
 }
 
 .resend-btn {
-  background-color: #ffc107;
-  color: #000;
+  background: var(--warning);
   border: none;
   padding: 8px 12px;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 14px;
 }
 
 .resend-btn[disabled] {
-  background-color: #e0e0e0;
+  background: #e0e0e0;
   color: #999;
   cursor: not-allowed;
 }
 
-/* ========== NOTIFICATION ========== */
-.notification {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background-color: #4caf50;
-  color: white;
-  padding: 12px 20px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  z-index: 9999;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
-}
-
-.notification.error {
-  background-color: #f44336;
-}
-
-/* ========== RESPONSIVE - TABLET & MOBILE ========== */
 @media screen and (max-width: 768px) {
   .hamburger {
-    display: flex;
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    z-index: 110;
-  }
-
-  .n-left {
-    position: absolute;
-    top: 15px;
-    left: 20px;
-    z-index: 110;
-  }
-
-  .n-wrapper {
-    flex-direction: column;
-    align-items: stretch;
-    padding: 0;
-    height: auto;
+    display: block;
   }
 
   .n-right {
     display: none;
     flex-direction: column;
-    width: 100vw;
-    position: relative;
-    left: 50%;
-    margin-left: -50vw;
-    background-color: #fff;
+    width: 100%;
+    background: #fff;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    z-index: 99;
+    padding: 1rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-top: px solid #ccc;
-    padding-left: 30px;
-    align-items: flex-start;
-    z-index: 100;
   }
 
   .n-right.open {
     display: flex;
   }
 
-  .n-list {
-    width: 100%;
-    padding: 1rem 2rem;
-  }
-
-  .n-list > ul {
+  .n-list ul {
     flex-direction: column;
-    align-items: flex-start;
     gap: 1rem;
-    padding: 0;
-    margin: 0;
+    align-items: flex-start;
   }
 
-  .n-list ul li a {
-    font-size: 1.25rem;
-    color: #333;
-    text-align: left;
-  }
-
-  .n-button {
-    width: 100%;
-    text-align: left;
-    padding: 0.75rem 2rem;
-    font-size: 1rem;
-    font-weight: 600;
-    margin-top: -8px;
-  }
-
-  /* ========== CONTACT BUTTON - RESPONSIVE (<=768px) ========== */
+  .n-button,
   .contact-button {
-    margin-left: 20px;       /* ⇨ Geser kanan agar tidak mentok */
-    margin-top: 2px;        /* ⇩ Turunkan sedikit */
-    padding: 0.5rem 1rem;
-    width: auto;
-    font-size: 1rem;
-    transform: translateX(0); /* Reset posisi */
+    width: 100%;
+    text-align: center;
+    margin-top: 0.5rem;
+  }
+
+  .n-left {
+    width: 100%;
+    justify-content: space-between;
   }
 }
 
-/* ========== RESPONSIVE - MOBILE KECIL (<= 480px) ========== */
 @media screen and (max-width: 480px) {
   .n-name {
     font-size: 1rem;
@@ -398,22 +297,6 @@ label[for="remember-me"] {
 
   .n-button,
   .contact-button {
-    padding: 1rem;
-    text-align: left;
-    width: 100%;
-  }
-
-  .n-left {
-    top: 20px;
-    left: 15px;
-  }
-
-  .hamburger {
-    top: 10px;
-    right: 15px;
-  }
-
-  .contact-button {
-    margin-top: 0px; /* ⇩ Tambahan jarak agar tidak menempel */
+    padding: 0.75rem;
   }
 }

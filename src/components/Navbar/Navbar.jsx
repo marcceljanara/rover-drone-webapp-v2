@@ -18,6 +18,7 @@ const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showPasswordLogin, setShowPasswordLogin] = useState(false);
+  const [showPasswordSignUp, setShowPasswordSignUp] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [emailLogin, setEmailLogin] = useState("");
   const [passwordLogin, setPasswordLogin] = useState("");
@@ -276,7 +277,13 @@ const Navbar = () => {
             <div className="form-group"><label>Full Name</label><input type="text" name="fullname" required /></div>
             <div className="form-group"><label>Username</label><input type="text" name="username" required /></div>
             <div className="form-group"><label>Email</label><input type="email" name="email-signup" required /></div>
-            <div className="form-group"><label>Password</label><input type="password" name="password-signup" required /></div>
+            <div className="form-group password-toggle">
+              <label>Password</label>
+              <input type={showPasswordSignUp ? "text" : "password"} name="password-signup" required />
+              <button type="button" className="eye-toggle" onClick={() => setShowPasswordSignUp(p => !p)}>
+                {showPasswordSignUp ? "🙈" : "👁️"}
+              </button>
+            </div>
             <button type="submit" className="login-btn">Register</button>
           </form>
           <p>Already have an account? <a href="#" onClick={() => {
