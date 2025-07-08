@@ -1,3 +1,4 @@
+// MainDash.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGithubCommits } from "../../Data/Data";
@@ -46,55 +47,53 @@ const MainDash = () => {
   };
 
   return (
-    <div className="main-dash">
-      <h1 className="dashboard-title">Dashboard</h1>
+    <div className="page-container">
+      {/* Main Dashboard */}
+      <div className="main-dash">
+        <h1 className="dashboard-title">Dashboard</h1>
 
-      <div className="search-container">
-        <input
-          type="text"
-          placeholder="Cari ID device..."
-          className="search-box"
-          value={searchTerm}
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
-            setCurrentPage(1);
-          }}
-        />
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="Cari ID device..."
+            className="search-box"
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1);
+            }}
+          />
+        </div>
+
+        <div className="dashboard-layout">
+          <div className="main-content">
+            <div className="cards-container">
+              {paginatedDevices.map((device) => (
+                <div
+                  key={device.id}
+                  className="device-card"
+                  onClick={() => navigate(`/dashboard/${device.id}`)}
+                  style={{ backgroundColor: getStatusColor(device.status) }}
+                >
+                  <h3>{device.id}</h3>
+                  <p>Status: {device.status}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="pagination-controls">
+              <button onClick={handlePrev} disabled={currentPage === 1}>←</button>
+              <span>Halaman {currentPage} dari {totalPages}</span>
+              <button onClick={handleNext} disabled={currentPage === totalPages}>→</button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="dashboard-layout">
-        <div className="main-content">
-          <div className="cards-container">
-            {paginatedDevices.map((device) => (
-              <div
-                key={device.id}
-                className="device-card"
-                onClick={() => navigate(`/dashboard/${device.id}`)}
-                style={{ backgroundColor: getStatusColor(device.status) }}
-              >
-                <h3>{device.id}</h3>
-                <p>Status: {device.status}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="pagination-controls">
-            <button onClick={handlePrev} disabled={currentPage === 1}>
-              ←
-            </button>
-            <span>Halaman {currentPage} dari {totalPages}</span>
-            <button onClick={handleNext} disabled={currentPage === totalPages}>
-              →
-            </button>
-          </div>
-        </div>
-
-        <div className="RightSide">
-          <div className="section">
-            <h3 className="section-title">Updates</h3>
-            <Updates />
-          </div>
-        </div>
+      {/* Floating Update Box */}
+      <div className="updates-floating">
+        <h3 className="section-title">Updates</h3>
+        <Updates />
       </div>
     </div>
   );

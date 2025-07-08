@@ -1,19 +1,21 @@
+/* ===== GLOBAL ===== */
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #E6FFF2;
   scroll-behavior: smooth;
   overflow-x: hidden;
-  font-family: 'Segoe UI', sans-serif;
 }
 
+/* ===== DASHBOARD ===== */
 .main-dash {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 2rem 1rem;
   min-height: 100vh;
-  background-color: #E6FFF2;
   width: 100%;
   max-width: 100vw;
   box-sizing: border-box;
@@ -65,6 +67,7 @@ html, body {
   flex: 1;
 }
 
+/* ===== CARDS ===== */
 .cards-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -93,6 +96,7 @@ html, body {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
 }
 
+/* ===== PAGINATION ===== */
 .pagination-controls {
   display: flex;
   justify-content: center;
@@ -123,29 +127,46 @@ html, body {
   font-weight: 500;
 }
 
-.RightSide {
-  position: sticky;
-  top: 1rem;
-  max-width: 320px;
-  min-width: 260px;
-  align-self: flex-start;
-}
-
-.section-title {
-  margin-bottom: 0.5rem;
-  font-size: 18px;
-  font-weight: bold;
-  text-align: left;
-}
-
-.Updates {
-  background: white;
-  border-radius: 0.7rem;
+/* ===== UPDATES BOX (ATUR POSISI & UKURAN) ===== */
+.updates-floating {
+  position: absolute;        /* Gunakan absolute agar bisa digeser */
+  top: 2rem;                 /* Geser dari atas */
+  right: -22rem;               /* Geser dari kanan */
+  width: 300px;              /* Ubah sesuai kebutuhan */
+  height: 280px;             /* Ubah sesuai kebutuhan */
+  
+ 
+  border-radius: 0.8rem;
   padding: 1rem;
+  
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  z-index: 10;
+}
+
+/* Untuk atur ulang dari parent container */
+.page-container {
+  position: relative;
+}
+
+/* ===== JUDUL SECTION DI UPDATE BOX ===== */
+.section-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+  
+  text-align: center;
+  margin-bottom: 0.75rem;
+}
+
+/* ===== ISI UPDATE ===== */
+.Updates {
   display: flex;
   flex-direction: column;
   font-size: 13px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  flex: 1;
 }
 
 .update {
@@ -169,52 +190,22 @@ html, body {
   font-weight: bold;
 }
 
-/* ========== RESPONSIVE - TABLET ========== */
 @media screen and (max-width: 768px) {
-  .dashboard-title {
-    font-size: 2rem;
+  .updates-floating {
+    position: relative;         /* Gunakan relative agar bisa diatur dalam flow */
+    width: 80%;                 /* Lebar menyesuaikan */
+    height: auto;
+    margin: 1rem auto 3rem auto; /* Tengah, lalu geser pakai padding atau align sendiri */
+    right: -2rem;                   /* pastikan tidak konflik */
+    left: auto;                 /* tambahkan ini jika perlu */
+    display: flex;
+    justify-content: flex-end; /* Kontennya ke kanan */
   }
 
-  .dashboard-layout {
-    flex-direction: column;
-  }
-
-  .search-container {
-    justify-content: center;
-    padding: 0 1rem;
-  }
-
-  .RightSide {
-    position: relative;
-    margin-top: 2rem;
+  /* Jika perlu pembungkus tambahan untuk isi agar box geser ke kanan */
+  .updates-wrapper {
     width: 100%;
-    max-width: 100%;
-  }
-}
-
-/* ========== RESPONSIVE - MOBILE ========== */
-@media screen and (max-width: 480px) {
-  .dashboard-title {
-    font-size: 1.6rem;
-  }
-
-  .search-box {
-    width: 100%;
-    font-size: 13px;
-    height: 36px;
-    padding: 6px 10px;
-  }
-
-  .cards-container {
-    grid-template-columns: 1fr;
-  }
-
-  .pagination-controls {
-    font-size: 0.9rem;
-    gap: 0.5rem;
-  }
-
-  .pagination-controls button {
-    padding: 6px 12px;
+    display: flex;
+    justify-content: flex-end;
   }
 }
