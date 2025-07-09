@@ -5,7 +5,6 @@ import HeartEmoji from "../../imgs/heartemoji.png";
 import Glasses from "../../imgs/glasses.png";
 import Humble from "../../imgs/humble.png";
 import { motion } from "framer-motion";
-// import Resume from './resume.pdf';
 
 const Services = () => {
   const transition = {
@@ -16,14 +15,16 @@ const Services = () => {
   const cardData = [
     {
       emoji: HeartEmoji,
-      heading: "Monitoring",
+      heading: <span style={{ color: "orange" }}>Monitoring</span>,
+
       detail: (
         <a
           href="/monitoring.html"
           target="_self"
-          style={{ textDecoration: "none", color: "inherit" }}
+          style={{ textDecoration: "none", color: "black" }}
         >
-          Pemantauan otomatis dengan Drone Rover untuk kesehatan tanaman, kebutuhan pemupukan, dan pengendalian hama.
+          Pemantauan otomatis dengan Drone Rover untuk kesehatan tanaman,
+          kebutuhan pemupukan, dan pengendalian hama.
         </a>
       ),
       link: "/monitoring.html",
@@ -31,14 +32,15 @@ const Services = () => {
     },
     {
       emoji: Glasses,
-      heading: "Data Management",
+      heading: <span style={{ color: "orange" }}>Data Management</span>,
       detail: (
         <a
           href="/data.html"
           target="_self"
-          style={{ textDecoration: "none", color: "inherit" }}
+          style={{ textDecoration: "none", color: "black" }}
         >
-          Pengelolaan data perkebunan dengan Blockchain untuk transparansi dan akuntabilitas yang lebih baik.
+          Pengelolaan data perkebunan dengan sistem digital untuk transparansi
+          dan akuntabilitas yang lebih baik.
         </a>
       ),
       link: "/data.html",
@@ -46,14 +48,15 @@ const Services = () => {
     },
     {
       emoji: Humble,
-      heading: "Automation",
+      heading: <span style={{ color: "orange" }}>Automation</span>,
       detail: (
         <a
           href="/automation.html"
           target="_self"
-          style={{ textDecoration: "none", color: "inherit" }}
+          style={{ textDecoration: "none", color: "black" }}
         >
-          Automatisasi proses pemeliharaan tanaman, seperti pemupukan dan penyemprotan, berdasarkan data real-time.
+          Automatisasi proses pemeliharaan tanaman, seperti pemupukan dan
+          penyemprotan, berdasarkan data real-time.
         </a>
       ),
       link: "/automation.html",
@@ -67,12 +70,12 @@ const Services = () => {
       <div className="awesome">
         <span>Our Innovative</span>
         <span>Services</span>
-        <span>
-          Kami menyediakan solusi teknologi terdepan untuk memantau dan 
+        <span style={{ color: "black" }}>
+          Kami menyediakan solusi teknologi terdepan untuk memantau dan
           <br />
           mengelola perkebunan kelapa sawit secara efisien dan transparan.
           <br />
-          Melalui teknologi blockchain dan drone rover, kami membawa revolusi 
+          Melalui teknologi drone rover, kami membawa revolusi
           <br />
           dalam pengelolaan perkebunan.
         </span>
