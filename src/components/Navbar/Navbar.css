@@ -102,10 +102,11 @@
     padding: 10px 20px;
     border-radius: 25px;
     cursor: pointer;
-    transform: translateX(-40px);
+    transform: translateX(-40px) translateY(2px); /* dinaikkan */
     transition: background-color 0.3s ease-in-out;
-    margin-top: 14px;
+    margin-top: 0px; /* hilangkan margin bawah */
     font-size: 1rem;
+    position: relative;
   }
 
   .contact-button:hover {
@@ -133,7 +134,6 @@
   padding: 2px;
 }
 
-/* Hover effect on eye icon */
 .eye-toggle:hover svg {
   stroke: var(--primary);
 }
@@ -399,11 +399,11 @@ label[for="remember-me"] {
 
   .contact-button {
     margin-left: 20px;
-    margin-top: 2px;
+    margin-top: 0px;
     padding: 0.5rem 1rem;
     width: auto;
     font-size: 1rem;
-    transform: translateX(0);
+    transform: translateX(0) translateY(-1px); /* naikkan juga di mobile */
   }
 }
 
@@ -432,5 +432,6 @@ label[for="remember-me"] {
 
   .contact-button {
     margin-top: 0px;
+    transform: translateY(-6px); /* sedikit naik */
   }
 }

@@ -1,8 +1,9 @@
+/* ========== INTRO SECTION STYLING ========== */
 .Intro {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: 10vh 2rem 0 2rem; /* ✅ ini penting: agar konten turun 10% dari atas */
+  padding: 10vh 2rem 0 2rem; /* Turunkan 10% dari atas */
   height: 73vh;
   width: 100%;
 }
@@ -37,11 +38,13 @@
   color: var(--orange);
 }
 
-.i-name > :nth-child(3) {
+.i-name > :nth-child(3),
+.intro-description {
   font-weight: 100;
   font-size: 14px;
-  color: var(--gray);
+  color: black; /* ✅ pastikan teks ini hitam */
   margin-top: 1.5rem;
+  line-height: 1.6;
 }
 
 .i-button {
@@ -111,15 +114,12 @@
   left: 56%;
 }
 
-/* ============================= */
-/* RESPONSIVE STYLING SECTION   */
-/* ============================= */
-
+/* ========== RESPONSIVE STYLING ========== */
 @media screen and (max-width: 1024px) {
   .Intro {
     flex-direction: column;
     align-items: center;
-    padding: 10vh 1rem 0 1rem; /* ✅ tetap beri padding top */
+    padding: 10vh 1rem 0 1rem;
     height: auto;
   }
 

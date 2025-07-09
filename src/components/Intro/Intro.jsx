@@ -36,10 +36,13 @@ const Intro = () => {
         <div className="i-name">
           <span>Smart Agriculture</span>
           <span>with Drone-Rover</span>
-          <span>
-            Meningkatkan Produktivitas Perkebunan Kelapa Sawit dengan Teknologi <br />
-            Blockchain dan Drone Rover dari Universitas Lampung
-          </span>
+          <span className="intro-description">
+  Meningkatkan produktivitas dan efisiensi perkebunan kelapa sawit <br />
+  melalui pemanfaatan teknologi Drone Rover yang dikembangkan oleh <br />
+  Universitas Lampung sebagai solusi inovatif dalam pemantauan dan <br />
+  pengelolaan lahan secara presisi.
+</span>
+
         </div>
         <Link to="/dashboard" className="i-button" style={{ textDecoration: 'none' }}>
           <button className="button">Dashboard</button>
