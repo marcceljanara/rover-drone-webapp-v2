@@ -29,8 +29,8 @@ const menuData = [
   { heading: "Return", icon: UilHistory, link: "/returns" },
   { heading: "Laporan Keuangan", icon: UilFileAlt, link: "/reports" },
   { heading: "Manajemen Pengguna", icon: UilUsersAlt, link: "/admin" },
-  { heading: "Non Fungible Token", icon: UilUsdCircle, link: "/non-fungible-token" },
-  { heading: "Power Data", icon: UilChart, link: "/power-data" },
+  // { heading: "Non Fungible Token", icon: UilUsdCircle, link: "/non-fungible-token" },
+  // { heading: "Power Data", icon: UilChart, link: "/power-data" },
 ];
 
 const Sidebar = () => {
