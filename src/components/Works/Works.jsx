@@ -26,11 +26,14 @@ const Works = () => {
             Works for All these
           </span>
           <span>Brands & Clients</span>
-          <span>
-            Kami bangga telah memberikan solusi inovatif dan efisien untuk berbagai merek dan klien, <br/>membantu mereka mengatasi tantangan dalam sektor pertanian dan teknologi.
-            <br />
-            Kami berkomitmen untuk terus memberikan layanan terbaik dan solusi yang berdampak positif.
-          </span>
+          <span style={{ color: "black" }}>
+  Kami bangga telah memberikan solusi inovatif dan efisien untuk berbagai merek dan klien,
+  <br />
+  membantu mereka mengatasi tantangan dalam sektor pertanian dan teknologi.
+  <br />
+  Kami berkomitmen untuk terus memberikan layanan terbaik dan solusi yang berdampak positif.
+</span>
+
           {/* <Link to="contact" smooth={true} spy={true}>
             <button className="button s-button">Hire Me</button>
           </Link> */}
