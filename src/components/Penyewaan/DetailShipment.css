@@ -1,116 +1,118 @@
-/* Rental Detail Page Styles */
-
-.rental-detail-container {
+/* ========== UTAMA ========== */
+.ship-detail-container {
+  max-width: 900px;
+  margin: 2rem auto;
   padding: 2rem 1rem;
-  max-width: 800px;
-  margin: auto;
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', sans-serif;
+  color: #333;
   box-sizing: border-box;
+  overflow: visible; /* 👈 NO SCROLL */
 }
 
-.rental-detail-error {
-  color: red;
+/* ========== JUDUL ========== */
+.ship-detail-title {
+  text-align: center;
+  font-size: 1.75rem;
   font-weight: bold;
-  margin-bottom: 1rem;
-  text-align: center;
+  margin-bottom: 2rem;
 }
 
-.rental-detail-title {
+/* ========== ERROR ========== */
+.ship-error {
+  color: #e74c3c;
   text-align: center;
+  font-weight: 600;
   margin-bottom: 1.5rem;
-  font-size: 1.5rem;
 }
 
-.rental-detail-back-btn {
-  display: block;
-  margin: 2rem auto 0;
-  background-color: #28a745;
-  color: white;
-  padding: 0.6rem 1.2rem;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s ease;
+/* ========== TABEL ========== */
+.ship-detail-table-wrapper {
+  width: 100%;
 }
 
-.rental-detail-back-btn:hover {
-  background-color: #218838;
-}
-
-.rental-detail-table-wrapper {
-  overflow-x: auto;
-  margin-top: 1rem;
-}
-
-.rental-detail-table {
+.ship-detail-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 300px;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
+  background: none;
 }
 
-.rental-detail-table th,
-.rental-detail-table td {
-  padding: 0.5rem 0.75rem;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
+.ship-detail-table td {
+  padding: 0.75rem 1rem;
   vertical-align: top;
+  border-bottom: 1px solid #ddd;
   word-break: break-word;
 }
 
-.rental-detail-table tr:hover {
+.ship-detail-table tr:nth-child(even) {
   background-color: #f9f9f9;
 }
-.ship-proof-img{
-  max-width:120px;
-  height:auto;
-  border:1px solid #ccc;
-  border-radius:4px;
+
+/* ========== GAMBAR ========== */
+.ship-proof-img {
+  max-width: 150px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-top: 0.5rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* ========== TOMBOL ========== */
+.ship-back-btn {
+  display: block;
+  margin: 2rem auto 0;
+  padding: 0.75rem 1.5rem;
+  background-color: #007bff;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
 
-/* Responsive - stacked style for small screens */
+.ship-back-btn:hover {
+  background-color: #0056b3;
+}
+
+/* ========== RESPONSIVE ========== */
 @media screen and (max-width: 768px) {
-  .rental-detail-table,
-  .rental-detail-table thead,
-  .rental-detail-table tbody,
-  .rental-detail-table th,
-  .rental-detail-table td,
-  .rental-detail-table tr {
+  .ship-detail-table,
+  .ship-detail-table thead,
+  .ship-detail-table tbody,
+  .ship-detail-table tr,
+  .ship-detail-table td {
     display: block;
     width: 100%;
   }
 
-  .rental-detail-table tr {
-    margin-bottom: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #fff;
+  .ship-detail-table tr {
+    margin-bottom: 1rem;
     padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
   }
 
-  .rental-detail-table td {
+  .ship-detail-table td {
+    padding: 0.75rem 1rem 0.75rem 50%;
     position: relative;
-    padding-left: 45%;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
     border: none;
     border-bottom: 1px solid #eee;
-    box-sizing: border-box;
   }
 
-  .rental-detail-table td::before {
+  .ship-detail-table td::before {
     content: attr(data-label);
     position: absolute;
-    top: 50%;
+    top: 0.75rem;
     left: 1rem;
-    transform: translateY(-50%);
-    font-weight: bold;
-    color: #555;
     width: 40%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    font-weight: bold;
+    font-size: 0.85rem;
+    color: #444;
+  }
+
+  .ship-proof-img {
+    max-width: 100%;
   }
 }

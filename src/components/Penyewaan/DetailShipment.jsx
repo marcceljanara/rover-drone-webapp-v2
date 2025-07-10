@@ -1,4 +1,3 @@
-// src/pages/DetailShipment.jsx
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./DetailShipment.css";
@@ -7,19 +6,18 @@ import { formatTanggalDanWaktuIndonesia } from "../../utils/datetimeIndonesia";
 const API_HOST = "https://dev-api.xsmartagrichain.com";
 
 export default function DetailShipment() {
-  const { id }      = useParams();          // ← shipmentId di URL
-  const navigate    = useNavigate();
-  const token       = localStorage.getItem("accessToken");
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const token = localStorage.getItem("accessToken");
 
-  const [data,  setData]  = useState(null);
+  const [data, setData] = useState(null);
   const [error, setError] = useState("");
 
-  /* ── ambil detail sekali ── */
   useEffect(() => {
     const fetchDetail = async () => {
       try {
         setError("");
-        const res  = await fetch(`${API_HOST}/v1/shipments/${id}`, {
+        const res = await fetch(`${API_HOST}/v1/shipments/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const json = await res.json();
@@ -32,17 +30,20 @@ export default function DetailShipment() {
     fetchDetail();
   }, [id, token]);
 
-  /* ── helper url gambar ── */
   const getProofUrl = (relativeUrl) =>
-    !relativeUrl ? "" :
-    relativeUrl.startsWith("http") ? relativeUrl : `${API_HOST}${relativeUrl}`;
+    !relativeUrl
+      ? ""
+      : relativeUrl.startsWith("http")
+      ? relativeUrl
+      : `${API_HOST}${relativeUrl}`;
 
-  /* ── UI ── */
   if (error)
     return (
       <div className="ship-detail-container">
         <p className="ship-error">{error}</p>
-        <button onClick={() => navigate(-1)} className="ship-back-btn">Kembali</button>
+        <button onClick={() => navigate(-1)} className="ship-back-btn">
+          Kembali
+        </button>
       </div>
     );
 
@@ -56,48 +57,27 @@ export default function DetailShipment() {
       <div className="ship-detail-table-wrapper">
         <table className="ship-detail-table">
           <tbody>
-            <tr><td>ID Pengiriman</td><td>{data.id}</td></tr>
-            <tr><td>Rental ID</td><td>{data.rental_id}</td></tr>
-            <tr><td>Alamat Pengiriman</td><td>{data.full_address}</td></tr>
-
-            <tr><td>Kurir / Layanan</td>
-                <td>{`${data.courier_name} / ${data.courier_service}`}</td></tr>
-
-            <tr><td>No. Resi</td><td>{data.tracking_number || "-"}</td></tr>
+            <tr><td>ID Pengiriman</td><td>{data.id}</td></tr>
+            <tr><td>Rental ID</td><td>{data.rental_id}</td></tr>
+            <tr><td>Alamat Pengiriman</td><td>{data.full_address}</td></tr>
+            <tr><td>Kurir / Layanan</td><td>{`${data.courier_name} / ${data.courier_service}`}</td></tr>
+            <tr><td>No. Resi</td><td>{data.tracking_number || "-"}</td></tr>
             <tr><td>Status</td><td>{data.shipping_status}</td></tr>
-
-            <tr><td>Perkiraan Kirim</td>
-                <td>{formatTanggalDanWaktuIndonesia(data.estimated_shipping_date)}</td></tr>
-            <tr><td>Perkiraan Sampai</td>
-                <td>{formatTanggalDanWaktuIndonesia(data.estimated_delivery_date)}</td></tr>
-
-            <tr><td>Tgl Kirim Sebenarnya</td>
-                <td>{data.actual_shipping_date
-                      ? formatTanggalDanWaktuIndonesia(data.actual_shipping_date)
-                      : "-"}</td></tr>
-            <tr><td>Tgl Sampai Sebenarnya</td>
-                <td>{data.actual_delivery_date
-                      ? formatTanggalDanWaktuIndonesia(data.actual_delivery_date)
-                      : "-"}</td></tr>
-
+            <tr><td>Perkiraan Kirim</td><td>{formatTanggalDanWaktuIndonesia(data.estimated_shipping_date)}</td></tr>
+            <tr><td>Perkiraan Sampai</td><td>{formatTanggalDanWaktuIndonesia(data.estimated_delivery_date)}</td></tr>
+            <tr><td>Tgl Kirim Sebenarnya</td><td>{data.actual_shipping_date ? formatTanggalDanWaktuIndonesia(data.actual_shipping_date) : "-"}</td></tr>
+            <tr><td>Tgl Sampai Sebenarnya</td><td>{data.actual_delivery_date ? formatTanggalDanWaktuIndonesia(data.actual_delivery_date) : "-"}</td></tr>
             <tr><td>Catatan</td><td>{data.notes || "-"}</td></tr>
-
             <tr>
-              <td>Bukti Pengiriman</td>
+              <td>Bukti Pengiriman</td>
               <td>
                 {data.delivery_proof_url ? (
-                  <a href={getProofUrl(data.delivery_proof_url)}
-                     target="_blank" rel="noopener noreferrer">
-                    <img
-                      src={getProofUrl(data.delivery_proof_url)}
-                      alt="Bukti Pengiriman"
-                      className="ship-proof-img"
-                    />
+                  <a href={getProofUrl(data.delivery_proof_url)} target="_blank" rel="noopener noreferrer">
+                    <img src={getProofUrl(data.delivery_proof_url)} alt="Bukti Pengiriman" className="ship-proof-img" />
                   </a>
                 ) : "-"}
               </td>
             </tr>
-
             <tr><td>Dibuat</td><td>{formatTanggalDanWaktuIndonesia(data.created_at)}</td></tr>
             <tr><td>Diperbarui</td><td>{formatTanggalDanWaktuIndonesia(data.updated_at)}</td></tr>
           </tbody>
