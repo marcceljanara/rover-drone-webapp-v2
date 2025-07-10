@@ -32,7 +32,6 @@ const HIDDEN_KEYS = ['is_deleted', 'created_at', 'updated_at'];
 function formatValue(key, value) {
   if (value == null) return '-';
 
-  // tanggal
   if (/_date$|reserved_until/.test(key)) {
     const date = new Date(value);
     return date.toLocaleString('id-ID', {
@@ -46,7 +45,6 @@ function formatValue(key, value) {
     });
   }
 
-  // uang
   if (/_cost$/.test(key)) {
     return Number(value).toLocaleString('id-ID', {
       style: 'currency',
@@ -56,7 +54,6 @@ function formatValue(key, value) {
     });
   }
 
-  // status
   if (key === 'rental_status') return STATUS_MAP[value] || value;
 
   return String(value);
@@ -85,7 +82,6 @@ function DetailPenyewaan() {
         const data = json.data.rental;
         setRental(data);
 
-        // hitung countdown batas bayar
         const reservedUntil = new Date(data.reserved_until).getTime();
         const tick = () => {
           const sisa = reservedUntil - Date.now();
@@ -124,9 +120,8 @@ function DetailPenyewaan() {
   return (
     <div className="rental-detail-container">
       <h2 className="rental-detail-title">Detail Penyewaan</h2>
-        <button onClick={() => navigate(-1)} className="rental-back-btn">
-          Kembali
-        </button>
+
+      <button onClick={() => navigate(-1)} className="rental-back-btn">Kembali</button>
 
       <div className="rental-detail-table-wrapper">
         <table className="rental-detail-table">
@@ -135,17 +130,13 @@ function DetailPenyewaan() {
               .filter(([k]) => !HIDDEN_KEYS.includes(k))
               .map(([key, value]) => (
                 <tr key={key}>
-                  <td data-label="Field">
-                    <strong>{LABELS[key] || key}</strong>
-                  </td>
+                  <td data-label="Field"><strong>{LABELS[key] || key}</strong></td>
                   <td data-label={LABELS[key] || key}>{formatValue(key, value)}</td>
                 </tr>
               ))}
 
             <tr>
-              <td data-label="Field">
-                <strong>Sisa Waktu Pembayaran</strong>
-              </td>
+              <td data-label="Field"><strong>Sisa Waktu Pembayaran</strong></td>
               <td
                 data-label="Sisa Waktu Pembayaran"
                 style={{ color: timeLeft === 'Batas waktu pembayaran habis' ? 'red' : 'black' }}
@@ -157,29 +148,11 @@ function DetailPenyewaan() {
         </table>
       </div>
 
-      <button
-        onClick={() => navigate(`/penyewaan/${id}/shipment`)}
-        className="rental-detail-back-btn"
-        style={{ marginTop: 10, backgroundColor: '#00796b', color: '#fff' }}
-      >
-        Pengiriman
-      </button>
-
-      <button
-        onClick={() => navigate(`/penyewaan/${id}/returns`)}
-        className="rental-detail-back-btn"
-        style={{ marginTop: 10, backgroundColor: '#00796b', color: '#fff' }}
-      >
-        Pengembalian
-      </button>
-
-            <button
-        onClick={() => navigate(`/penyewaan/${id}/extensions`)}
-        className="rental-detail-back-btn"
-        style={{ marginTop: 10, backgroundColor: '#4a148c', color: '#fff' }}
-      >
-        Perpanjangan
-      </button>
+      <div className="rental-detail-buttons">
+        <button onClick={() => navigate(`/penyewaan/${id}/shipment`)} className="rental-detail-action-btn">Pengiriman</button>
+        <button onClick={() => navigate(`/penyewaan/${id}/returns`)} className="rental-detail-action-btn">Pengembalian</button>
+        <button onClick={() => navigate(`/penyewaan/${id}/extensions`)} className="rental-detail-action-btn purple">Perpanjangan</button>
+      </div>
     </div>
   );
 }
