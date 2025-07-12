@@ -171,7 +171,6 @@ const DeviceDetail = () => {
           </div>
 
           <div className="detail-item"><strong>Created At:</strong><div className="detail-value">{formatDateTime(device.created_at)}</div></div>
-          <div className="detail-item"><strong>Updated At:</strong><div className="detail-value">{formatDateTime(device.updated_at)}</div></div>
         </div>
       ) : (
         <div>Perangkat tidak ditemukan</div>
