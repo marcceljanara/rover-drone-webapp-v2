@@ -151,7 +151,7 @@ const DeviceDetail = () => {
           <div className="detail-item"><strong>Status:</strong><div className={`status-badge ${localStatus.toLowerCase()}`}>{localStatus}</div></div>
           <div className="detail-item"><strong>Rental ID:</strong><div className="detail-value">{device.rental_id || 'Tidak tersedia'}</div></div>
           <div className="detail-item"><strong>Last Issue:</strong><div className="detail-value">{device.last_reported_issue || 'Tidak ada'}</div></div>
-          <div className="detail-item"><strong>Last Active:</strong><div className="detail-value">{formatDateTime(device.last_active)}</div></div>
+          <div className="detail-item"><strong>Last Active:</strong><div className="detail-value">{device.last_active}</div></div>
           <div className="detail-item">
             <strong>Sensor Topic:</strong>
             <div className="topic-with-button">
@@ -172,7 +172,6 @@ const DeviceDetail = () => {
 
           <div className="detail-item"><strong>Created At:</strong><div className="detail-value">{formatDateTime(device.created_at)}</div></div>
           <div className="detail-item"><strong>Updated At:</strong><div className="detail-value">{formatDateTime(device.updated_at)}</div></div>
-          <div className="detail-item"><strong>Group ID:</strong><div className="detail-value">{device.group_id || 'Tidak tersedia'}</div></div>
         </div>
       ) : (
         <div>Perangkat tidak ditemukan</div>
