@@ -37,10 +37,10 @@ const Payments = () => {
 
       const result = await response.json();
       const payments = result.data.payments.map((payment) => ({
-        id: payment.id,
-        rentalId: payment.rental_id ?? 'null',
+        id: payment.id?.toString() || '',
+        rentalId: payment.rental_id?.toString() || 'null',
         amount: payment.amount,
-        payment_status: payment.payment_status,
+        payment_status: payment.payment_status?.toString() || '',
       }));
 
       setData(payments);
@@ -88,11 +88,14 @@ const Payments = () => {
     setTimeout(() => setNotification(null), 3000);
   };
 
-  const filteredData = data.filter((item) =>
-    item.id.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.payment_status.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.rentalId.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredData = data.filter((item) => {
+    const keyword = searchTerm.toLowerCase();
+    return (
+      item.id.toLowerCase().includes(keyword) ||
+      item.rentalId.toLowerCase().includes(keyword) ||
+      item.payment_status.toLowerCase().includes(keyword)
+    );
+  });
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -105,9 +108,12 @@ const Payments = () => {
       <div className="search-add-bar">
         <input
           type="text"
-          placeholder="Cari Pembayaran"
+          placeholder="Cari berdasarkan ID, Rental ID, atau Status"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+            setCurrentPage(1); // reset ke halaman 1 saat pencarian
+          }}
         />
       </div>
 
