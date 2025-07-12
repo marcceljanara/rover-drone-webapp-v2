@@ -8,8 +8,8 @@ const LABELS = {
   start_date: 'Tanggal Mulai',
   end_date: 'Tanggal Selesai',
   rental_status: 'Status Penyewaan',
-  reserved_until: 'Batas Bayar',
-  shipping_address_id: 'Alamat Pengiriman',
+  // reserved_until: 'Batas Bayar',
+  // shipping_address_id: 'Alamat Pengiriman',
   total_cost: 'Total Biaya',
   base_cost: 'Biaya Dasar',
   sensor_cost: 'Biaya Sensor',
@@ -27,7 +27,7 @@ const STATUS_MAP = {
   finished: 'Selesai',
 };
 
-const HIDDEN_KEYS = ['is_deleted', 'created_at', 'updated_at'];
+const HIDDEN_KEYS = ['is_deleted', 'created_at', 'updated_at', 'shipping_address_id', 'reserved_until'];
 
 function formatValue(key, value) {
   if (value == null) return '-';
