@@ -12,6 +12,9 @@ const Activation = () => {
   const [editingId, setEditingId] = useState(null);
   const [notification, setNotification] = useState(null);
   const navigate = useNavigate();
+  const role = localStorage.getItem('role');
+  const isUser = role === 'user';
+
 
   useEffect(() => {
     const fetchDevices = async () => {
@@ -77,19 +80,28 @@ const Activation = () => {
   const handleAdd = async () => {
     const token = localStorage.getItem('accessToken');
     try {
-      await fetch('https://dev-api.xsmartagrichain.com/v1/devices', {
+      const response = await fetch('https://dev-api.xsmartagrichain.com/v1/devices', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
       });
-      setNotification('Perangkat berhasil ditambahkan');
+
+      const result = await response.json(); // ⬅️ Perbaikan di sini
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Gagal menambahkan perangkat');
+      }
+
+      setNotification(result.message || 'Perangkat berhasil ditambahkan');
       setTimeout(() => setNotification(null), 3000);
     } catch (err) {
-      alert(`Gagal menambahkan: ${err.message}`);
+      setNotification(err.message || 'Terjadi kesalahan');
+      setTimeout(() => setNotification(null), 3000);
     }
   };
+
 
   const filteredData = data.filter((item) =>
     item.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -127,7 +139,7 @@ const Activation = () => {
                 <th>Status</th>
                 <th>Masalah Terakhir</th>
                 <th>Aktif Terakhir</th>
-                <th>Aksi</th>
+                {!isUser && <th>Aksi</th>}
               </tr>
             </thead>
             <tbody className="table-content">
@@ -153,10 +165,12 @@ const Activation = () => {
                   </td>
                   <td data-label="Masalah Terakhir">{item.lastIssue}</td>
                   <td data-label="Aktif Terakhir">{item.lastActive}</td>
-                  <td data-label="Aksi" className="action-col">
-                    <button className="delete-btn" onClick={() => handleDelete(item.id)}>Hapus</button>
-                    <button className="edit-btn" onClick={() => handleEdit(item.id)}>Edit</button>
-                  </td>
+                  {!isUser && (
+                    <td data-label="Aksi" className="action-col">
+                      <button className="delete-btn" onClick={() => handleDelete(item.id)}>Hapus</button>
+                      <button className="edit-btn" onClick={() => handleEdit(item.id)}>Edit</button>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
