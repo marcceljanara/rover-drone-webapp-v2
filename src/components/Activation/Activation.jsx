@@ -86,7 +86,6 @@ const Activation = () => {
       });
       setNotification('Perangkat berhasil ditambahkan');
       setTimeout(() => setNotification(null), 3000);
-      window.location.reload();
     } catch (err) {
       alert(`Gagal menambahkan: ${err.message}`);
     }
