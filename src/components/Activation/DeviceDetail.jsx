@@ -23,6 +23,13 @@ const DeviceDetail = () => {
     setTimeout(() => setShowPopup(false), 3000);
   };
 
+  const handleCopyTopic = (text) => {
+  navigator.clipboard.writeText(text)
+    .then(() => triggerPopup('Topik berhasil disalin'))
+    .catch(() => triggerPopup('Gagal menyalin topik', 'error'));
+};
+
+
   const fetchDevice = async () => {
     const token = localStorage.getItem('accessToken');
     try {
@@ -148,17 +155,21 @@ const DeviceDetail = () => {
           <div className="detail-item">
             <strong>Sensor Topic:</strong>
             <div className="topic-with-button">
-              <span>{device.sensor_topic}</span>
+              <code className="topic-text">{device.sensor_topic}</code>
+              <button onClick={() => handleCopyTopic(device.sensor_topic)}>Copy</button>
               <button onClick={() => handleChangeTopic('sensor')}>Change</button>
             </div>
           </div>
+
           <div className="detail-item">
             <strong>Control Topic:</strong>
             <div className="topic-with-button">
-              <span>{device.control_topic}</span>
+              <code className="topic-text">{device.control_topic}</code>
+              <button onClick={() => handleCopyTopic(device.control_topic)}>Copy</button>
               <button onClick={() => handleChangeTopic('control')}>Change</button>
             </div>
           </div>
+
           <div className="detail-item"><strong>Created At:</strong><div className="detail-value">{formatDateTime(device.created_at)}</div></div>
           <div className="detail-item"><strong>Updated At:</strong><div className="detail-value">{formatDateTime(device.updated_at)}</div></div>
           <div className="detail-item"><strong>Group ID:</strong><div className="detail-value">{device.group_id || 'Tidak tersedia'}</div></div>
