@@ -89,13 +89,15 @@ function DetailPenyewaan() {
             setTimeLeft('Batas waktu pembayaran habis');
             clearInterval(interval);
           } else {
+            const h = Math.floor((sisa % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const m = Math.floor((sisa % (1000 * 60 * 60)) / (1000 * 60));
             const s = Math.floor((sisa % (1000 * 60)) / 1000);
-            setTimeLeft(`${m}m ${s}s`);
+            setTimeLeft(`${h}h ${m}m ${s}s`);
           }
         };
         tick();
         interval = setInterval(tick, 1000);
+
       } catch (err) {
         setError(err.message);
       }
