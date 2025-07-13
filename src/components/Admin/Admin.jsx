@@ -1,4 +1,3 @@
-// Admin.jsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Admin.css';
@@ -167,6 +166,49 @@ const Admin = () => {
           </button>
         </div>
       </div>
+
+      {/* === MODAL TAMBAH PENGGUNA === */}
+      {showAddModal && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3>Tambah Pengguna Baru</h3>
+            <input
+              type="text"
+              placeholder="Username"
+              value={formData.username}
+              onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+            />
+            <input
+              type="text"
+              placeholder="Nama Lengkap"
+              value={formData.fullname}
+              onChange={(e) => setFormData({ ...formData, fullname: e.target.value })}
+            />
+            <input
+              type="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+            />
+            <input
+              type="password"
+              placeholder="Konfirmasi Password"
+              value={formData.confirmPassword}
+              onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+            />
+            <div className="modal-buttons">
+              <button className="add-btn" onClick={handleAddUser}>Simpan</button>
+              <button className="cancel-btn" onClick={() => setShowAddModal(false)}>Batal</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

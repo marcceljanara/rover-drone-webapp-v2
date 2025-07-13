@@ -4,20 +4,19 @@
   background-color: #f0fff0;
   font-family: Arial, sans-serif;
   width: 100%;
-  max-width: 1200px;
-  margin: auto;
   box-sizing: border-box;
+  overflow-x: hidden;
 }
 
-/* === JUDUL === */
+/* === JUDUL HALAMAN === */
 h2 {
-  font-size: 2rem;
+  font-size: 24px;
   font-weight: bold;
   margin-bottom: 10px;
-  color: #333;
+  text-align: center;
 }
 
-/* === BAR PENCARIAN & TOMBOL TAMBAH === */
+/* === PENCARIAN & TOMBOL TAMBAH === */
 .search-add-bar {
   display: flex;
   flex-wrap: wrap;
@@ -27,25 +26,26 @@ h2 {
 }
 
 .search-add-bar input {
-  padding: 10px 14px;
+  padding: 8px 12px;
   border: 1px solid #4CAF50;
   border-radius: 5px;
-  font-size: 16px;
-  flex-grow: 1;
+  font-size: 14px;
+  flex: 1;
   min-width: 200px;
+  box-sizing: border-box;
 }
 
-/* === TOMBOL TAMBAH === */
 .add-btn {
   background-color: #4CAF50;
   color: white;
   border: none;
-  padding: 10px 16px;
+  padding: 8px 16px;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
   transition: background-color 0.3s;
+  white-space: nowrap;
 }
 
 .add-btn:hover {
@@ -64,16 +64,20 @@ h2 {
   margin-bottom: 20px;
   border-radius: 5px;
   font-weight: bold;
+  text-align: center;
 }
 
-/* === TABEL DATA === */
+/* === WRAPPER TABEL === */
 .table-wrapper {
-  overflow-x: auto;
   width: 100%;
+  overflow-x: auto;
+  box-sizing: border-box;
 }
 
+/* === TABEL === */
 .data-table {
   width: 100%;
+  min-width: 100%;
   border-collapse: collapse;
   background-color: #fff;
   font-size: 14px;
@@ -81,18 +85,19 @@ h2 {
 
 .data-table th,
 .data-table td {
-  padding: 12px 16px;
+  padding: 10px;
   border: 1px solid #ccc;
   text-align: center;
-  white-space: nowrap;
+  word-wrap: break-word;
+  white-space: normal;
+  box-sizing: border-box;
 }
 
 .data-table th {
-  background-color: #e0f2e0;
+  background-color: #dff0df;
   color: #166a16;
 }
 
-/* === ID KLIKABLE === */
 .clickable-id {
   color: #007bff;
   cursor: pointer;
@@ -104,18 +109,19 @@ h2 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 30px;
-  gap: 12px;
+  margin-top: 20px;
+  gap: 10px;
 }
 
 .pagination {
   display: flex;
   gap: 10px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .pagination button {
-  padding: 8px 14px;
+  padding: 6px 12px;
   border: none;
   background-color: #4CAF50;
   color: white;
@@ -132,60 +138,110 @@ h2 {
 
 .page-number {
   font-weight: bold;
-  font-size: 15px;
+  font-size: 14px;
 }
 
-/* === RESPONSIF MOBILE & TABLET === */
+/* === RESPONSIVE MOBILE NORMAL === */
 @media (max-width: 768px) {
+  h2 {
+    font-size: 20px;
+  }
+
   .search-add-bar {
     flex-direction: column;
     align-items: stretch;
   }
 
-  .data-table thead {
-    display: none;
-  }
-
-  .data-table,
-  .data-table tbody,
-  .data-table tr,
-  .data-table td {
-    display: block;
+  .search-add-bar input,
+  .add-btn {
     width: 100%;
   }
 
-  .data-table tr {
-    margin-bottom: 15px;
-    border-bottom: 2px solid #ddd;
-    padding: 10px;
-    border-radius: 8px;
-    background-color: #ffffff;
+  .table-wrapper {
+    overflow-x: auto;
   }
 
+  .data-table {
+    font-size: 13px;
+    min-width: 100%;
+  }
+
+  .data-table th,
   .data-table td {
-    text-align: left;
-    padding-left: 50%;
-    position: relative;
-    border: none;
-    border-bottom: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+    word-break: break-word;
+    white-space: normal;
   }
+}
 
-  .data-table td:last-child {
-    border-bottom: none;
-  }
+/* === MODAL TAMBAH PENGGUNA === */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
 
-  .data-table td::before {
-    content: attr(data-label);
-    position: absolute;
-    left: 15px;
-    top: 12px;
-    font-weight: bold;
-    color: #4CAF50;
-    white-space: nowrap;
-  }
+.modal {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
 
-  .pagination {
-    flex-direction: column;
-    gap: 6px;
-  }
+.modal h3 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.modal input {
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.cancel-btn {
+  background-color: #ccc;
+  color: #000;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.save-btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.save-btn:hover {
+  background-color: #45a049;
 }
