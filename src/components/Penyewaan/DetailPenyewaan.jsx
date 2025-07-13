@@ -8,8 +8,8 @@ const LABELS = {
   start_date: 'Tanggal Mulai',
   end_date: 'Tanggal Selesai',
   rental_status: 'Status Penyewaan',
-  reserved_until: 'Batas Bayar',
-  shipping_address_id: 'Alamat Pengiriman',
+  // reserved_until: 'Batas Bayar',
+  // shipping_address_id: 'Alamat Pengiriman',
   total_cost: 'Total Biaya',
   base_cost: 'Biaya Dasar',
   sensor_cost: 'Biaya Sensor',
@@ -27,7 +27,7 @@ const STATUS_MAP = {
   finished: 'Selesai',
 };
 
-const HIDDEN_KEYS = ['is_deleted', 'created_at', 'updated_at'];
+const HIDDEN_KEYS = ['is_deleted', 'created_at', 'updated_at', 'shipping_address_id', 'reserved_until'];
 
 function formatValue(key, value) {
   if (value == null) return '-';
@@ -89,13 +89,15 @@ function DetailPenyewaan() {
             setTimeLeft('Batas waktu pembayaran habis');
             clearInterval(interval);
           } else {
+            const h = Math.floor((sisa % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const m = Math.floor((sisa % (1000 * 60 * 60)) / (1000 * 60));
             const s = Math.floor((sisa % (1000 * 60)) / 1000);
-            setTimeLeft(`${m}m ${s}s`);
+            setTimeLeft(`${h}h ${m}m ${s}s`);
           }
         };
         tick();
         interval = setInterval(tick, 1000);
+
       } catch (err) {
         setError(err.message);
       }
