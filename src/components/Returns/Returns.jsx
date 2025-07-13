@@ -9,20 +9,19 @@ export default function Returns() {
   const token = localStorage.getItem("accessToken");
 
   const [returns, setReturns] = useState([]);
-  const [status, setStatus] = useState("");
-  const [courier, setCourier] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredReturns, setFilteredReturns] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   const fetchAllReturns = useCallback(async () => {
     setLoading(true);
     setError("");
     try {
-      const params = new URLSearchParams();
-      if (status) params.append("status", status);
-      if (courier) params.append("courierName", courier);
-
-      const res = await fetch(`${API}?${params.toString()}`, {
+      const res = await fetch(API, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -34,37 +33,39 @@ export default function Returns() {
     } finally {
       setLoading(false);
     }
-  }, [status, courier, token]);
+  }, [token]);
 
   useEffect(() => {
     fetchAllReturns();
   }, [fetchAllReturns]);
 
   useEffect(() => {
-    fetchAllReturns();
-  }, [status, courier, fetchAllReturns]);
+    const term = searchTerm.toLowerCase();
+    const filtered = returns.filter((r) =>
+      `${r.id} ${r.rental_id} ${r.courier_name} ${r.tracking_number} ${r.status} ${r.created_at}`
+        .toLowerCase()
+        .includes(term)
+    );
+    setFilteredReturns(filtered);
+    setCurrentPage(1);
+  }, [searchTerm, returns]);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredReturns.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredReturns.length / itemsPerPage);
 
   return (
     <div className="ret-container">
       <h1 className="ret-title">Daftar Pengembalian</h1>
 
       <div className="ret-filter">
-        <select value={status} onChange={(e) => setStatus(e.target.value)}>
-          <option value="">Semua Status</option>
-          <option value="requested">Requested</option>
-          <option value="returning">Returning</option>
-          <option value="returned">Returned</option>
-          <option value="failed">Failed</option>
-        </select>
-
         <input
           type="text"
-          placeholder="Kurir (mis. JNE)"
-          value={courier}
-          onChange={(e) => setCourier(e.target.value)}
+          placeholder="Cari berdasarkan ID, Rental ID, Kurir, Resi, Status, Tanggal"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
-
-        <button onClick={fetchAllReturns}>Cari</button>
       </div>
 
       <div className="ret-table-wrapper">
@@ -87,10 +88,10 @@ export default function Returns() {
               <tr>
                 <td colSpan="7" className="ret-loading">Memuat…</td>
               </tr>
-            ) : returns.length ? (
-              returns.map((r, i) => (
+            ) : currentItems.length ? (
+              currentItems.map((r, i) => (
                 <tr key={r.id}>
-                  <td data-label="#">{i + 1}</td>
+                  <td data-label="#">{indexOfFirstItem + i + 1}</td>
                   <td data-label="ID Pengembalian">
                     <span
                       onClick={() => navigate(`/returns/${r.rental_id}`)}
@@ -115,6 +116,25 @@ export default function Returns() {
             )}
           </tbody>
         </table>
+
+        {/* Pagination SELALU tampil, tapi hanya aktif jika data > 5 */}
+        <div className="ret-pagination">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1 || filteredReturns.length <= itemsPerPage}
+          >
+            ←
+          </button>
+          <span className="page-number">
+            Halaman {String(currentPage).padStart(2, "0")}
+          </span>
+          <button
+            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages || filteredReturns.length <= itemsPerPage}
+          >
+            →
+          </button>
+        </div>
       </div>
     </div>
   );
