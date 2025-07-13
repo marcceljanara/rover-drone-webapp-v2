@@ -115,7 +115,7 @@ const Reports = () => {
 
   return (
     <div className="container">
-      <h2>Daftar Laporan</h2>
+      <h2>Daftar Laporan Keuangan</h2>
       <div className="search-add-bar">
         <input
           type="text"

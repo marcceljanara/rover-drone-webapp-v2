@@ -71,7 +71,7 @@ const ReportDetail = () => {
         <button className="download-btn" onClick={handleDownload}>📄 Unduh Laporan PDF</button>
       </div>
 
-      <h2>Detail Laporan</h2>
+      <h2>Detail Laporan Keuangan</h2>
       <p><strong>ID Laporan:</strong> {report.id}</p>
       <p><strong>Interval Laporan:</strong> {formatIntervalIndonesian(report.report_interval)}</p>
       <p><strong>Total Transaksi:</strong> {report.total_transactions}</p>
