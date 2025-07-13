@@ -1,16 +1,23 @@
+/* === CONTAINER UTAMA === */
 .container {
   padding: 20px;
   background-color: #f0fff0;
   font-family: Arial, sans-serif;
-  max-width: 100%;
-  overflow-x: hidden;
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+  box-sizing: border-box;
 }
 
+/* === JUDUL === */
 h2 {
-  font-size: 24px;
+  font-size: 2rem;
   font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
 }
 
+/* === BAR PENCARIAN & TOMBOL TAMBAH === */
 .search-add-bar {
   display: flex;
   flex-wrap: wrap;
@@ -19,24 +26,25 @@ h2 {
   margin: 20px 0;
 }
 
-.search-add-bar input,
-.search-add-bar select {
-  padding: 8px 12px;
+.search-add-bar input {
+  padding: 10px 14px;
   border: 1px solid #4CAF50;
   border-radius: 5px;
-  font-size: 14px;
-  min-width: 120px;
-  flex: 1;
+  font-size: 16px;
+  flex-grow: 1;
+  min-width: 200px;
 }
 
+/* === TOMBOL TAMBAH === */
 .add-btn {
   background-color: #4CAF50;
   color: white;
   border: none;
-  padding: 8px 14px;
+  padding: 10px 16px;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: bold;
   transition: background-color 0.3s;
 }
 
@@ -48,15 +56,17 @@ h2 {
   box-shadow: 0 0 10px #4CAF50;
 }
 
+/* === NOTIFIKASI === */
 .notification {
   background-color: #fdd835;
-  color: black;
-  padding: 10px;
-  margin: 10px 0;
+  color: #000;
+  padding: 12px;
+  margin-bottom: 20px;
   border-radius: 5px;
+  font-weight: bold;
 }
 
-/* Table styles */
+/* === TABEL DATA === */
 .table-wrapper {
   overflow-x: auto;
   width: 100%;
@@ -71,37 +81,75 @@ h2 {
 
 .data-table th,
 .data-table td {
-  padding: 10px;
+  padding: 12px 16px;
   border: 1px solid #ccc;
   text-align: center;
   white-space: nowrap;
 }
 
+.data-table th {
+  background-color: #e0f2e0;
+  color: #166a16;
+}
+
+/* === ID KLIKABLE === */
+.clickable-id {
+  color: #007bff;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* === FOOTER & PAGINATION === */
 .footer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 30px;
+  gap: 12px;
 }
 
 .pagination {
-  margin-top: 10px;
   display: flex;
-  align-items: center;
   gap: 10px;
+  align-items: center;
+}
+
+.pagination button {
+  padding: 8px 14px;
+  border: none;
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.pagination button:disabled {
+  background-color: #9ccc9c;
+  cursor: not-allowed;
 }
 
 .page-number {
   font-weight: bold;
+  font-size: 15px;
 }
 
-/* Responsif Label Data di Mobile */
+/* === RESPONSIF MOBILE & TABLET === */
 @media (max-width: 768px) {
+  .search-add-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
   .data-table thead {
     display: none;
   }
 
-  .data-table, .data-table tbody, .data-table tr, .data-table td {
+  .data-table,
+  .data-table tbody,
+  .data-table tr,
+  .data-table td {
     display: block;
     width: 100%;
   }
@@ -109,31 +157,35 @@ h2 {
   .data-table tr {
     margin-bottom: 15px;
     border-bottom: 2px solid #ddd;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #ffffff;
   }
 
   .data-table td {
     text-align: left;
     padding-left: 50%;
     position: relative;
+    border: none;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .data-table td:last-child {
+    border-bottom: none;
   }
 
   .data-table td::before {
     content: attr(data-label);
     position: absolute;
-    left: 10px;
-    top: 10px;
+    left: 15px;
+    top: 12px;
     font-weight: bold;
+    color: #4CAF50;
     white-space: nowrap;
   }
 
-  .search-add-bar {
+  .pagination {
     flex-direction: column;
-    align-items: stretch;
-  }
-
-  .search-add-bar input,
-  .search-add-bar select,
-  .add-btn {
-    width: 100%;
+    gap: 6px;
   }
 }
