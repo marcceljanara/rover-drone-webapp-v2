@@ -1,14 +1,14 @@
-/* ===== Container ===== */
+/* === CONTAINER & TITLE === */
 .ret-detail-container {
-  max-width: 800px;
+  max-width: 920px;
   margin: 40px auto;
-  padding: 1rem 1.5rem;
+  padding: 1.5rem 2rem;
   font-family: "Segoe UI", sans-serif;
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   overflow-x: auto;
 }
 
@@ -17,53 +17,56 @@
   font-weight: 600;
   text-align: center;
   color: #00796b;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.8rem;
 }
 
-/* ===== Table ===== */
+/* === TABLE === */
 .ret-detail-table-wrapper {
   overflow-x: auto;
 }
 
 .ret-detail-table {
   width: 100%;
-  min-width: 560px;
+  min-width: 600px;
   border-collapse: collapse;
-  font-size: 0.95rem;
+  font-size: 0.97rem;
   color: #222;
+  background: transparent;
 }
 
 .ret-detail-table td {
   padding: 12px 16px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid rgba(180, 180, 180, 0.25);
   vertical-align: top;
+  background: transparent;
 }
 
-/* ===== Input Field (edit mode) ===== */
+/* === INPUTS (EDIT MODE) === */
 .ret-inline-input {
-  padding: 8px 10px;
+  padding: 9px 12px;
   width: 100%;
   border: 1px solid #ccc;
   border-radius: 6px;
-  font-size: 0.92rem;
+  font-size: 0.94rem;
   box-sizing: border-box;
-  margin-top: 4px;
+  margin-top: 5px;
+  background: transparent;
 }
 
-/* ===== Action Buttons ===== */
+/* === ACTION BUTTONS === */
 .ret-detail-actions {
   display: flex;
   gap: 12px;
   justify-content: center;
   flex-wrap: wrap;
-  margin-top: 24px;
+  margin-top: 26px;
 }
 
 .ret-edit-btn,
 .ret-save-btn,
 .ret-cancel-btn,
 .ret-back-btn {
-  padding: 8px 16px;
+  padding: 10px 18px;
   font-weight: 500;
   border-radius: 6px;
   border: none;
@@ -106,7 +109,7 @@
   background: #5d4037;
 }
 
-/* ===== States ===== */
+/* === STATUS === */
 .ret-loading,
 .ret-error {
   text-align: center;
@@ -118,25 +121,17 @@
   color: #c62828;
 }
 
-.ret-edit-btn { background:#0288d1;color:#fff; }
-.ret-edit-btn:hover { background:#0277bd; }
-
-.ret-save-btn { background:#00796b;color:#fff; }
-.ret-save-btn:hover { background:#005f56; }
-
-.ret-cancel-btn { background:#e0e0e0;color:#333; }
-.ret-cancel-btn:hover { background:#d5d5d5; }
-
-
-/* ===== Responsive ===== */
+/* === RESPONSIVE === */
 @media (max-width: 640px) {
   .ret-detail-title {
     font-size: 1.6rem;
   }
+
   .ret-detail-table {
-    min-width: 100%;
     font-size: 0.9rem;
+    min-width: 100%;
   }
+
   .ret-detail-actions {
     flex-direction: column;
     align-items: stretch;
