@@ -4,6 +4,7 @@
   margin: 40px auto;
   padding: 0 16px;
   font-family: Arial, sans-serif;
+  box-sizing: border-box;
 }
 
 .ship-title {
@@ -34,7 +35,8 @@
 
 /* === Table === */
 .ship-table-wrapper {
-  overflow-x: auto;
+  width: 100%;
+  overflow-x: visible;
   display: flex;
   justify-content: center;
 }
@@ -52,7 +54,6 @@
   padding: 12px 16px;
   text-align: center;
   border-bottom: 1px solid #eee;
-  white-space: nowrap;
   background: transparent;
 }
 
@@ -121,7 +122,7 @@
   color: #333;
 }
 
-/* === RESPONSIVE TABLE === */
+/* === RESPONSIVE TABLE – SMARTPHONE & TABLET === */
 @media (max-width: 768px) {
   .ship-table,
   .ship-table thead,
@@ -137,20 +138,23 @@
   }
 
   .ship-table tr {
-    background: transparent;
+    background: #fdfdfd;
     border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 10px;
-    margin-bottom: 14px;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 16px;
   }
 
   .ship-table td {
-    padding: 10px 16px 10px 45%;
+    padding: 12px 16px 12px 48%;
     position: relative;
     text-align: left;
-    border: none;
-    border-bottom: 1px solid #eee;
     font-size: 14px;
+    word-break: break-word;
+    word-wrap: break-word;
+    min-height: 3.5rem;
+    border-bottom: 1px solid #eee;
+    background: transparent;
   }
 
   .ship-table td:last-child {
@@ -160,14 +164,15 @@
   .ship-table td::before {
     content: attr(data-label);
     position: absolute;
+    top: 12px;
     left: 16px;
-    top: 50%;
-    transform: translateY(-50%);
+    width: 40%;
     font-weight: 600;
     color: #444;
-    width: 40%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: 14px;
+    white-space: normal;      /* ALLOW WRAPPING */
+    overflow: visible;        /* NO CUT-OFF */
+    text-overflow: unset;     /* REMOVE ELLIPSIS */
+    word-break: break-word;
   }
 }
