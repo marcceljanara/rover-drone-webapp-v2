@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import './Extensions.css'; 
 
 function DetailPerpanjangan() {
-  const { id } = useParams(); // rentalId dari URL
+  const { id } = useParams();
   const navigate = useNavigate();
   const token = localStorage.getItem('accessToken');
 
@@ -46,20 +46,15 @@ function DetailPerpanjangan() {
     <main className="container">
       <h2>Riwayat Perpanjangan Sewa - ID {id}</h2>
 
-        <div className="toolbar">
-        <button onClick={() => navigate(-1)} className="back-button">
-            ← Kembali
-        </button>
-
+      <div className="toolbar">
+        <button onClick={() => navigate(-1)} className="back-button">← Kembali</button>
         <button
-            onClick={() => navigate(`/penyewaan/${id}/extensions/pengajuan`)}
-            className="action-btn add-extension"
+          onClick={() => navigate(`/penyewaan/${id}/extensions/pengajuan`)}
+          className="action-btn add-extension"
         >
-            + Ajukan Perpanjangan
+          + Ajukan Perpanjangan
         </button>
-        </div>
-
-
+      </div>
 
       {loading ? (
         <p>Memuat data perpanjangan...</p>
@@ -80,23 +75,22 @@ function DetailPerpanjangan() {
               </tr>
             </thead>
             <tbody>
-            {extensions.map((ext) => (
+              {extensions.map((ext) => (
                 <tr key={ext.id}>
-                <td data-label="ID">{ext.id}</td>
-                <td data-label="Durasi (bulan)">{ext.duration_months}</td>
-                <td data-label="Tanggal Akhir Baru">
+                  <td data-label="ID">{ext.id}</td>
+                  <td data-label="Durasi (bulan)">{ext.duration_months}</td>
+                  <td data-label="Tanggal Akhir Baru">
                     {new Date(ext.new_end_date).toLocaleDateString('id-ID')}
-                </td>
-                <td data-label="Biaya Tambahan (Rp)">
+                  </td>
+                  <td data-label="Biaya Tambahan (Rp)">
                     {ext.amount.toLocaleString('id-ID')}
-                </td>
-                <td data-label="Status">
+                  </td>
+                  <td data-label="Status">
                     <span className={`status-badge status-${ext.status}`}>{ext.status}</span>
-                </td>
+                  </td>
                 </tr>
-            ))}
+              ))}
             </tbody>
-
           </table>
         </div>
       )}
