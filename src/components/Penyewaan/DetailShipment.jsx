@@ -30,12 +30,8 @@ export default function DetailShipment() {
     fetchDetail();
   }, [id, token]);
 
-  const getProofUrl = (relativeUrl) =>
-    !relativeUrl
-      ? ""
-      : relativeUrl.startsWith("http")
-      ? relativeUrl
-      : `${API_HOST}${relativeUrl}`;
+  const getProofUrl = (url) =>
+    !url ? "" : url.startsWith("http") ? url : `${API_HOST}${url}`;
 
   if (error)
     return (
@@ -50,40 +46,42 @@ export default function DetailShipment() {
   if (!data)
     return <div className="ship-detail-container">Memuat detail…</div>;
 
+  const rows = [
+    ["ID Pengiriman", data.id],
+    ["Rental ID", data.rental_id],
+    ["Alamat Pengiriman", data.full_address],
+    ["Kurir / Layanan", `${data.courier_name} / ${data.courier_service}`],
+    ["No. Resi", data.tracking_number || "-"],
+    ["Status", data.shipping_status],
+    ["Perkiraan Kirim", formatTanggalDanWaktuIndonesia(data.estimated_shipping_date)],
+    ["Perkiraan Sampai", formatTanggalDanWaktuIndonesia(data.estimated_delivery_date)],
+    ["Tgl Kirim Sebenarnya", data.actual_shipping_date ? formatTanggalDanWaktuIndonesia(data.actual_shipping_date) : "-"],
+    ["Tgl Sampai Sebenarnya", data.actual_delivery_date ? formatTanggalDanWaktuIndonesia(data.actual_delivery_date) : "-"],
+    ["Catatan", data.notes || "-"],
+    ["Bukti Pengiriman", data.delivery_proof_url ? (
+      <a href={getProofUrl(data.delivery_proof_url)} target="_blank" rel="noopener noreferrer">
+        <img src={getProofUrl(data.delivery_proof_url)} alt="Bukti Pengiriman" className="ship-proof-img" />
+      </a>
+    ) : "-"],
+    ["Dibuat", formatTanggalDanWaktuIndonesia(data.created_at)],
+    ["Diperbarui", formatTanggalDanWaktuIndonesia(data.updated_at)],
+  ];
+
   return (
     <div className="ship-detail-container">
       <h2 className="ship-detail-title">Detail Pengiriman</h2>
-
       <div className="ship-detail-table-wrapper">
         <table className="ship-detail-table">
           <tbody>
-            <tr><td>ID Pengiriman</td><td>{data.id}</td></tr>
-            <tr><td>Rental ID</td><td>{data.rental_id}</td></tr>
-            <tr><td>Alamat Pengiriman</td><td>{data.full_address}</td></tr>
-            <tr><td>Kurir / Layanan</td><td>{`${data.courier_name} / ${data.courier_service}`}</td></tr>
-            <tr><td>No. Resi</td><td>{data.tracking_number || "-"}</td></tr>
-            <tr><td>Status</td><td>{data.shipping_status}</td></tr>
-            <tr><td>Perkiraan Kirim</td><td>{formatTanggalDanWaktuIndonesia(data.estimated_shipping_date)}</td></tr>
-            <tr><td>Perkiraan Sampai</td><td>{formatTanggalDanWaktuIndonesia(data.estimated_delivery_date)}</td></tr>
-            <tr><td>Tgl Kirim Sebenarnya</td><td>{data.actual_shipping_date ? formatTanggalDanWaktuIndonesia(data.actual_shipping_date) : "-"}</td></tr>
-            <tr><td>Tgl Sampai Sebenarnya</td><td>{data.actual_delivery_date ? formatTanggalDanWaktuIndonesia(data.actual_delivery_date) : "-"}</td></tr>
-            <tr><td>Catatan</td><td>{data.notes || "-"}</td></tr>
-            <tr>
-              <td>Bukti Pengiriman</td>
-              <td>
-                {data.delivery_proof_url ? (
-                  <a href={getProofUrl(data.delivery_proof_url)} target="_blank" rel="noopener noreferrer">
-                    <img src={getProofUrl(data.delivery_proof_url)} alt="Bukti Pengiriman" className="ship-proof-img" />
-                  </a>
-                ) : "-"}
-              </td>
-            </tr>
-            <tr><td>Dibuat</td><td>{formatTanggalDanWaktuIndonesia(data.created_at)}</td></tr>
-            <tr><td>Diperbarui</td><td>{formatTanggalDanWaktuIndonesia(data.updated_at)}</td></tr>
+            {rows.map(([label, value], index) => (
+              <tr key={index}>
+                <td data-label={label}>{label}</td>
+                <td data-label={label}>{value}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
-
       <button onClick={() => navigate(-1)} className="ship-back-btn">Kembali</button>
     </div>
   );

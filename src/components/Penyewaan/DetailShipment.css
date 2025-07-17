@@ -1,12 +1,18 @@
 /* ========== UTAMA ========== */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-x: hidden;
+  font-family: 'Segoe UI', sans-serif;
+}
+
 .ship-detail-container {
   max-width: 900px;
   margin: 2rem auto;
   padding: 2rem 1rem;
-  font-family: 'Segoe UI', sans-serif;
   color: #333;
   box-sizing: border-box;
-  overflow: visible; /* 👈 NO SCROLL */
 }
 
 /* ========== JUDUL ========== */
@@ -28,6 +34,7 @@
 /* ========== TABEL ========== */
 .ship-detail-table-wrapper {
   width: 100%;
+  overflow-x: hidden;
 }
 
 .ship-detail-table {
@@ -76,8 +83,12 @@
   background-color: #0056b3;
 }
 
-/* ========== RESPONSIVE ========== */
+/* ========== RESPONSIVE TABLE (KHUSUS SMARTPHONE) ========== */
 @media screen and (max-width: 768px) {
+  .ship-detail-container {
+    padding: 1rem 0.5rem;
+  }
+
   .ship-detail-table,
   .ship-detail-table thead,
   .ship-detail-table tbody,
@@ -87,32 +98,45 @@
     width: 100%;
   }
 
+  .ship-detail-table thead {
+    display: none;
+  }
+
   .ship-detail-table tr {
     margin-bottom: 1rem;
-    padding: 0.5rem;
-    border: 1px solid #ddd;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
     border-radius: 8px;
+    background-color: #fafafa;
   }
 
   .ship-detail-table td {
-    padding: 0.75rem 1rem 0.75rem 50%;
     position: relative;
+    padding: 0.75rem 0.75rem 0.75rem 50%;
     border: none;
     border-bottom: 1px solid #eee;
+    background: none;
+    box-sizing: border-box;
   }
 
   .ship-detail-table td::before {
     content: attr(data-label);
     position: absolute;
     top: 0.75rem;
-    left: 1rem;
-    width: 40%;
+    left: 0.75rem;
     font-weight: bold;
-    font-size: 0.85rem;
-    color: #444;
+    font-size: 0.9rem;
+    color: #222;
+    width: 45%;
+    white-space: nowrap;
+  }
+
+  .ship-detail-table td:last-child {
+    border-bottom: none;
   }
 
   .ship-proof-img {
     max-width: 100%;
+    height: auto;
   }
 }
