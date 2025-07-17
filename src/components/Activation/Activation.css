@@ -8,7 +8,6 @@
   background: linear-gradient(to bottom right, #eaffea, #e9fce9);
   box-sizing: border-box;
   overflow-x: hidden;
-  overflow-y: auto;
 }
 
 .activation-title {
@@ -77,25 +76,25 @@
 
 .activation-table {
   width: 100%;
-  min-width: 350px;
-  border-collapse: collapse;
-  background-color: transparent; /* HAPUS background utama tabel */
+  min-width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background-color: transparent;
 }
 
 .activation-table th,
 .activation-table td {
-  padding: 0.6rem 1rem;
-  font-size: 13.5px;
-  line-height: 1.4;
+  padding: 1rem 1.4rem;
+  font-size: 14px;
   text-align: left;
   border-bottom: 1px solid #ddd;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  word-wrap: break-word;
+  white-space: normal;
+  vertical-align: top;
 }
 
 .activation-table th {
-  background-color: #dff0df; /* Tetap pertahankan warna header */
+  background-color: #dff0df;
   color: #166a16;
   font-weight: bold;
   position: sticky;
@@ -103,7 +102,7 @@
   z-index: 1;
 }
 
-/* ========== RESPONSIVE ========== */
+/* ========== RESPONSIVE TABLE TANPA SCROLL HORIZONTAL ========== */
 @media (max-width: 768px) {
   .activation-table,
   .activation-table thead,
@@ -121,27 +120,26 @@
 
   .activation-table tr {
     margin-bottom: 1.2rem;
-    border: 1px solid #ccc;
+    background-color: #f5fff5;
+    border: 1px solid #cddccd;
     border-radius: 8px;
-    padding: 0.6rem 1rem;
-    background-color: transparent; /* HAPUS warna pada responsive card */
+    padding: 1rem;
   }
 
   .activation-table td {
-    border: none;
-    border-bottom: 1px solid #eee;
     position: relative;
-    padding-left: 50%;
-    white-space: normal;
-    word-wrap: break-word;
-    background-color: transparent; /* pastikan td tetap transparan */
+    padding: 1rem 1rem 1rem 55%;
+    font-size: 14px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+    box-sizing: border-box;
   }
 
   .activation-table td::before {
     content: attr(data-label);
     position: absolute;
     left: 1rem;
-    top: 0.6rem;
+    top: 1rem;
     font-weight: bold;
     color: #166a16;
     white-space: nowrap;
@@ -151,8 +149,12 @@
   .edit-btn,
   .delete-btn {
     width: 100%;
-    max-width: 90px;
     font-size: 13px;
+  }
+
+  .action-col {
+    flex-direction: row;
+    justify-content: space-between;
   }
 }
 

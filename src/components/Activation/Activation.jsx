@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Activation.css';
 
@@ -15,7 +15,6 @@ const Activation = () => {
   const role = localStorage.getItem('role');
   const isUser = role === 'user';
 
-
   useEffect(() => {
     const fetchDevices = async () => {
       const token = localStorage.getItem('accessToken');
@@ -26,10 +25,10 @@ const Activation = () => {
         const result = await res.json();
         const devices = result.data.devices.map(device => ({
           id: device.id,
-          rentalId: device.rental_id || 'null',
+          rentalId: device.rental_id || '-',
           status: device.status,
-          lastIssue: device.last_reported_issue || 'null',
-          lastActive: device.last_active,
+          lastIssue: device.last_reported_issue || '-',
+          lastActive: device.last_active || '-',
         }));
         setData(devices);
       } catch (err) {
@@ -53,7 +52,7 @@ const Activation = () => {
         },
         body: JSON.stringify({ status: newStatus }),
       });
-      setNotification(`Status perangkat ${id} diubah menjadi ${newStatus}`);
+      setNotification(`Status perangkat ${id} diubah jadi ${newStatus}`);
       setTimeout(() => setNotification(null), 3000);
       setData(prev => prev.map(item => item.id === id ? { ...item, status: newStatus } : item));
       setEditingId(null);
@@ -80,54 +79,51 @@ const Activation = () => {
   const handleAdd = async () => {
     const token = localStorage.getItem('accessToken');
     try {
-      const response = await fetch('https://dev-api.xsmartagrichain.com/v1/devices', {
+      const res = await fetch('https://dev-api.xsmartagrichain.com/v1/devices', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
       });
-
-      const result = await response.json(); // ⬅️ Perbaikan di sini
-
-      if (!response.ok) {
-        throw new Error(result.message || 'Gagal menambahkan perangkat');
-      }
-
-      setNotification(result.message || 'Perangkat berhasil ditambahkan');
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.message || 'Gagal menambahkan perangkat');
+      setNotification(result.message);
       setTimeout(() => setNotification(null), 3000);
+      // refresh
+      const updated = await fetch('https://dev-api.xsmartagrichain.com/v1/devices', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const updatedJson = await updated.json();
+      setData(updatedJson.data.devices);
     } catch (err) {
-      setNotification(err.message || 'Terjadi kesalahan');
+      setNotification(err.message);
       setTimeout(() => setNotification(null), 3000);
     }
   };
 
-
-  const filteredData = data.filter((item) =>
+  const filtered = data.filter(item =>
     item.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.status.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentData = filteredData.slice(startIndex, startIndex + itemsPerPage);
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+  const displayed = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
     <div className="activation-container">
       <h2 className="activation-title">Kelola Perangkat Rover Drone</h2>
-
       <div className="activation-box">
         <div className="search-add">
           <input
             type="text"
+            className="search-input"
             placeholder="Cari perangkat..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input"
+            onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
           />
           <button className="add-btn" onClick={handleAdd}>+ Tambah</button>
         </div>
-
         {notification && <div className="notif">{notification}</div>}
 
         <div className="table-wrapper">
@@ -142,8 +138,8 @@ const Activation = () => {
                 {!isUser && <th>Aksi</th>}
               </tr>
             </thead>
-            <tbody className="table-content">
-              {currentData.map(item => (
+            <tbody>
+              {displayed.map(item => (
                 <tr key={item.id}>
                   <td data-label="ID" className="clickable" onClick={() => navigate(`/devices/${item.id}`)}>{item.id}</td>
                   <td data-label="Rental ID">{item.rentalId}</td>
@@ -154,13 +150,12 @@ const Activation = () => {
                         onChange={(e) => handleStatusChange(item.id, e.target.value)}
                         onBlur={() => setEditingId(null)}
                       >
-                        <option disabled>Pilih status</option>
-                        {statusOptions.map(opt => (
-                          <option key={opt} value={opt}>{opt}</option>
-                        ))}
+                        {statusOptions.map(opt => <option key={opt}>{opt}</option>)}
                       </select>
                     ) : (
-                      <span className={`badge ${item.status}`} onClick={() => handleEdit(item.id)}>{item.status}</span>
+                      <span className={`badge ${item.status}`} onClick={() => handleEdit(item.id)}>
+                        {item.status}
+                      </span>
                     )}
                   </td>
                   <td data-label="Masalah Terakhir">{item.lastIssue}</td>
