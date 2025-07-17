@@ -8,16 +8,19 @@
   --activeItem: #e2e8f0;
 }
 
-/* === Sidebar utama === */
+/* === Sidebar === */
 .sidebar {
   display: flex;
   flex-direction: column;
   padding-top: 3rem;
+  background-color: transparent; /* HILANGKAN background putih */
   transition: all 300ms ease;
-  background-color: transparent;
+  height: 100vh;
+  overflow-y: auto;
+  position: relative;
 }
 
-/* === Tombol Hamburger === */
+/* === Hamburger Button === */
 .bars {
   display: none;
 }
@@ -48,7 +51,7 @@
   color: var(--primary);
 }
 
-/* === Icon Lokasi === */
+/* === Lokasi Icon === */
 .icon-lokasi {
   width: 24px;
   height: 24px;
@@ -73,12 +76,11 @@
   border-radius: 12px;
   font-size: 13px;
   text-align: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   width: fit-content;
-  max-width: 80%;
+  max-width: 90%;
 }
 
-/* === Menu === */
+/* === Menu Items === */
 .menu {
   margin-top: 2rem;
   display: flex;
@@ -132,43 +134,13 @@
   text-decoration: none;
 }
 
-.menuItemLink:hover {
-  color: var(--fontColor);
-}
-
-/* === Tablet ≤ 1200px === */
-@media screen and (max-width: 1200px) {
-  .menuItem > span {
-    display: block;
-  }
-  .logo {
-    display: flex;
-  }
-  .signout-section {
-    display: flex;
-    margin-left: 2rem;
-  }
-}
-
-/* === Mobile ≤ 768px === */
-@media screen and (max-width: 768px) {
-  .sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 65%;
-    height: 100vh;
-    background: var(--bg-light);
-    padding-right: 1rem;
-    z-index: 99;
-    overflow-y: auto;
-  }
-
+/* === RESPONSIVE untuk semua iPad dan bawahnya (max 1024px) === */
+@media screen and (max-width: 1024px) {
   .bars {
     display: flex;
     position: fixed;
-    top: 2rem;
-    left: 2rem;
+    top: 1rem;
+    left: 1rem;
     background: var(--bg-light);
     padding: 10px;
     border-radius: 10px;
@@ -176,56 +148,57 @@
     cursor: pointer;
   }
 
-  .logo {
-    justify-content: center;
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 70%;
+    max-width: 320px;
+    background: var(--bg-light);
+    z-index: 99;
+    transform: translateX(-100%);
   }
 
-  .menuItem > span {
+  .sidebar.open {
+    transform: translateX(0%);
+  }
+
+  .menuItem span,
+  .menuItemLink span {
     display: inline;
+  }
+
+  .logo {
+    justify-content: center;
   }
 
   .signout-section {
     margin-left: 2rem;
   }
-
-  .menuItemLink span {
-    display: inline;
-  }
 }
 
-/* === Small Mobile ≤ 430px === */
-@media screen and (max-width: 430px) {
+/* === Ultra Small Devices (Mobile) === */
+@media screen and (max-width: 480px) {
   .sidebar {
     width: 80%;
   }
 
-  .menuItem {
-    font-size: 13px;
-  }
-
+  .menuItem,
   .menuItemLink span {
     font-size: 13px;
   }
 
   .logo {
     flex-direction: column;
-    align-items: center;
   }
 }
 
-/* === Device-Specific Layouts === */
-@media screen and (max-width: 376px) { .sidebar { width: 85%; } }
-@media screen and (max-width: 415px) { .sidebar { width: 80%; } }
-@media screen and (max-width: 391px) { .sidebar { width: 82%; } }
-@media screen and (max-width: 431px) { .sidebar { width: 78%; } }
-@media screen and (max-width: 413px) { .sidebar { width: 80%; } }
-@media screen and (max-width: 361px) { .sidebar { width: 90%; } }
-@media screen and (max-width: 541px) { .sidebar { width: 80%; } }
-@media screen and (max-width: 374px) { .sidebar { width: 85%; } }
-@media screen and (max-width: 1281px) { .sidebar { width: 45%; } }
-@media screen and (max-width: 913px) { .sidebar { width: 50%; } }
-@media screen and (max-width: 821px) { .sidebar { width: 60%; } }
-@media screen and (max-width: 769px) { .sidebar { width: 65%; } }
-@media screen and (max-width: 1025px) { .sidebar { width: 55%; } }
-@media screen and (max-width: 1025px) and (max-height: 601px) { .sidebar { width: 65%; } }
-@media screen and (max-width: 1281px) and (max-height: 801px) { .sidebar { width: 60%; } }
+/* === FULL PAGE SCROLL SAAT RESPONSIVE === */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  overflow-y: auto; /* pastikan scroll vertikal aktif untuk halaman penuh */
+}

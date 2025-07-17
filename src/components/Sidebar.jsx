@@ -10,8 +10,6 @@ import {
   UilBars,
   UilRocket,
   UilEstate,
-  // UilChart,
-  // UilUsdCircle,
   UilCar,
   UilMoneyBill,
   UilFileAlt,
@@ -20,6 +18,7 @@ import {
   UilHistory,
 } from "@iconscout/react-unicons";
 
+// Menu data
 const menuData = [
   { heading: "Dashboard", icon: UilEstate, link: "/dashboard" },
   { heading: "Perangkat", icon: UilRocket, link: "/devices" },
@@ -29,48 +28,56 @@ const menuData = [
   { heading: "Return", icon: UilHistory, link: "/returns" },
   { heading: "Laporan Keuangan", icon: UilFileAlt, link: "/reports" },
   { heading: "Manajemen Pengguna", icon: UilUsersAlt, link: "/admin" },
-  // { heading: "Non Fungible Token", icon: UilUsdCircle, link: "/non-fungible-token" },
-  // { heading: "Power Data", icon: UilChart, link: "/power-data" },
 ];
 
 const Sidebar = () => {
-  const [expanded, setExpanded] = useState(window.innerWidth > 768);
-  const role = localStorage.getItem("role") || "guest";
-  const navigate = useNavigate();
+  const [expanded, setExpanded] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const role = localStorage.getItem("role") || "guest";
 
+  // Menyaring menu berdasarkan role
   const filteredMenu = menuData.filter((item) =>
     role === "user"
       ? !["/reports", "/admin", "/pengiriman", "/returns"].includes(item.link)
       : true
   );
 
+  // Fungsi resize untuk mengatur expanded berdasarkan device
   useEffect(() => {
-    const handleResize = () => setExpanded(window.innerWidth > 768);
+    const handleResize = () => {
+      // Gunakan hamburger jika layar ≤ 1024px (termasuk semua iPad)
+      setExpanded(window.innerWidth > 1024);
+    };
+
+    handleResize(); // Atur saat pertama kali
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Fungsi klik icon lokasi
   const handleIconLokasiClick = () => {
-    if (location.pathname === "/addresses" && window.innerWidth <= 768) {
+    if (location.pathname === "/addresses" && window.innerWidth <= 1024) {
       setExpanded(false);
     } else {
       navigate("/addresses");
-      if (window.innerWidth <= 768) setExpanded(true);
+      if (window.innerWidth <= 1024) setExpanded(false);
     }
   };
 
   return (
     <>
+      {/* Tombol hamburger */}
       <div className="bars" onClick={() => setExpanded((prev) => !prev)}>
         <UilBars />
       </div>
 
+      {/* Sidebar */}
       <div
         className={`sidebar ${expanded ? "open" : "closed"}`}
         style={{
           left: expanded ? "0" : "-100%",
-          position: window.innerWidth <= 768 ? "fixed" : "relative",
+          position: window.innerWidth <= 1024 ? "fixed" : "relative",
           zIndex: 100,
         }}
       >
@@ -91,13 +98,14 @@ const Sidebar = () => {
 
         <div className="role-badge">Role: {role}</div>
 
+        {/* Menu */}
         <div className="menu">
           {filteredMenu.map(({ heading, icon: Icon, link }) => (
             <NavLink
               key={link}
               to={link}
               className={({ isActive }) => `menuItem ${isActive ? "active" : ""}`}
-              onClick={() => window.innerWidth <= 768 && setExpanded(false)}
+              onClick={() => window.innerWidth <= 1024 && setExpanded(false)}
             >
               <Icon />
               <span>{heading}</span>
