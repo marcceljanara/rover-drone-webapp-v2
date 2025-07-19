@@ -116,7 +116,7 @@ const cardConfigs = rawCardConfigs
       <h2>{id}</h2>
 
       <select value={interval} onChange={(e) => setIntervalValue(e.target.value)} className="interval-select">
-        {["15m", "1h", "6h", "12h", "24h", "7d", "30d", "60d", "90d"].map(opt => (
+        {["15m", "1h", "6h", "12h", "24h", "7d", "30d", "60d", "90d", "180d", "365d"].map(opt => (
           <option key={opt} value={opt}>{opt}</option>
         ))}
       </select>
