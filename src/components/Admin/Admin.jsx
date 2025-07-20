@@ -26,7 +26,7 @@ const Admin = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch(`https://dev-api.xsmartagrichain.com/v1/admin`, {
+      const response = await fetch(`https://dev-api.xsmartagrichain.com/v1/admin?limit=100`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
 
