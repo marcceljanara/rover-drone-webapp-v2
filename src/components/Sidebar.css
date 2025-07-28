@@ -16,7 +16,7 @@
   background-color: transparent;
   transition: all 300ms ease;
   height: 100vh;
-  overflow-y: auto;
+  overflow-y: visible !important;
   overflow-x: hidden; /* ✅ HILANGKAN scroll horizontal pada sidebar */
   position: relative;
 }
@@ -205,4 +205,48 @@ body {
   scroll-behavior: smooth;
   overflow-x: hidden; /* ✅ hilangkan scroll horizontal halaman penuh */
   overflow-y: auto;
+}
+
+/* === SIDEBAR TANPA SCROLL VERTIKAL DI DESKTOP UNTUK SEMUA MENU === */
+
+/* Sidebar: biarkan tinggi mengikuti isi, tidak ada scroll vertikal di desktop */
+.sidebar {
+  overflow-y: visible !important;
+  height: auto !important;        /* <--- ini yang benar */
+  min-height: 100vh;
+  max-height: none !important;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar .menu {
+  max-height: none !important;
+  overflow-y: visible !important;
+  overflow-x: visible !important;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+/* Hapus scroll vertikal pada body/html juga */
+html, body {
+  overflow-y: hidden !important;
+  height: 100% !important;
+}
+
+/* Aktifkan scroll vertikal HANYA di mobile/tablet */
+@media screen and (max-width: 1024px) {
+  html, body {
+    overflow-y: auto !important;
+  }
+  .sidebar {
+    overflow-y: auto !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+  }
+  .sidebar .menu {
+    max-height: calc(100vh - 10rem) !important;
+    overflow-y: auto !important;
+  }
 }

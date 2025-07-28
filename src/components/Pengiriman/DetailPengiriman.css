@@ -10,6 +10,21 @@
   border-radius: 12px;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
   overflow-x: auto;
+  max-height: none;
+  overflow-y: auto;
+}
+
+/* Responsive: Scroll vertikal hanya muncul jika memang dibutuhkan (konten melebihi layar) */
+.ship-detail-container {
+  overflow-x: visible;
+  /* Pastikan tidak ada height/max-height yang membatasi */
+}
+
+/* Hilangkan pembatasan tinggi pada table dan wrapper */
+.ship-detail-table,
+.ship-detail-table-wrapper {
+  max-height: none;
+  overflow: visible;
 }
 
 .ship-detail-title {
@@ -21,7 +36,8 @@
 }
 
 .ship-detail-table-wrapper {
-  overflow-x: auto;
+  overflow: visible !important;
+  max-height: none !important;
 }
 
 .ship-detail-table {
@@ -206,4 +222,13 @@
   width: auto;
   min-width: 160px;
   text-align: center;
+}
+
+/* Hilangkan scroll vertikal pada halaman detail pengiriman */
+.ship-detail-container,
+.ship-detail-table,
+.ship-detail-table-wrapper {
+  max-height: none !important;
+  overflow-y: visible !important;
+  overflow: visible !important;
 }
