@@ -20,7 +20,7 @@ const DataDetail = () => {
       .then(result => {
         const sensors = result.data?.sensors || [];
         setSensorData(sensors);
-        setTimestamps(sensors.map(item => new Date(item.timestamp).toISOString()));
+        setTimestamps(sensors.map(item => item.timestamp));
       })
       .catch(err => console.error(err));
   };
@@ -164,7 +164,7 @@ const cardConfigs = rawCardConfigs
         <tbody>
           {limitsData.map((item, idx) => (
             <tr key={idx}>
-              <td>{new Date(item.timestamp).toISOString().replace("T", " ").replace("Z", "").slice(0, 19)}</td>
+              <td>{item.timestamp}</td>
               <td>{item.temperature}</td>
               <td>{item.humidity}</td>
               <td>{item.light_intensity}</td>
