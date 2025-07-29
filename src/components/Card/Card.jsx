@@ -6,8 +6,7 @@ import { motion, AnimateSharedLayout } from "framer-motion";
 import { UilTimes } from "@iconscout/react-unicons";
 import Chart from "react-apexcharts";
 
-// parent Card
-
+// Parent Card
 const Card = (props) => {
   const [expanded, setExpanded] = useState(false);
   return (
@@ -35,16 +34,13 @@ function CompactCard({ param, setExpanded }) {
       onClick={setExpanded}
     >
       <div className="radialBar">
-        <CircularProgressbar
-          value={param.barValue}
-          text={`${param.barValue}%`}
-        />
+        <CircularProgressbar value={param.barValue} text={`${param.barValue}%`} />
         <span>{param.title}</span>
       </div>
       <div className="detail">
         <Png />
         <span>{param.value}{param.satuan}</span>
-        <span>Last 1 hours</span>
+        <span>Last 1 hour</span>
       </div>
     </motion.div>
   );
@@ -52,23 +48,19 @@ function CompactCard({ param, setExpanded }) {
 
 // Expanded Card
 function ExpandedCard({ param, setExpanded }) {
+  const sortedData = param.xaxis.map((time, index) => ({
+    x: new Date(time).getTime(), // convert to epoch
+    y: param.series[0].data[index],
+  })).sort((a, b) => a.x - b.x); // sort ascending by time
+
   const data = {
     options: {
       chart: {
         type: "area",
         height: "auto",
+        zoom: { enabled: false },
+        toolbar: { show: false },
       },
-
-      dropShadow: {
-        enabled: false,
-        enabledOnSeries: undefined,
-        top: 0,
-        left: 0,
-        blur: 3,
-        color: "#000",
-        opacity: 0.35,
-      },
-
       fill: {
         colors: ["#fff"],
         type: "gradient",
@@ -87,12 +79,21 @@ function ExpandedCard({ param, setExpanded }) {
       },
       grid: {
         show: true,
+        borderColor: "#ccc",
       },
       xaxis: {
         type: "datetime",
-        categories: param.xaxis,
+        labels: {
+          datetimeUTC: false,
+        },
       },
     },
+    series: [
+      {
+        name: param.series[0].name,
+        data: sortedData,
+      },
+    ],
   };
 
   return (
@@ -107,9 +108,9 @@ function ExpandedCard({ param, setExpanded }) {
       <div style={{ alignSelf: "flex-end", cursor: "pointer", color: "white" }}>
         <UilTimes onClick={setExpanded} />
       </div>
-        <span>{param.title}</span>
+      <span>{param.title}</span>
       <div className="chartContainer">
-        <Chart options={data.options} series={param.series} type="area" />
+        <Chart options={data.options} series={data.series} type="area" height="350px" width={"100%"} />
       </div>
       <span>Last 24 hours</span>
     </motion.div>
