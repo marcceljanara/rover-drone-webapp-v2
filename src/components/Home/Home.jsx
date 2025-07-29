@@ -25,18 +25,15 @@ const Home = () => {
     <div className="home-wrapper">
       <Navbar />
       <div className="home-content">
-        <Element name="intro">
+        <div id="intro">
           <Intro />
-        </Element>
-
-        <Element name="services">
+        </div>
+        <div id="services">
           <Services />
-        </Element>
-
-        <Element name="works">
+        </div>
+        <div id="works">
           <Works />
-        </Element>
-
+        </div>
         <Footer />
       </div>
     </div>

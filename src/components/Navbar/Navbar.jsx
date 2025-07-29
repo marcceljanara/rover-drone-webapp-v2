@@ -189,6 +189,13 @@ const Navbar = () => {
     }
   };
 
+  const scrollToSection = (id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
     <div className={`n-wrapper ${isMenuOpen ? "menu-open" : ""}`} id="Navbar">
       <div className="n-left">
@@ -197,12 +204,39 @@ const Navbar = () => {
       <div className="hamburger" onClick={toggleMenu}>☰</div>
       <div className={`n-right ${isMenuOpen ? "open" : ""}`}>
         <div className="n-list">
-          <ul>
-            <li><Link to="Navbar" spy smooth>Home</Link></li>
-            <li><Link to="services" spy smooth>Services</Link></li>
-            <li><Link to="works" spy smooth>Experience</Link></li>
+          <ul className="navbar-menu">
             <li>
-              <button className={`button n-button ${loginClicked ? "clicked" : ""}`} onClick={handleLoginClick}>
+              <a
+                href="#intro"
+                className="navbar-link"
+                onClick={e => { e.preventDefault(); scrollToSection("intro"); }}
+              >
+                Home
+              </a>
+            </li>
+            <li>
+              <a
+                href="#services"
+                className="navbar-link"
+                onClick={e => { e.preventDefault(); scrollToSection("services"); }}
+              >
+                Services
+              </a>
+            </li>
+            <li>
+              <a
+                href="#works"
+                className="navbar-link"
+                onClick={e => { e.preventDefault(); scrollToSection("works"); }}
+              >
+                Experience
+              </a>
+            </li>
+            <li>
+              <button
+                className={`button n-button navbar-auth ${loginClicked ? "clicked" : ""}`}
+                onClick={handleLoginClick}
+              >
                 {isLoggedIn ? "Log Out" : "Login"}
               </button>
             </li>

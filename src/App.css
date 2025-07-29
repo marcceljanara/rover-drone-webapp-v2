@@ -11,6 +11,10 @@
   --activeItem: #b4f79954;
 }
 
+html, body {
+  scroll-behavior: smooth;
+}
+
 .App {
   color: var(--black);
   background: linear-gradient(

@@ -70,11 +70,15 @@
   padding: 0;
 }
 
-.n-list > ul li {
-  cursor: pointer;
+.n-list > ul li a {
+  text-decoration: none;
+  color: black;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: color 0.2s ease-in-out;
 }
 
-.n-list > ul li:hover {
+.n-list > ul li a:hover {
   color: var(--orange);
 }
 
@@ -94,7 +98,7 @@
   background-color: #f80808;
 }
 
-/* ========== CONTACT BUTTON - DESKTOP ========== */
+/* ========== CONTACT BUTTON & LOGIN POSITION - DESKTOP ========== */
 @media screen and (min-width: 769px) {
   .contact-button {
     background-color: #0e6419;
@@ -102,15 +106,19 @@
     padding: 10px 20px;
     border-radius: 25px;
     cursor: pointer;
-    transform: translateX(-40px) translateY(2px); /* dinaikkan */
+    transform: translateX(-40px) translateY(2px);
     transition: background-color 0.3s ease-in-out;
-    margin-top: 0px; /* hilangkan margin bawah */
+    margin-top: 0px;
     font-size: 1rem;
     position: relative;
   }
 
   .contact-button:hover {
     background-color: #0b4f15;
+  }
+
+  .n-button {
+    margin-left: 20px; /* Login geser ke kanan saat desktop */
   }
 }
 
@@ -144,6 +152,8 @@
   font-size: 28px;
   cursor: pointer;
   user-select: none;
+  background: none;
+  border: none;
 }
 
 /* ========== LOGIN OVERLAY ========== */
@@ -214,7 +224,7 @@ input[type="number"] {
 input:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 5px rgba(0,123,255,0.3);
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
 }
 
 input[type="checkbox"] {
@@ -320,7 +330,7 @@ label[for="remember-me"] {
   font-size: 14px;
   font-weight: 500;
   z-index: 9999;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
 }
 
 .notification.error {
@@ -345,24 +355,27 @@ label[for="remember-me"] {
   }
 
   .n-wrapper {
-    flex-direction: column;
-    align-items: stretch;
-    padding: 0;
+    flex-direction: row;
+    align-items: center;
+    padding: 1rem;
+    background-color: transparent;
     height: auto;
+    z-index: 100;
   }
 
   .n-right {
     display: none;
     flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: white;
     width: 100vw;
-    position: relative;
-    left: 50%;
-    margin-left: -50vw;
-    background-color: #fff;
+    padding: 1rem 2rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding-left: 30px;
     align-items: flex-start;
-    z-index: 100;
+    z-index: 99;
+    border-radius: 0 0 12px 12px;
   }
 
   .n-right.open {
@@ -371,7 +384,6 @@ label[for="remember-me"] {
 
   .n-list {
     width: 100%;
-    padding: 1rem 2rem;
   }
 
   .n-list > ul {
@@ -386,24 +398,25 @@ label[for="remember-me"] {
     font-size: 1.25rem;
     color: var(--text);
     text-align: left;
+    text-decoration: none;
   }
 
-  .n-button {
+  .button-group {
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    text-align: left;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .n-button,
+  .contact-button {
+    width: 100%;
     padding: 0.75rem 2rem;
     font-size: 1rem;
     font-weight: 600;
-    margin-top: -8px;
-  }
-
-  .contact-button {
-    margin-left: 20px;
-    margin-top: 0px;
-    padding: 0.5rem 1rem;
-    width: auto;
-    font-size: 1rem;
-    transform: translateX(0) translateY(-1px); /* naikkan juga di mobile */
+    text-align: center;
+    border-radius: 25px;
   }
 }
 
@@ -411,13 +424,6 @@ label[for="remember-me"] {
 @media screen and (max-width: 480px) {
   .n-name {
     font-size: 1rem;
-  }
-
-  .n-button,
-  .contact-button {
-    padding: 1rem;
-    text-align: left;
-    width: 100%;
   }
 
   .n-left {
@@ -430,8 +436,15 @@ label[for="remember-me"] {
     right: 15px;
   }
 
+  .n-button,
   .contact-button {
-    margin-top: 0px;
-    transform: translateY(-6px); /* sedikit naik */
+    width: 100%;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .contact-button {
+    margin-top: 20px;
+    transform: translateY(-6px);
   }
 }
