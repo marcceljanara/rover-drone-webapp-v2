@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Card.css";
-import { CircularProgressbar } from "react-circular-progressbar";
+// import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { motion, AnimateSharedLayout } from "framer-motion";
 import { UilTimes } from "@iconscout/react-unicons";
@@ -33,10 +33,10 @@ function CompactCard({ param, setExpanded }) {
       layoutId="expandableCard"
       onClick={setExpanded}
     >
-      <div className="radialBar">
+      {/* <div className="radialBar">
         <CircularProgressbar value={param.barValue} text={`${param.barValue}%`} />
         <span>{param.title}</span>
-      </div>
+      </div> */}
       <div className="detail">
         <Png />
         <span>{param.value}{param.satuan}</span>
