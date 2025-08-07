@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import "./DetailReturns.css";
 import { formatTanggalDanWaktuIndonesia } from "../../utils/datetimeIndonesia";
 
-const API = "https://dev-api.xsmartagrichain.com/v1/returns";
+const API = "https://dev-api.xsmartagrichain.site/v1/returns";
 
 export default function DetailReturns() {
   const { rentalId } = useParams();

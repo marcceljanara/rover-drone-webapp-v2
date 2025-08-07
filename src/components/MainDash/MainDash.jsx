@@ -15,7 +15,7 @@ const MainDash = () => {
     const fetchDevices = async () => {
       try {
         const token = localStorage.getItem("accessToken");
-        const response = await fetch("https://dev-api.xsmartagrichain.com/v1/devices", {
+        const response = await fetch("https://dev-api.xsmartagrichain.site/v1/devices", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

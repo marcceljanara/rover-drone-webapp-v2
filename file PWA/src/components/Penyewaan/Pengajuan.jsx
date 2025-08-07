@@ -22,7 +22,7 @@ function KelolaPenyewaan() {
       }
 
       try {
-        const response = await fetch('https://dev-api.xsmartagrichain.com/v1/rentals', {
+        const response = await fetch('https://dev-api.xsmartagrichain.site/v1/rentals', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -61,8 +61,8 @@ function KelolaPenyewaan() {
     try {
       const url =
         role === 'admin'
-          ? `https://dev-api.xsmartagrichain.com/v1/rentals/${id}`
-          : `https://dev-api.xsmartagrichain.com/v1/rentals/${id}/cancel`;
+          ? `https://dev-api.xsmartagrichain.site/v1/rentals/${id}`
+          : `https://dev-api.xsmartagrichain.site/v1/rentals/${id}/cancel`;
 
       const options = {
         method: 'PUT',
@@ -102,7 +102,7 @@ function KelolaPenyewaan() {
     if (!token) return;
   
     try {
-      const response = await fetch(`https://dev-api.xsmartagrichain.com/v1/rentals/${id}/status`, {
+      const response = await fetch(`https://dev-api.xsmartagrichain.site/v1/rentals/${id}/status`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

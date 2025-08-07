@@ -91,7 +91,7 @@ const Navbar = () => {
     const password = e.target.password.value;
 
     try {
-      const response = await fetch("https://dev-api.xsmartagrichain.com/v1/authentications", {
+      const response = await fetch("https://dev-api.xsmartagrichain.site/v1/authentications", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -137,7 +137,7 @@ const Navbar = () => {
     const password = e.target["password-signup"].value;
 
     try {
-      const response = await fetch("https://dev-api.xsmartagrichain.com/v1/users/register", {
+      const response = await fetch("https://dev-api.xsmartagrichain.site/v1/users/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fullname, username, email, password }),
@@ -163,7 +163,7 @@ const Navbar = () => {
     const otp = e.target.otp.value;
 
     try {
-      const response = await fetch("https://dev-api.xsmartagrichain.com/v1/users/verify-otp", {
+      const response = await fetch("https://dev-api.xsmartagrichain.site/v1/users/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: registeredEmail, otp }),
@@ -187,7 +187,7 @@ const Navbar = () => {
     if (resendCooldown > 0) return;
 
     try {
-      const response = await fetch("https://dev-api.xsmartagrichain.com/v1/users/resend-otp", {
+      const response = await fetch("https://dev-api.xsmartagrichain.site/v1/users/resend-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: registeredEmail }),

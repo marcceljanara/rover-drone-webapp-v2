@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Returns.css";
 
-const API = "https://dev-api.xsmartagrichain.com/v1/returns";
+const API = "https://dev-api.xsmartagrichain.site/v1/returns";
 
 export default function Returns() {
   const navigate = useNavigate();

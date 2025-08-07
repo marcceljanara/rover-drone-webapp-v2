@@ -73,7 +73,7 @@ function DetailPenyewaan() {
 
     const fetchRental = async () => {
       try {
-        const resp = await fetch(`https://dev-api.xsmartagrichain.com/v1/rentals/${id}`, {
+        const resp = await fetch(`https://dev-api.xsmartagrichain.site/v1/rentals/${id}`, {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
         const json = await resp.json();

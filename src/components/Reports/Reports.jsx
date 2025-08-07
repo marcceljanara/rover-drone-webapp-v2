@@ -22,7 +22,7 @@ const Reports = () => {
   const fetchReports = async () => {
     const accessToken = localStorage.getItem('accessToken');
     try {
-      const response = await fetch('https://dev-api.xsmartagrichain.com/v1/reports', {
+      const response = await fetch('https://dev-api.xsmartagrichain.site/v1/reports', {
         method: 'GET',
         headers: { Authorization: `Bearer ${accessToken}` },
       });
@@ -50,7 +50,7 @@ const Reports = () => {
   const handleAdd = async () => {
     const accessToken = localStorage.getItem('accessToken');
     try {
-      const response = await fetch('https://dev-api.xsmartagrichain.com/v1/reports', {
+      const response = await fetch('https://dev-api.xsmartagrichain.site/v1/reports', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -80,7 +80,7 @@ const Reports = () => {
   const handleDelete = async () => {
     const accessToken = localStorage.getItem('accessToken');
     try {
-      const response = await fetch(`https://dev-api.xsmartagrichain.com/v1/reports/${deleteId}`, {
+      const response = await fetch(`https://dev-api.xsmartagrichain.site/v1/reports/${deleteId}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${accessToken}`,

@@ -28,7 +28,7 @@ const DeviceDetail = () => {
     const accessToken = localStorage.getItem('accessToken');
 
     try {
-      const response = await fetch(`https://dev-api.xsmartagrichain.com/v1/devices/${id}`, {
+      const response = await fetch(`https://dev-api.xsmartagrichain.site/v1/devices/${id}`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -55,7 +55,7 @@ const DeviceDetail = () => {
 
   const handleToggle = async (status) => {
     const accessToken = localStorage.getItem('accessToken');
-    const endpoint = `https://dev-api.xsmartagrichain.com/v1/devices/${id}/control`;
+    const endpoint = `https://dev-api.xsmartagrichain.site/v1/devices/${id}/control`;
 
     try {
       const response = await fetch(endpoint, {
@@ -86,7 +86,7 @@ const DeviceDetail = () => {
 
   const handleChangeTopic = async (type) => {
     const accessToken = localStorage.getItem('accessToken');
-    const endpoint = `https://dev-api.xsmartagrichain.com/v1/devices/${id}/${type === 'sensor' ? 'mqttsensor' : 'mqttcontrol'}`;
+    const endpoint = `https://dev-api.xsmartagrichain.site/v1/devices/${id}/${type === 'sensor' ? 'mqttsensor' : 'mqttcontrol'}`;
 
     try {
       const response = await fetch(endpoint, {
