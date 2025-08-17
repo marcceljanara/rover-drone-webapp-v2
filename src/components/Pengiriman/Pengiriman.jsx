@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Pengiriman.css";
 
-const API = "https://dev-api.xsmartagrichain.site/v1/shipments";
+const API = process.env.REACT_APP_API_URL+"/v1/shipments";
 const itemsPerPage = 5;
 
 export default function Shipments() {

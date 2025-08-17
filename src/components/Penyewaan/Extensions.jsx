@@ -20,7 +20,7 @@ function DetailPerpanjangan() {
       }
 
       try {
-        const response = await fetch(`https://dev-api.xsmartagrichain.site/v1/rentals/${id}/extensions`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/rentals/${id}/extensions`, {
           headers: {
             Authorization: `Bearer ${token}`,
             Accept: 'application/json',

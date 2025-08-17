@@ -28,6 +28,7 @@ import DetailPerpanjangan from './components/Penyewaan/Extensions';
 import AjukanPerpanjangan from './components/Penyewaan/AjukanPerpanjangan';
 import DetailReturns from './components/Returns/DetailReturns';
 import DetailReturnsUser from './components/Penyewaan/DetailPengembalian';
+import ChatBot from './components/ChatBot/ChatBot';
 
 function App() {
   return (
@@ -55,6 +56,13 @@ function App() {
               <Sidebar />
               <DataDetail />
               <RightSide />
+            </div>
+          } />
+
+          <Route path="/chats" element={
+            <div className="AppGlass">
+              <Sidebar />
+              <ChatBot />
             </div>
           } />
 

@@ -19,7 +19,7 @@ const Activation = () => {
     const fetchDevices = async () => {
       const token = localStorage.getItem('accessToken');
       try {
-        const res = await fetch('https://dev-api.xsmartagrichain.site/v1/devices', {
+        const res = await fetch(process.env.REACT_APP_API_URL+'/v1/devices', {
           headers: { Authorization: `Bearer ${token}` },
         });
         const result = await res.json();
@@ -44,7 +44,7 @@ const Activation = () => {
   const handleStatusChange = async (id, newStatus) => {
     const token = localStorage.getItem('accessToken');
     try {
-      await fetch(`https://dev-api.xsmartagrichain.site/v1/devices/${id}/status`, {
+      await fetch(process.env.REACT_APP_API_URL+`/v1/devices/${id}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ const Activation = () => {
   const handleDelete = async (id) => {
     const token = localStorage.getItem('accessToken');
     try {
-      await fetch(`https://dev-api.xsmartagrichain.site/v1/devices/${id}`, {
+      await fetch(`${process.env.REACT_APP_API_URL}/v1/devices/${id}`, {
         method: 'PUT',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -79,7 +79,7 @@ const Activation = () => {
   const handleAdd = async () => {
     const token = localStorage.getItem('accessToken');
     try {
-      const res = await fetch('https://dev-api.xsmartagrichain.site/v1/devices', {
+      const res = await fetch(process.env.REACT_APP_API_URL+'/v1/devices', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ const Activation = () => {
       setNotification(result.message);
       setTimeout(() => setNotification(null), 3000);
       // refresh
-      const updated = await fetch('https://dev-api.xsmartagrichain.site/v1/devices', {
+      const updated = await fetch(process.env.REACT_APP_API_URL+'/v1/devices', {
         headers: { Authorization: `Bearer ${token}` },
       });
       const updatedJson = await updated.json();

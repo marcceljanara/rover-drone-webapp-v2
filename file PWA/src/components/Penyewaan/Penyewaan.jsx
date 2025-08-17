@@ -49,7 +49,7 @@ const Penyewaan = () => {
   useEffect(() => {
     const fetchAvailableDevices = async () => {
       try {
-        const response = await fetch('https://dev-api.xsmartagrichain.site/v1/devices?scope=available', {
+        const response = await fetch(process.env.REACT_APP_API_URL+'/v1/devices?scope=available', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -85,7 +85,7 @@ const Penyewaan = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('https://dev-api.xsmartagrichain.site/v1/rentals', {
+      const response = await fetch(process.env.REACT_APP_API_URL+'/v1/rentals', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

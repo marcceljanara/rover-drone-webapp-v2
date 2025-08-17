@@ -16,11 +16,13 @@ import {
   UilUsersAlt,
   UilTruck,
   UilHistory,
+  UilCommentAlt,
 } from "@iconscout/react-unicons";
 
 // Menu data
 const menuData = [
   { heading: "Dashboard", icon: UilEstate, link: "/dashboard" },
+  { heading: "Chat Bot", icon: UilCommentAlt, link: "/chats" },
   { heading: "Perangkat", icon: UilRocket, link: "/devices" },
   { heading: "Penyewaan", icon: UilCar, link: "/penyewaan" },
   { heading: "Pembayaran", icon: UilMoneyBill, link: "/payments" },

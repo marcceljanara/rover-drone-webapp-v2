@@ -23,7 +23,7 @@ const Payments = () => {
   const fetchPayments = async () => {
     const accessToken = localStorage.getItem('accessToken');
     try {
-      const response = await fetch('https://dev-api.xsmartagrichain.site/v1/payments', {
+      const response = await fetch(process.env.REACT_APP_API_URL+'/v1/payments', {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -61,7 +61,7 @@ const Payments = () => {
   const handleSubmit = async () => {
     const accessToken = localStorage.getItem('accessToken');
     try {
-      const response = await fetch(`https://dev-api.xsmartagrichain.site/v1/payments/${selectedPaymentId}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/payments/${selectedPaymentId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -44,7 +44,7 @@ export default function AjukanPerpanjangan() {
 
     setLoading(true);
     try {
-      const res = await fetch('https://dev-api.xsmartagrichain.site/v1/extensions', {
+      const res = await fetch(process.env.REACT_APP_API_URL+'/v1/extensions', {
         method : 'POST',
         headers: {
           Authorization : `Bearer ${token}`,

@@ -1,0 +1,128 @@
+.chatbot-container {
+  margin: 40px auto 0 auto;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 700px; /* Lebar diperbesar */
+  display: flex;
+  flex-direction: column;
+  height: 600px; /* Tinggi diperbesar */
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  background-color: white;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+.chatbot-header {
+  background-color: #4caf50;
+  color: white;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.chatbot-messages {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: #f9f9f9;
+}
+
+.message {
+  max-width: 80%;
+  padding: 12px 16px;
+  border-radius: 16px;
+  font-size: 15px;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.message.assistant {
+  background-color: #e0e0e0;
+  align-self: flex-start;
+}
+
+.message.user {
+  background-color: #d1e7dd;
+  align-self: flex-end;
+}
+
+.chatbot-input {
+  display: flex;
+  align-items: flex-end;
+  padding: 8px;
+  border-top: 1px solid #ccc;
+  background: #fff;
+}
+
+.chatbot-input textarea {
+  flex: 1;
+  resize: none;
+  border: none;
+  font-size: 16px;
+  padding: 12px;
+  max-height: 120px; /* batas kenyamanan */
+  overflow-y: auto;
+  line-height: 1.5;
+  border-radius: 8px;
+  font-family: inherit;
+  outline: none;
+}
+
+.chatbot-input button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  margin-left: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.chatbot-input button:disabled {
+  background-color: #9ccc9c;
+  cursor: not-allowed;
+}
+
+.chatbot-input textarea {
+  max-height: 120px;
+  overflow-y: auto;
+  line-height: 1.5;
+  font-family: inherit;
+  resize: none;
+}
+
+
+.message p {
+  margin: 6px 0;
+  line-height: 1.5;
+  text-align: justify; /* Rata kiri-kanan */
+}
+
+.message strong {
+  font-weight: bold;
+}
+
+.reset-icon {
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.reset-icon:hover {
+  opacity: 0.85;
+}
+

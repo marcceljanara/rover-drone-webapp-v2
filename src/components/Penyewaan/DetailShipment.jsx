@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import "./DetailShipment.css";
 import { formatTanggalDanWaktuIndonesia } from "../../utils/datetimeIndonesia";
 
-const API_HOST = "https://dev-api.xsmartagrichain.site";
+const API_HOST = process.env.REACT_APP_API_URL;
 
 export default function DetailShipment() {
   const { id } = useParams();

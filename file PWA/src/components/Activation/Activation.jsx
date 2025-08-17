@@ -18,7 +18,7 @@ const Activation = () => {
     const accessToken = localStorage.getItem('accessToken');
 
     try {
-      const response = await fetch('https://dev-api.xsmartagrichain.site/v1/devices', {
+      const response = await fetch(process.env.REACT_APP_API_URL+ '/v1/devices', {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -56,7 +56,7 @@ const Activation = () => {
     const accessToken = localStorage.getItem('accessToken');
   
     try {
-      const response = await fetch(`https://dev-api.xsmartagrichain.site/v1/devices/${id}/status`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/devices/${id}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -86,7 +86,7 @@ const Activation = () => {
     const accessToken = localStorage.getItem('accessToken');
   
     try {
-      const response = await fetch(`https://dev-api.xsmartagrichain.site/v1/devices/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/devices/${id}`, {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -113,7 +113,7 @@ const Activation = () => {
     const accessToken = localStorage.getItem('accessToken');
 
     try {
-      const response = await fetch('https://dev-api.xsmartagrichain.site/v1/devices', {
+      const response = await fetch(process.env.REACT_APP_API_URL+'/v1/devices', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${accessToken}`,
