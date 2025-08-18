@@ -7,10 +7,15 @@ import "./DataDetail.css";
 const DataDetail = () => {
   const { id } = useParams();
   const accessToken = localStorage.getItem("accessToken");
-  const [interval, setIntervalValue] = useState("1h");
+
+  const [interval, setIntervalValue] = useState("1h"); // untuk chart & download
+  const [analysisInterval, setAnalysisInterval] = useState("24h"); // khusus analisis
+
   const [sensorData, setSensorData] = useState([]);
   const [timestamps, setTimestamps] = useState([]);
   const [limitsData, setLimitsData] = useState([]);
+  const [analysis, setAnalysis] = useState([]);
+  const [loadingAnalysis, setLoadingAnalysis] = useState(false);
 
   const fetchSensorChart = () => {
     fetch(`${process.env.REACT_APP_API_URL}/v1/devices/${id}/sensors/intervals?interval=${interval}`, {
@@ -36,6 +41,27 @@ const DataDetail = () => {
       .catch(err => console.error(err));
   };
 
+  const fetchAnalysis = () => {
+    setLoadingAnalysis(true);
+    fetch(`${process.env.REACT_APP_API_URL}/v1/chats/${id}/analyze?interval=${analysisInterval}`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${accessToken}` },
+    })
+      .then(res => res.json())
+      .then(result => {
+        let parsed = [];
+        try {
+          parsed = JSON.parse(result.data);
+        } catch {
+          parsed = [result.data];
+        }
+        console.log(result.data)
+        setAnalysis(parsed);
+      })
+      .catch(err => console.error("Gagal ambil analisis LLM:", err))
+      .finally(() => setLoadingAnalysis(false));
+  };
+
   const handleDownloadCSV = () => {
     fetch(`${process.env.REACT_APP_API_URL}/v1/devices/${id}/sensors/downloads?interval=${interval}`, {
       headers: { Authorization: `Bearer ${accessToken}` },
@@ -59,7 +85,6 @@ const DataDetail = () => {
       });
   };
 
-  // Fetch saat mount dan saat interval berubah
   useEffect(() => {
     fetchSensorChart();
     fetchSensorLimits();
@@ -67,56 +92,57 @@ const DataDetail = () => {
     const polling = setInterval(() => {
       fetchSensorChart();
       fetchSensorLimits();
-    }, 10000); // 10 detik
+    }, 10000);
 
-    return () => clearInterval(polling); // cleanup interval
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => clearInterval(polling);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [interval]);
 
   const getSeriesData = (key) => sensorData.map(item => item[key]);
 
   const rawCardConfigs = [
-  {
-    title: "Lux",
-    icon: UilSun,
-    color: "linear-gradient(180deg, #bb67ff 0%, #c484f3 100%)",
-    key: "light_intensity",
-    satuan: " lx",
-  },
-  {
-    title: "Temperature",
-    icon: UilTemperature,
-    color: "linear-gradient(180deg, #FF919D 0%, #FC929D 100%)",
-    key: "temperature",
-    satuan: " °C",
-  },
-  {
-    title: "Humidity",
-    icon: UilTear,
-    color: "linear-gradient(rgb(248, 212, 154) -146.42%, rgb(255 202 113) -46.42%)",
-    key: "humidity",
-    satuan: " %",
-  },
-];
+    {
+      title: "Lux",
+      icon: UilSun,
+      color: "linear-gradient(180deg, #bb67ff 0%, #c484f3 100%)",
+      key: "light_intensity",
+      satuan: " lx",
+    },
+    {
+      title: "Temperature",
+      icon: UilTemperature,
+      color: "linear-gradient(180deg, #FF919D 0%, #FC929D 100%)",
+      key: "temperature",
+      satuan: " °C",
+    },
+    {
+      title: "Humidity",
+      icon: UilTear,
+      color: "linear-gradient(rgb(248, 212, 154) -146.42%, rgb(255 202 113) -46.42%)",
+      key: "humidity",
+      satuan: " %",
+    },
+  ];
 
-const cardConfigs = rawCardConfigs
-  .map(card => {
-    const series = getSeriesData(card.key);
-    if (!series || series.length === 0 || series.every(v => v === null || v === undefined)) return null;
-    return {
-      ...card,
-      value: sensorData.at(0)?.[card.key],
-      series,
-    };
-  })
-  .filter(Boolean); // buang yang null
+  const cardConfigs = rawCardConfigs
+    .map(card => {
+      const series = getSeriesData(card.key);
+      if (!series || series.length === 0 || series.every(v => v === null || v === undefined)) return null;
+      return {
+        ...card,
+        value: sensorData.at(0)?.[card.key],
+        series,
+      };
+    })
+    .filter(Boolean);
 
   return (
     <div className="data-detail">
       <h2>{id}</h2>
 
+      {/* Interval untuk fetch chart & download */}
       <select value={interval} onChange={(e) => setIntervalValue(e.target.value)} className="interval-select">
-        {["15m", "1h", "6h", "12h", "24h", "7d", "30d", "60d", "90d", "180d", "365d"].map(opt => (
+        {["15m", "1h", "6h", "12h", "24h", "30d", "60d", "90d"].map(opt => (
           <option key={opt} value={opt}>{opt}</option>
         ))}
       </select>
@@ -150,7 +176,6 @@ const cardConfigs = rawCardConfigs
         )}
       </div>
 
-
       <h3>Latest Sensor Data</h3>
       <table className="sensor-table">
         <thead>
@@ -172,6 +197,47 @@ const cardConfigs = rawCardConfigs
           ))}
         </tbody>
       </table>
+
+      {/* Analisis dari LLM */}
+      <div className="analysis-section">
+        <div className="analysis-header">
+          <h3>🤖 AI Analysis</h3>
+          <div className="analysis-controls">
+            <select
+              value={analysisInterval}
+              onChange={(e) => setAnalysisInterval(e.target.value)}
+              className="interval-select"
+            >
+              {["15m", "1h", "6h", "12h", "24h", "30d", "60d", "90d"].map(opt => (
+                <option key={opt} value={opt}>{opt}</option>
+              ))}
+            </select>
+            <button className="analyze-btn" onClick={fetchAnalysis}>
+              🔎 Analisis
+            </button>
+          </div>
+        </div>
+
+        <div className="analysis-body">
+          {loadingAnalysis ? (
+            <div className="loading-spinner">
+              <p>AI Menganalisis..</p>
+              <div className="spinner" />
+            </div>
+          ) : analysis.length > 0 ? (
+            <ul className="analysis-list">
+              {analysis.map((msg, idx) => (
+                <li key={idx} className="analysis-item">✨ {msg}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className="empty-analysis">
+              Belum ada analisis. Pilih interval lalu klik <b>Analisis</b>.
+            </p>
+          )}
+        </div>
+      </div>
+
     </div>
   );
 };
