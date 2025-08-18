@@ -34,7 +34,7 @@ export const useGithubCommits = () => {
   useEffect(() => {
     const fetchCommits = async () => {
       try {
-        const response = await fetch('https://api.github.com/repos/marcceljanara/rover-drone-webapp/commits?per_page=2');
+        const response = await fetch('https://api.github.com/repos/marcceljanara/rover-drone-webapp-v2/commits?per_page=2');
         const commits = await response.json();
 
         const formattedData = commits.map((commit) => {
