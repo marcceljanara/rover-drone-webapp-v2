@@ -22,6 +22,8 @@ jobs:
       run: |
         yarn install
         yarn build
+      env:
+        REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
 
     - name: Deploy to VPS
       uses: appleboy/scp-action@master
