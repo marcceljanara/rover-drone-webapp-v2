@@ -44,7 +44,7 @@ const DataDetail = () => {
   const fetchAnalysis = () => {
     setLoadingAnalysis(true);
     fetch(`${process.env.REACT_APP_API_URL}/v1/chats/${id}/analyze?interval=${analysisInterval}`, {
-      method: "POST",
+      method: "GET",
       headers: { Authorization: `Bearer ${accessToken}` },
     })
       .then(res => res.json())
