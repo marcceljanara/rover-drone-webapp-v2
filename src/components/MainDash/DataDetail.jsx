@@ -4,6 +4,19 @@ import { UilSun, UilTemperature, UilTear } from "@iconscout/react-unicons";
 import Card from "../Card/Card";
 import "./DataDetail.css";
 
+const formatMessage = (text) => {
+  const cleanedText = text.replace(/###\s?/g, '').trim();
+
+  return cleanedText.split('\n').map((line, i) => (
+    <p
+      key={i}
+      dangerouslySetInnerHTML={{
+        __html: line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'),
+      }}
+    />
+  ));
+};
+
 const DataDetail = () => {
   const { id } = useParams();
   const accessToken = localStorage.getItem("accessToken");
@@ -227,7 +240,7 @@ const DataDetail = () => {
           ) : analysis.length > 0 ? (
             <ul className="analysis-list">
               {analysis.map((msg, idx) => (
-                <li key={idx} className="analysis-item">✨ {msg}</li>
+                <li key={idx} className="analysis-item">✨ {formatMessage(msg)}</li>
               ))}
             </ul>
           ) : (
