@@ -25,14 +25,11 @@ const DeviceDetail = () => {
   };
 
   const fetchDeviceDetails = async () => {
-    const accessToken = localStorage.getItem('accessToken');
 
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/devices/${id}`, {
         method: 'GET',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+        credentials: "include",
       });
 
       if (!response.ok) {
@@ -54,15 +51,14 @@ const DeviceDetail = () => {
   }, [id]);
 
   const handleToggle = async (status) => {
-    const accessToken = localStorage.getItem('accessToken');
     const endpoint = `${process.env.REACT_APP_API_URL}/v1/devices/${id}/control`;
 
     try {
       const response = await fetch(endpoint, {
         method: 'PUT',
+        credentials: "include",
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
           action: status ? 'on' : 'off',
@@ -85,15 +81,12 @@ const DeviceDetail = () => {
   };
 
   const handleChangeTopic = async (type) => {
-    const accessToken = localStorage.getItem('accessToken');
     const endpoint = `${process.env.REACT_APP_API_URL}/v1/devices/${id}/${type === 'sensor' ? 'mqttsensor' : 'mqttcontrol'}`;
 
     try {
       const response = await fetch(endpoint, {
         method: 'PUT',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+        credentials: "include",
       });
 
       const result = await response.json();

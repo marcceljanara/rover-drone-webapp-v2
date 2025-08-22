@@ -56,9 +56,7 @@ const ChatBot = () => {
         `${process.env.REACT_APP_API_URL}/v1/chats`,
         { messages: newMessages },
         {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-          },
+          credentials: "include",
         }
       );
 

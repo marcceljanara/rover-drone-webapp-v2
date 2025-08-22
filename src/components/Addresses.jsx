@@ -39,26 +39,25 @@ const Addresses = () => {
   const [kecId, setKecId]   = useState("");
 
   /* ---------- Ambil alamat dari backend ---------- */
-  const token = localStorage.getItem("accessToken");
 
   const fetchAddresses = useCallback(async () => {
     try {
       const res = await fetch(
         process.env.REACT_APP_API_URL+ "/v1/users/addresses",
-        { headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` } }
+        { headers: { "Content-Type": "application/json" },credentials: "include" }
       );
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Gagal memuat alamat");
       setAddresses(data.data.addresses || []);
     } catch (err) { alert(err.message); }
-  }, [token]);
+  }, []);
 
   /* --- NEW: ambil detail alamat --- */
   const fetchAddressDetail = async (id) => {
     try {
       const res = await fetch(
         `${process.env.REACT_APP_API_URL}/v1/users/addresses/${id}`,
-        { headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` } }
+        {credentials: "include" , headers: { "Content-Type": "application/json",} }
       );
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Gagal memuat detail alamat");
@@ -127,9 +126,9 @@ const handleSubmit = async (e) => {
 
     const res = await fetch(url, {
       method,
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(form),
     });
@@ -156,9 +155,9 @@ const setAsDefault = async (id) => {
       `${process.env.REACT_APP_API_URL}/v1/users/addresses/${id}`,
       {
         method: "PATCH",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
       }
     );
@@ -179,9 +178,9 @@ const handleDeleteAddress = async () => {
       `${process.env.REACT_APP_API_URL}/v1/users/addresses/${deleteId}`,
       {
         method: "DELETE",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
       }
     );

@@ -21,13 +21,10 @@ const Payments = () => {
   const navigate = useNavigate();
 
   const fetchPayments = async () => {
-    const accessToken = localStorage.getItem('accessToken');
     try {
       const response = await fetch(process.env.REACT_APP_API_URL+'/v1/payments', {
         method: 'GET',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+        credentials: "include",
       });
 
       if (!response.ok) {
@@ -59,13 +56,12 @@ const Payments = () => {
   };
 
   const handleSubmit = async () => {
-    const accessToken = localStorage.getItem('accessToken');
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/payments/${selectedPaymentId}`, {
         method: 'PUT',
+        credentials: "include",
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
           paymentStatus: formData.paymentStatus,

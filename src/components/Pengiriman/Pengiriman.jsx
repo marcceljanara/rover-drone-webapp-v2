@@ -21,7 +21,7 @@ export default function Shipments() {
       setError("");
       try {
         const res = await fetch(API, {
-          headers: { Authorization: `Bearer ${token}` },
+          credentials: "include",
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.message || "Gagal memuat pengiriman");

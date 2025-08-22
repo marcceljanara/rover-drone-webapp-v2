@@ -58,7 +58,7 @@ const Penyewaan = () => {
     const fetchData = async () => {
       try {
         const deviceRes = await fetch(process.env.REACT_APP_API_URL+'/v1/devices?scope=available', {
-          headers: { Authorization: `Bearer ${token}` },
+          credentials: "include",
         });
         const deviceData = await deviceRes.json();
         setDeviceStatus({ loading: false, value: deviceData.data.devices.length, error: null });
@@ -68,7 +68,8 @@ const Penyewaan = () => {
 
       try {
         const sensorRes = await fetch(process.env.REACT_APP_API_URL+'/v1/sensors/available', {
-          headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+          credentials: "include",
+          headers: { 'Content-Type': 'application/json' },
         });
         const sensorData = await sensorRes.json();
         const sensors = sensorData?.data?.sensors || [];
@@ -86,7 +87,7 @@ const Penyewaan = () => {
   const fetchAddresses = async () => {
     try {
       const res = await fetch(process.env.REACT_APP_API_URL+"/v1/users/addresses", {
-        headers: { Authorization: `Bearer ${token}` }
+        credentials: "include",
       });
       const data = await res.json();
       if (res.ok) setUserAddresses(data?.data?.addresses || []);
@@ -130,8 +131,8 @@ const handleSewa = async () => {
   try {
     const response = await fetch(process.env.REACT_APP_API_URL+'/v1/rentals', {
       method: 'POST',
+      credentials: "include",
       headers: {
-        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -172,9 +173,7 @@ const handleSewa = async () => {
   try {
     const res = await fetch(url, {
       method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      credentials: "include",
     });
 
     const data = await res.json();

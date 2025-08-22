@@ -51,9 +51,7 @@ const Penyewaan = () => {
       try {
         const response = await fetch(process.env.REACT_APP_API_URL+'/v1/devices?scope=available', {
           method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          }});
+          credentials: "include",});
         const data = await response.json();
         setAvailableDevices(data.data.devices.length);
       } catch (error) {
@@ -87,8 +85,8 @@ const Penyewaan = () => {
     try {
       const response = await fetch(process.env.REACT_APP_API_URL+'/v1/rentals', {
         method: 'POST',
+        credentials: "include",
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },

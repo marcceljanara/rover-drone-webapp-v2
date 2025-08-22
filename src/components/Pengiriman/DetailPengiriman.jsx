@@ -36,7 +36,7 @@ export default function DetailPengiriman() {
       setError("");
       const res  = await fetch(
         `${process.env.REACT_APP_API_URL}/v1/shipments/${rentalId}`,
-        { headers: { Authorization: `Bearer ${token}` } }
+        { credentials: "include", }
       );
       const json = await res.json();
       if (!res.ok) throw new Error(json.message || "Gagal memuat detail");
@@ -54,7 +54,7 @@ export default function DetailPengiriman() {
     } catch (e) {
       setError(e.message); setData(null);
     }
-  }, [rentalId, token]);
+  }, [rentalId]);
 
   useEffect(() => { fetchDetail(); }, [fetchDetail, rentalId, token]);
 
@@ -65,7 +65,8 @@ export default function DetailPengiriman() {
         `${process.env.REACT_APP_API_URL}/v1/shipments/${shipmentId}/info`,
         {
           method: "PUT",
-          headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(draft),
         }
       );
@@ -83,7 +84,8 @@ export default function DetailPengiriman() {
         `${process.env.REACT_APP_API_URL}/v1/shipments/${shipmentId}/status`,
         {
           method: "PATCH",
-          headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
           body  : JSON.stringify({ status: statusDraft }),
         }
       );
@@ -103,7 +105,8 @@ export default function DetailPengiriman() {
         `${process.env.REACT_APP_API_URL}/v1/shipments/${shipmentId}/actual-shipping`,
         {
           method: "PATCH",
-          headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ date: now }),
         }
       );
@@ -122,7 +125,8 @@ export default function DetailPengiriman() {
         `${process.env.REACT_APP_API_URL}/v1/shipments/${shipmentId}/actual-delivery`,
         {
           method: "PATCH",
-          headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+          credentials: "include",
+          headers: {  "Content-Type": "application/json" },
           body: JSON.stringify({ date: now }),
         }
       );
@@ -149,9 +153,7 @@ export default function DetailPengiriman() {
       `${process.env.REACT_APP_API_URL}/v1/shipments/${shipmentId}/delivery-proof`,
       {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        credentials: "include",
         body: formData,
       }
     );

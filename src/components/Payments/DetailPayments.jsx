@@ -13,11 +13,8 @@ const DetailPembayaran = () => {
   useEffect(() => {
     const fetchDetail = async () => {
       try {
-        const accessToken = localStorage.getItem('accessToken');
         const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/payments/${id}`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
+          credentials: "include",
         });
 
         const result = await response.json();
@@ -34,12 +31,9 @@ const DetailPembayaran = () => {
 
   const handleDelete = async () => {
     try {
-      const accessToken = localStorage.getItem('accessToken');
       const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/payments/${id}`, {
         method: 'PATCH',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+        credentials: "include",
       });
 
       const result = await response.json();

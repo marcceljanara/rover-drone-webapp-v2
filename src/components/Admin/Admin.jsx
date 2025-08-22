@@ -22,12 +22,11 @@ const Admin = () => {
   });
 
   const navigate = useNavigate();
-  const accessToken = localStorage.getItem('accessToken');
 
   const fetchUsers = async () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/admin?limit=100`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
+        credentials: "include",
       });
 
       const result = await response.json();
@@ -68,8 +67,8 @@ const Admin = () => {
     try {
       const response = await fetch(process.env.REACT_APP_API_URL+'/v1/admin', {
         method: 'POST',
+        credentials: "include",
         headers: {
-          Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({

@@ -6,7 +6,6 @@ const API = process.env.REACT_APP_API_URL+"/v1/returns";
 
 export default function Returns() {
   const navigate = useNavigate();
-  const token = localStorage.getItem("accessToken");
 
   const [returns, setReturns] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -22,7 +21,7 @@ export default function Returns() {
     setError("");
     try {
       const res = await fetch(API, {
-        headers: { Authorization: `Bearer ${token}` },
+        credentials: "include",
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
@@ -33,7 +32,7 @@ export default function Returns() {
     } finally {
       setLoading(false);
     }
-  }, [token]);
+  }, []);
 
   useEffect(() => {
     fetchAllReturns();

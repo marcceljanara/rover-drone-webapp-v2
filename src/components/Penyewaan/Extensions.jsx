@@ -21,8 +21,8 @@ function DetailPerpanjangan() {
 
       try {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/rentals/${id}/extensions`, {
+          credentials: "include",
           headers: {
-            Authorization: `Bearer ${token}`,
             Accept: 'application/json',
           },
         });

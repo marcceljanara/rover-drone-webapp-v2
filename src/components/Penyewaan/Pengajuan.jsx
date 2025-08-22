@@ -37,8 +37,8 @@ function KelolaPenyewaan() {
     const fetchRentals = async () => {
       try {
         const response = await fetch(process.env.REACT_APP_API_URL+'/v1/rentals', {
+          credentials: "include",
           headers: {
-            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
             Accept: 'application/json',
           },
@@ -74,8 +74,8 @@ function KelolaPenyewaan() {
 
       const options = {
         method: 'PUT',
+        credentials: "include",
         headers: {
-          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: !isAdmin ? JSON.stringify({ rentalStatus: 'cancelled' }) : null,
@@ -108,8 +108,8 @@ function KelolaPenyewaan() {
         `${process.env.REACT_APP_API_URL}/v1/rentals/${id}/status`,
         {
           method: 'PUT',
+          credentials: "include",
           headers: {
-            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ rentalStatus: 'completed' }),

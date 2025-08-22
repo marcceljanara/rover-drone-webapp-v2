@@ -31,13 +31,9 @@ const DeviceDetail = () => {
 
 
   const fetchDevice = async () => {
-    const token = localStorage.getItem('accessToken');
     try {
       const res = await fetch(`${process.env.REACT_APP_API_URL}/v1/devices/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: 'application/json',
-        },
+        credentials: "include",
       });
       const result = await res.json();
       if (!res.ok || !result.data?.device) {
@@ -55,12 +51,11 @@ const DeviceDetail = () => {
   };
 
   const fetchDailyData = async () => {
-    const token = localStorage.getItem('accessToken');
     setLoadingDaily(true);
     try {
       const res = await fetch(`${process.env.REACT_APP_API_URL}/v1/devices/${id}/daily`, {
+        credentials: "include",
         headers: {
-          Authorization: `Bearer ${token}`,
           Accept: 'application/json',
         },
       });
@@ -81,12 +76,11 @@ const DeviceDetail = () => {
   };
 
   const updateDeviceStatus = async (status) => {
-    const token = localStorage.getItem('accessToken');
     try {
       const res = await fetch(`${process.env.REACT_APP_API_URL}/v1/devices/${id}/control`, {
         method: 'PUT',
+        credentials: "include",
         headers: {
-          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ command: 'power', action: status ? 'on' : 'off' }),
@@ -104,13 +98,12 @@ const DeviceDetail = () => {
   };
 
   const handleChangeTopic = async (type) => {
-    const token = localStorage.getItem('accessToken');
     const endpoint = type === 'sensor' ? 'mqttsensor' : 'mqttcontrol';
     try {
       const res = await fetch(`${process.env.REACT_APP_API_URL}/v1/devices/${id}/${endpoint}`, {
         method: 'PUT',
+        credentials: "include",
         headers: {
-          Authorization: `Bearer ${token}`,
           Accept: 'application/json',
         },
       });

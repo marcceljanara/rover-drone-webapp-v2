@@ -46,8 +46,8 @@ export default function AjukanPerpanjangan() {
     try {
       const res = await fetch(process.env.REACT_APP_API_URL+'/v1/extensions', {
         method : 'POST',
+        credentials: "include",
         headers: {
-          Authorization : `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ rentalId: id, interval }),

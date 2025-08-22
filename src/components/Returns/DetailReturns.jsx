@@ -31,7 +31,7 @@ export default function DetailReturns() {
     try {
       setError("");
       const res = await fetch(`${API}/${rentalId}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        credentials: "include",
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.message || "Gagal memuat detail");
@@ -50,7 +50,7 @@ export default function DetailReturns() {
     } catch (e) {
       setError(e.message); setData(null);
     }
-  }, [rentalId, token]);
+  }, [rentalId]);
 
   useEffect(() => { fetchDetail(); }, [fetchDetail, rentalId, token]);
 
@@ -64,7 +64,8 @@ export default function DetailReturns() {
     try {
       const res = await fetch(`${API}/${data.id}`, {
         method : "PUT",
-        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+        credentials: "include",
+        headers: {"Content-Type": "application/json" },
         body   : JSON.stringify({
           courierName   : form.courierName,
           courierService: form.courierService,
@@ -86,7 +87,8 @@ export default function DetailReturns() {
     try {
       const res = await fetch(`${API}/${data.id}/status`, {
         method : "PATCH",
-        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+        credentials: "include",
+        headers: {"Content-Type": "application/json" },
         body   : JSON.stringify({ status: statusDraft }),
       });
       const json = await res.json();
@@ -102,8 +104,8 @@ const handleNoteSave = async () => {
   try {
     const res = await fetch(`${API}/${data.id}/note`, {
       method : "PATCH",
+      credentials: "include",
       headers: {
-        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({ note: noteDraft }),

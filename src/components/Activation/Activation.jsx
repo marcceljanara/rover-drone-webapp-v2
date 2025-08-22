@@ -17,10 +17,9 @@ const Activation = () => {
 
   useEffect(() => {
     const fetchDevices = async () => {
-      const token = localStorage.getItem('accessToken');
       try {
         const res = await fetch(process.env.REACT_APP_API_URL+'/v1/devices', {
-          headers: { Authorization: `Bearer ${token}` },
+          credentials: "include",
         });
         const result = await res.json();
         const devices = result.data.devices.map(device => ({
@@ -42,13 +41,12 @@ const Activation = () => {
   const handleEdit = (id) => setEditingId(id);
 
   const handleStatusChange = async (id, newStatus) => {
-    const token = localStorage.getItem('accessToken');
     try {
       await fetch(process.env.REACT_APP_API_URL+`/v1/devices/${id}/status`, {
         method: 'PUT',
+        credentials: "include",
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ status: newStatus }),
       });
@@ -62,11 +60,10 @@ const Activation = () => {
   };
 
   const handleDelete = async (id) => {
-    const token = localStorage.getItem('accessToken');
     try {
       await fetch(`${process.env.REACT_APP_API_URL}/v1/devices/${id}`, {
         method: 'PUT',
-        headers: { Authorization: `Bearer ${token}` },
+        credentials: "include",
       });
       setNotification(`Perangkat ${id} berhasil dihapus`);
       setTimeout(() => setNotification(null), 3000);
@@ -77,13 +74,12 @@ const Activation = () => {
   };
 
   const handleAdd = async () => {
-    const token = localStorage.getItem('accessToken');
     try {
       const res = await fetch(process.env.REACT_APP_API_URL+'/v1/devices', {
         method: 'POST',
+        credentials: "include",
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
       });
       const result = await res.json();
@@ -92,7 +88,7 @@ const Activation = () => {
       setTimeout(() => setNotification(null), 3000);
       // refresh
       const updated = await fetch(process.env.REACT_APP_API_URL+'/v1/devices', {
-        headers: { Authorization: `Bearer ${token}` },
+        credentials: "include",
       });
       const updatedJson = await updated.json();
       setData(updatedJson.data.devices);

@@ -255,62 +255,70 @@ const Navbar = () => {
         <div className={`notification ${notificationType}`}>{notificationMessage}</div>
       )}
 
-      {/* LOGIN FORM */}
-      {showLoginForm && (
-        <div className="login-form">
-          <button className="close-btn" onClick={closeAllForms}>&times;</button>
-          <h2>Sign In</h2>
-          <form onSubmit={handleLoginSubmit}>
-            <div className="form-group">
-              <label>Email</label>
-              <input
-                type="email"
-                value={emailLogin}
-                onChange={e => setEmailLogin(e.target.value)}
-                required
-              />
-            </div>
-            <div className="form-group password-toggle">
-              <label>Password</label>
-              <input
-                type={showPasswordLogin ? "text" : "password"}
-                value={passwordLogin}
-                onChange={e => setPasswordLogin(e.target.value)}
-                required
-              />
-              <button
-                type="button"
-                className="eye-toggle"
-                onClick={() => setShowPasswordLogin(p => !p)}
-              >
-                {showPasswordLogin ? (
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="black" strokeWidth="2" viewBox="0 0 24 24">
-                    <path d="M17.94 17.94A10.93 10.93 0 0112 19c-5 0-9.27-3.11-11-7 1.21-2.77 3.64-5.01 6.59-6.2"/>
-                    <path d="M9.5 9.5a3 3 0 014 4"/>
-                    <line x1="1" y1="1" x2="23" y2="23"/>
-                  </svg>
-                ) : (
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="black" strokeWidth="2" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="3" />
-                    <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z" />
-                  </svg>
-                )}
-              </button>
-            </div>
-            <div className="form-group">
-              <input
-                type="checkbox"
-                id="remember-me"
-                checked={rememberMe}
-                onChange={() => setRememberMe(p => !p)}
-              />
-              <label htmlFor="remember-me">Remember me</label>
-            </div>
-            <button type="submit" className="login-btn">Sign In</button>
-          </form>
-          <p>Don't have an account? <a href="#" onClick={handleSignUpClick}>Sign up</a></p>
-        </div>
-      )}
+{/* LOGIN FORM */}
+{showLoginForm && (
+  <div className="login-form">
+    <button className="close-btn" onClick={closeAllForms}>&times;</button>
+    <h2>Sign In</h2>
+    <form onSubmit={handleLoginSubmit}>
+      <div className="form-group">
+        <label>Email</label>
+        <input
+          type="email"
+          value={emailLogin}
+          onChange={e => setEmailLogin(e.target.value)}
+          required
+        />
+      </div>
+      <div className="form-group password-toggle">
+        <label>Password</label>
+        <input
+          type={showPasswordLogin ? "text" : "password"}
+          value={passwordLogin}
+          onChange={e => setPasswordLogin(e.target.value)}
+          required
+        />
+        <button
+          type="button"
+          className="eye-toggle"
+          onClick={() => setShowPasswordLogin(p => !p)}
+        >
+          👁
+        </button>
+      </div>
+      <div className="form-group">
+        <input
+          type="checkbox"
+          id="remember-me"
+          checked={rememberMe}
+          onChange={() => setRememberMe(p => !p)}
+        />
+        <label htmlFor="remember-me">Remember me</label>
+      </div>
+      <button type="submit" className="login-btn">Sign In</button>
+    </form>
+
+    {/* 🔹 Tambahan tombol Google Login */}
+    <div className="google-login">
+      <button
+        type="button"
+        className="google-btn"
+        onClick={() => {
+          window.location.href = "http://localhost:5000/v1/authentications/google";
+        }}
+      >
+        <img
+          src="https://developers.google.com/identity/images/g-logo.png"
+          alt="Google Logo"
+        />
+        Sign in with Google
+      </button>
+    </div>
+
+    <p>Don't have an account? <a href="#" onClick={handleSignUpClick}>Sign up</a></p>
+  </div>
+)}
+
 
       {/* SIGN UP FORM */}
       {showSignUpForm && (
