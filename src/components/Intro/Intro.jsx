@@ -3,7 +3,6 @@ import "./Intro.css";
 import Vector1 from "../../imgs/slime.png";
 import Vector2 from "../../imgs/Vector2.png";
 import boy from "../../imgs/rover2.png";
-import glassesimoji from "../../imgs/buah.png";
 import thumbup from "../../imgs/thumbup.png";
 import crown from "../../imgs/crown.png";
 import FloatinDiv from "../FloatingDiv/FloatingDiv";
@@ -34,13 +33,11 @@ const Intro = () => {
     <div className="Intro" id="Intro">
       <div className="i-left">
         <div className="i-name">
-          <span>Smart Agriculture</span>
-          <span>with Drone-Rover</span>
+          <span>AgroSwarm</span>
+          <span>Integrated Rover-Drone</span>
           <span className="intro-description">
-  Meningkatkan produktivitas dan efisiensi perkebunan kelapa sawit <br />
-  melalui pemanfaatan teknologi Drone Rover yang dikembangkan oleh <br />
-  Universitas Lampung sebagai solusi inovatif dalam pemantauan dan <br />
-  pengelolaan lahan secara presisi.
+  Welcome to Agro-Swarm — an autonomous drone-rover swarm system powered by AI <br />
+  to deliver real-time, energy-efficient, and scalable monitoring for precision agriculture.
 </span>
 
         </div>
@@ -64,20 +61,13 @@ const Intro = () => {
           transition={transition}
           onAnimationComplete={() => setIsAnimated(false)}
         />
-        <motion.img
-          initial={{ left: "-36%" }}
-          whileInView={{ left: "-24%" }}
-          transition={transition}
-          src={glassesimoji}
-          alt="emoji"
-        />
         <motion.div
           initial={{ top: "-4%", left: "60%" }}
           whileInView={{ left: "50%" }}
           transition={transition}
           className="floating-div"
         >
-          <FloatinDiv img={crown} text1="Sawit" text2="Monitoring" />
+          <FloatinDiv img={crown} text1="AI" text2="Agent" />
         </motion.div>
         <motion.div
           initial={{ left: "9rem", top: "18rem" }}

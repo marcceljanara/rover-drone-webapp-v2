@@ -105,7 +105,7 @@ const Sidebar = () => {
           <img src={Logo} alt="logo" className="logo-img" />
           <div className="logo-text">
             <span className="brand-name">
-              Ro<span>o</span>ne
+              A<span>gro</span>S
             </span>
             <img
               src={IconLokasi}

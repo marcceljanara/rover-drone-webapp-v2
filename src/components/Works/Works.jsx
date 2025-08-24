@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext } from "react";
 import "./Works.css";
-import Upwork from "../../imgs/bpdpks.png";
-import Fiverr from "../../imgs/kemenkeu.png";
+import Upwork from "../../imgs/pertamina.png";
+import Fiverr from "../../imgs/bumn.png";
 import Amazon from "../../imgs/sawit.png";
 import Shopify from "../../imgs/unila.png";
 import Facebook from "../../imgs/handayani.png";
@@ -27,11 +27,11 @@ const Works = () => {
           </span>
           <span>Brands & Clients</span>
           <span style={{ color: "black" }}>
-  Kami bangga telah memberikan solusi inovatif dan efisien untuk berbagai merek dan klien,
+  We pride ourselves on providing innovative and efficient solutions to a wide range of brands and clients,
   <br />
-  membantu mereka mengatasi tantangan dalam sektor pertanian dan teknologi.
+  helping them overcome challenges in the agricultural and technology sectors.
   <br />
-  Kami berkomitmen untuk terus memberikan layanan terbaik dan solusi yang berdampak positif.
+  We are committed to continuing to provide the best services and solutions that have a positive impact.
 </span>
 
           {/* <Link to="contact" smooth={true} spy={true}>

@@ -228,7 +228,7 @@ const Navbar = () => {
   return (
     <div className="n-wrapper" id="Navbar">
       <div className="n-left">
-        <div className="n-name">Roone</div>
+        <div className="n-name">AgroSwarm</div>
       </div>
       <div className="n-right">
         <div className="n-list">
