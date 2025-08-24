@@ -56,7 +56,7 @@ const ChatBot = () => {
         `${process.env.REACT_APP_API_URL}/v1/chats`,
         { messages: newMessages },
         {
-          credentials: "include",
+          withCredentials: true,
         }
       );
 

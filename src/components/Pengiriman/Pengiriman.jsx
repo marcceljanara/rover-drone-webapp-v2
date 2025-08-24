@@ -6,7 +6,6 @@ const API = process.env.REACT_APP_API_URL+"/v1/shipments";
 const itemsPerPage = 5;
 
 export default function Shipments() {
-  const token = localStorage.getItem("accessToken");
   const [shipments, setShipments] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
@@ -34,7 +33,7 @@ export default function Shipments() {
       }
     };
     fetchShipments();
-  }, [token]);
+  }, []);
 
   const filtered = shipments.filter((s) => {
     const query = searchTerm.toLowerCase();

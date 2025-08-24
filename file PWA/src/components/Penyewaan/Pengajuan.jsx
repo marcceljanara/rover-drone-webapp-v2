@@ -11,15 +11,9 @@ function KelolaPenyewaan() {
   const [showNotification, setShowNotification] = useState(false);
   const navigate = useNavigate();
   const role = localStorage.getItem('role');
-  const token = localStorage.getItem('accessToken');
 
   useEffect(() => {
     const fetchRentals = async () => {
-      if (!token) {
-        setError('Token tidak ditemukan. Silakan login terlebih dahulu.');
-        setLoading(false);
-        return;
-      }
 
       try {
         const response = await fetch(process.env.REACT_APP_API_URL+'/v1/rentals', {
@@ -46,7 +40,7 @@ function KelolaPenyewaan() {
     };
 
     fetchRentals();
-  }, [token]);
+  },[]);
 
   useEffect(() => {
     if (showNotification) {
@@ -56,7 +50,7 @@ function KelolaPenyewaan() {
   }, [showNotification]);
 
   const handleAction = async (id) => {
-    if (!token) return;
+
 
     try {
       const url =
@@ -99,8 +93,6 @@ function KelolaPenyewaan() {
   };
 
   const handleComplete = async (id) => {
-    if (!token) return;
-  
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/rentals/${id}/status`, {
         method: 'PUT',

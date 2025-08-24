@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext'; // 🔑 ambil dari context
 import './Penyewaan.css';
 import './Pengajuan.css';
 
 function KelolaPenyewaan() {
   const navigate = useNavigate();
+  const { user } = useAuth(); // user = { id, role, email } dari AuthContext
   const [data, setData] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
@@ -14,9 +16,6 @@ function KelolaPenyewaan() {
   const [currentPage, setCurrentPage] = useState(1);
 
   const itemsPerPage = 4;
-
-  const role = localStorage.getItem('role');
-  const token = localStorage.getItem('accessToken');
 
   const allColumns = [
     { key: 'id', label: 'ID' },
@@ -28,21 +27,15 @@ function KelolaPenyewaan() {
   ];
 
   useEffect(() => {
-    if (!token) {
-      setError('Token tidak ditemukan. Silakan login terlebih dahulu.');
-      setLoading(false);
-      return;
-    }
-
     const fetchRentals = async () => {
       try {
-        const response = await fetch(process.env.REACT_APP_API_URL+'/v1/rentals', {
-          credentials: "include",
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
-        });
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/v1/rentals`,
+          {
+            credentials: 'include', // kirim cookie otomatis
+            headers: { Accept: 'application/json' },
+          }
+        );
         const result = await response.json();
         if (!response.ok) throw new Error(result.message || 'Gagal memuat data penyewaan.');
         setData(result.data?.rentals || []);
@@ -54,8 +47,8 @@ function KelolaPenyewaan() {
       }
     };
 
-    fetchRentals();
-  }, [token]);
+    if (user) fetchRentals();
+  }, [user]);
 
   useEffect(() => {
     if (showNotification) {
@@ -65,19 +58,16 @@ function KelolaPenyewaan() {
   }, [showNotification]);
 
   const handleAction = async (id) => {
-    if (!token) return;
     try {
-      const isAdmin = role === 'admin';
+      const isAdmin = user?.role === 'admin';
       const url = isAdmin
         ? `${process.env.REACT_APP_API_URL}/v1/rentals/${id}`
         : `${process.env.REACT_APP_API_URL}/v1/rentals/${id}/cancel`;
 
       const options = {
         method: 'PUT',
-        credentials: "include",
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
         body: !isAdmin ? JSON.stringify({ rentalStatus: 'cancelled' }) : null,
       };
 
@@ -102,16 +92,13 @@ function KelolaPenyewaan() {
   };
 
   const handleComplete = async (id) => {
-    if (!token) return;
     try {
       const response = await fetch(
         `${process.env.REACT_APP_API_URL}/v1/rentals/${id}/status`,
         {
           method: 'PUT',
-          credentials: "include",
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ rentalStatus: 'completed' }),
         }
       );
@@ -155,7 +142,7 @@ function KelolaPenyewaan() {
             setCurrentPage(1);
           }}
         />
-        {role === 'user' && (
+        {user?.role === 'user' && (
           <button className="add-btn" onClick={() => navigate('/penyewaan/lanjutan')}>
             + Ajukan Penyewaan Baru
           </button>
@@ -182,13 +169,12 @@ function KelolaPenyewaan() {
                   <tr key={item.id}>
                     {allColumns.map((col) => {
                       const key = col.key;
-                      const label = col.label;
 
                       if (key === 'action') {
                         return (
-                          <td key="action" data-label={label}>
+                          <td key="action" data-label="Aksi">
                             <div className="action-wrapper">
-                              {role === 'admin' && (
+                              {user?.role === 'admin' && (
                                 <button
                                   className="action-btn admin"
                                   onClick={() => handleComplete(item.id)}
@@ -198,11 +184,11 @@ function KelolaPenyewaan() {
                                 </button>
                               )}
                               <button
-                                className={`action-btn ${role}`}
+                                className={`action-btn ${user?.role}`}
                                 onClick={() => handleAction(item.id)}
-                                disabled={role === 'user' && item.rental_status !== 'pending'}
+                                disabled={user?.role === 'user' && item.rental_status !== 'pending'}
                               >
-                                {role === 'admin' ? 'Hapus Sewa' : 'Batalkan'}
+                                {user?.role === 'admin' ? 'Hapus Sewa' : 'Batalkan'}
                               </button>
                             </div>
                           </td>
@@ -211,7 +197,7 @@ function KelolaPenyewaan() {
 
                       if (key === 'rental_status') {
                         return (
-                          <td key="status" data-label={label}>
+                          <td key="status" data-label="Status">
                             <span className={`status-badge status-${item.rental_status}`}>
                               {item.rental_status}
                             </span>
@@ -221,7 +207,7 @@ function KelolaPenyewaan() {
 
                       if (key === 'start_date' || key === 'end_date') {
                         return (
-                          <td key={key} data-label={label}>
+                          <td key={key} data-label={col.label}>
                             {new Date(item[key]).toLocaleDateString('id-ID')}
                           </td>
                         );
@@ -229,7 +215,7 @@ function KelolaPenyewaan() {
 
                       if (key === 'total_cost') {
                         return (
-                          <td key={key} data-label={label}>
+                          <td key={key} data-label={col.label}>
                             {item[key]?.toLocaleString('id-ID')}
                           </td>
                         );
@@ -238,7 +224,7 @@ function KelolaPenyewaan() {
                       return (
                         <td
                           key={key}
-                          data-label={label}
+                          data-label={col.label}
                           className={key === 'id' ? 'clickable-id' : ''}
                           onClick={key === 'id' ? () => navigate(`/penyewaan/${item.id}`) : null}
                         >

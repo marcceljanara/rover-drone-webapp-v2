@@ -5,7 +5,6 @@ import './Penyewaan.css';
 function DetailPenyewaan() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const accessToken = localStorage.getItem('accessToken');
 
   const [rental, setRental] = useState(null);
   const [error, setError] = useState('');
@@ -65,7 +64,7 @@ function DetailPenyewaan() {
     fetchRental();
 
     return () => clearInterval(interval); // Pastikan interval dibersihkan saat komponen tidak aktif lagi
-  }, [id, accessToken]);
+  }, [id]);
 
   if (error) {
     return (

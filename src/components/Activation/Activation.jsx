@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext'; // ✅ import context
 import './Activation.css';
 
 const statusOptions = ['active', 'inactive', 'maintenance', 'error'];
@@ -12,13 +13,14 @@ const Activation = () => {
   const [editingId, setEditingId] = useState(null);
   const [notification, setNotification] = useState(null);
   const navigate = useNavigate();
-  const role = localStorage.getItem('role');
-  const isUser = role === 'user';
+
+  const { user } = useAuth(); // ✅ ambil user dari context
+  const isUser = user?.role === 'user'; // ✅ cek role dari context
 
   useEffect(() => {
     const fetchDevices = async () => {
       try {
-        const res = await fetch(process.env.REACT_APP_API_URL+'/v1/devices', {
+        const res = await fetch(process.env.REACT_APP_API_URL + '/v1/devices', {
           credentials: "include",
         });
         const result = await res.json();
@@ -42,7 +44,7 @@ const Activation = () => {
 
   const handleStatusChange = async (id, newStatus) => {
     try {
-      await fetch(process.env.REACT_APP_API_URL+`/v1/devices/${id}/status`, {
+      await fetch(process.env.REACT_APP_API_URL + `/v1/devices/${id}/status`, {
         method: 'PUT',
         credentials: "include",
         headers: {
@@ -75,7 +77,7 @@ const Activation = () => {
 
   const handleAdd = async () => {
     try {
-      const res = await fetch(process.env.REACT_APP_API_URL+'/v1/devices', {
+      const res = await fetch(process.env.REACT_APP_API_URL + '/v1/devices', {
         method: 'POST',
         credentials: "include",
         headers: {
@@ -86,8 +88,9 @@ const Activation = () => {
       if (!res.ok) throw new Error(result.message || 'Gagal menambahkan perangkat');
       setNotification(result.message);
       setTimeout(() => setNotification(null), 3000);
+
       // refresh
-      const updated = await fetch(process.env.REACT_APP_API_URL+'/v1/devices', {
+      const updated = await fetch(process.env.REACT_APP_API_URL + '/v1/devices', {
         credentials: "include",
       });
       const updatedJson = await updated.json();
@@ -118,7 +121,9 @@ const Activation = () => {
             value={searchTerm}
             onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
           />
-          <button className="add-btn" onClick={handleAdd}>+ Tambah</button>
+          {!isUser && ( // ✅ hanya admin/operator bisa tambah device
+            <button className="add-btn" onClick={handleAdd}>+ Tambah</button>
+          )}
         </div>
         {notification && <div className="notif">{notification}</div>}
 
@@ -149,7 +154,7 @@ const Activation = () => {
                         {statusOptions.map(opt => <option key={opt}>{opt}</option>)}
                       </select>
                     ) : (
-                      <span className={`badge ${item.status}`} onClick={() => handleEdit(item.id)}>
+                      <span className={`badge ${item.status}`} onClick={() => !isUser && handleEdit(item.id)}>
                         {item.status}
                       </span>
                     )}

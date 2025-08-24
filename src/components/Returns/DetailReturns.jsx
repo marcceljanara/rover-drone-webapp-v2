@@ -8,7 +8,6 @@ const API = process.env.REACT_APP_API_URL+"/v1/returns";
 export default function DetailReturns() {
   const { rentalId } = useParams();
   const navigate = useNavigate();
-  const token = localStorage.getItem("accessToken");
 
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
@@ -52,7 +51,7 @@ export default function DetailReturns() {
     }
   }, [rentalId]);
 
-  useEffect(() => { fetchDetail(); }, [fetchDetail, rentalId, token]);
+  useEffect(() => { fetchDetail(); }, [fetchDetail, rentalId, ]);
 
   /* ---------- helpers ---------- */
   const fmt = (t) => (t ? formatTanggalDanWaktuIndonesia(t) : "-");

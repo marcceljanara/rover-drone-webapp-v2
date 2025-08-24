@@ -16,8 +16,6 @@ const AdminDetail = () => {
   const [showConfPassword, setShowConfPassword] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  const accessToken = localStorage.getItem('accessToken');
-
   useEffect(() => {
     const fetchUserDetail = async () => {
       try {
@@ -33,7 +31,7 @@ const AdminDetail = () => {
     };
 
     fetchUserDetail();
-  }, [id, accessToken]);
+  }, [id]);
 
   const handlePasswordUpdate = async () => {
     if (newPassword !== confNewPassword) {

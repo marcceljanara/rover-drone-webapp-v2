@@ -29,11 +29,13 @@ import AjukanPerpanjangan from './components/Penyewaan/AjukanPerpanjangan';
 import DetailReturns from './components/Returns/DetailReturns';
 import DetailReturnsUser from './components/Penyewaan/DetailPengembalian';
 import ChatBot from './components/ChatBot/ChatBot';
+import { AuthProvider } from './context/AuthContext';
 
 function App() {
   return (
     <div className="App">
       <Router>
+        <AuthProvider>
         <Routes>
           <Route path="/" element={<Home />} />
           
@@ -231,6 +233,7 @@ function App() {
             </div>
           } />
         </Routes>
+        </AuthProvider>
       </Router>
     </div>
   );

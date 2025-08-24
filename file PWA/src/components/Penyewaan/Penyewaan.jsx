@@ -37,7 +37,6 @@ const Penyewaan = () => {
   const [loading, setLoading] = useState(false);
   const [availableDevices, setAvailableDevices] = useState(null);
   const navigate = useNavigate();
-  const token = localStorage.getItem('accessToken');
 
   useEffect(() => {
     if (showNotification) {
@@ -70,12 +69,6 @@ const Penyewaan = () => {
   const handleSewa = async () => {
     if (!duration) {
       setNotification('Silakan pilih durasi sewa terlebih dahulu.');
-      setShowNotification(true);
-      return;
-    }
-
-    if (!token) {
-      setNotification('Token tidak tersedia. Silakan login terlebih dahulu.');
       setShowNotification(true);
       return;
     }

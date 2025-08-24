@@ -5,7 +5,6 @@ import './Extensions.css';
 function DetailPerpanjangan() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const token = localStorage.getItem('accessToken');
 
   const [extensions, setExtensions] = useState([]);
   const [error, setError] = useState('');
@@ -13,12 +12,6 @@ function DetailPerpanjangan() {
 
   useEffect(() => {
     const fetchExtensions = async () => {
-      if (!token) {
-        setError('Token tidak ditemukan. Silakan login.');
-        setLoading(false);
-        return;
-      }
-
       try {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/rentals/${id}/extensions`, {
           credentials: "include",
@@ -40,7 +33,7 @@ function DetailPerpanjangan() {
     };
 
     fetchExtensions();
-  }, [id, token]);
+  }, [id, ]);
 
   return (
     <main className="container">

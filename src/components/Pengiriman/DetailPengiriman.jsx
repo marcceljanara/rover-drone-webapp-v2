@@ -8,7 +8,6 @@ const BASE = process.env.REACT_APP_API_URL;
 export default function DetailPengiriman() {
   const { rentalId } = useParams();     // ← param di <Route path="/pengiriman/:rentalId" ... />
   const navigate    = useNavigate();
-  const token       = localStorage.getItem("accessToken");
 
   /* ──────────── state ──────────── */
   const [data,        setData]        = useState(null);
@@ -56,7 +55,7 @@ export default function DetailPengiriman() {
     }
   }, [rentalId]);
 
-  useEffect(() => { fetchDetail(); }, [fetchDetail, rentalId, token]);
+  useEffect(() => { fetchDetail(); }, [fetchDetail, rentalId,]);
 
   /* ──────────── aksi penyimpanan ──────────── */
   const handleInfoSave = async () => {

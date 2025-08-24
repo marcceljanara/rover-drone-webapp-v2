@@ -8,7 +8,6 @@ const API_HOST = process.env.REACT_APP_API_URL;
 export default function DetailShipment() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const token = localStorage.getItem("accessToken");
 
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
@@ -28,7 +27,7 @@ export default function DetailShipment() {
       }
     };
     fetchDetail();
-  }, [id, token]);
+  }, [id]);
 
   const getProofUrl = (url) =>
     !url ? "" : url.startsWith("http") ? url : `${API_HOST}${url}`;

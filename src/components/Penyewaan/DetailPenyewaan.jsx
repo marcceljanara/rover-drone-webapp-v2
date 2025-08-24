@@ -62,7 +62,6 @@ function formatValue(key, value) {
 function DetailPenyewaan() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const accessToken = localStorage.getItem('accessToken');
 
   const [rental, setRental] = useState(null);
   const [error, setError] = useState('');
@@ -105,7 +104,7 @@ function DetailPenyewaan() {
 
     fetchRental();
     return () => clearInterval(interval);
-  }, [id, accessToken]);
+  }, [id]);
 
   if (error)
     return (
