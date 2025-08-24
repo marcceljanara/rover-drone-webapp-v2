@@ -97,18 +97,27 @@
   margin-bottom: 0.5rem;
   padding: 0.75rem 1rem;
   border-radius: 8px;
+
   color: #333;
   font-size: 0.9rem;
-  line-height: 1.4;
+  line-height: 1.5; /* lebih enak dibaca */
+
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: background 0.3s ease;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+
+  text-align: justify;   /* teks rata kanan kiri */
+  white-space: pre-line; /* tetap hormati newline */
+
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .analysis-item:hover {
-  background: #e3efff;
+  background: #e2eeff;
+  transform: translateY(-2px);
 }
+
 
 .analyze-btn {
   padding: 10px 18px;
