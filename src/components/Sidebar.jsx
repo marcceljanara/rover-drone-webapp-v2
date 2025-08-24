@@ -74,8 +74,8 @@ const Sidebar = () => {
   // ✅ handle logout
   const handleLogout = async () => {
     try {
-      await fetch(process.env.REACT_APP_API_URL + "/v1/authentications/logout", {
-        method: "POST",
+      await fetch(process.env.REACT_APP_API_URL + "/v1/authentications", {
+        method: "DELETE",
         credentials: "include",
       });
       setUser(null); // reset context
