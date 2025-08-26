@@ -12,11 +12,10 @@ const ReportDetail = () => {
 
   useEffect(() => {
     const fetchReportDetail = async () => {
-      const accessToken = localStorage.getItem('accessToken');
       try {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/reports/${id}`, {
           method: 'GET',
-          headers: { Authorization: `Bearer ${accessToken}` },
+          credentials: "include",
         });
 
         const result = await response.json();
@@ -37,11 +36,10 @@ const ReportDetail = () => {
   }, [id]);
 
   const handleDownload = () => {
-    const accessToken = localStorage.getItem('accessToken');
     const downloadUrl = `${process.env.REACT_APP_API_URL}/v1/reports/${id}/download`;
 
     fetch(downloadUrl, {
-      headers: { Authorization: `Bearer ${accessToken}` },
+      credentials: "include",
     })
       .then((res) => res.blob())
       .then((blob) => {

@@ -16,13 +16,11 @@ const AdminDetail = () => {
   const [showConfPassword, setShowConfPassword] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  const accessToken = localStorage.getItem('accessToken');
-
   useEffect(() => {
     const fetchUserDetail = async () => {
       try {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/admin/${id}`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
+          credentials: "include",
         });
         const result = await response.json();
         if (!response.ok) throw new Error(result.message);
@@ -33,7 +31,7 @@ const AdminDetail = () => {
     };
 
     fetchUserDetail();
-  }, [id, accessToken]);
+  }, [id]);
 
   const handlePasswordUpdate = async () => {
     if (newPassword !== confNewPassword) {
@@ -45,8 +43,8 @@ const AdminDetail = () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/admin/${id}`, {
         method: 'PUT',
+        credentials: "include",
         headers: {
-          Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ newPassword, confNewPassword }),
@@ -70,9 +68,7 @@ const AdminDetail = () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/admin/${id}`, {
         method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+        credentials: "include",
       });
 
       const result = await response.json();

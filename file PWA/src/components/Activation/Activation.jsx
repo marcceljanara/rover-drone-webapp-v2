@@ -15,14 +15,11 @@ const Activation = () => {
   const navigate = useNavigate();
 
   const fetchDevices = async () => {
-    const accessToken = localStorage.getItem('accessToken');
 
     try {
       const response = await fetch(process.env.REACT_APP_API_URL+ '/v1/devices', {
         method: 'GET',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+        credentials: "include",
       });
 
       if (!response.ok) {
@@ -53,16 +50,12 @@ const Activation = () => {
   const handleEdit = (id) => setEditingId(id);
 
   const handleStatusChange = async (id, newStatus) => {
-    const accessToken = localStorage.getItem('accessToken');
   
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/devices/${id}/status`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
         body: JSON.stringify({ status: newStatus }),
+        credentials: "include",
       });
   
       if (!response.ok) {
@@ -83,14 +76,11 @@ const Activation = () => {
   };
 
   const handleDelete = async (id) => {
-    const accessToken = localStorage.getItem('accessToken');
   
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/devices/${id}`, {
         method: 'PUT',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+        credentials: "include",
       });
   
       if (!response.ok) {
@@ -110,13 +100,12 @@ const Activation = () => {
   };
 
   const handleAdd = async () => {
-    const accessToken = localStorage.getItem('accessToken');
 
     try {
       const response = await fetch(process.env.REACT_APP_API_URL+'/v1/devices', {
         method: 'POST',
+        credentials: "include",
         headers: {
-          Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
       });

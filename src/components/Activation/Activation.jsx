@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext'; // ✅ import context
 import './Activation.css';
 
 const statusOptions = ['active', 'inactive', 'maintenance', 'error'];
@@ -12,15 +13,15 @@ const Activation = () => {
   const [editingId, setEditingId] = useState(null);
   const [notification, setNotification] = useState(null);
   const navigate = useNavigate();
-  const role = localStorage.getItem('role');
-  const isUser = role === 'user';
+
+  const { user } = useAuth(); // ✅ ambil user dari context
+  const isUser = user?.role === 'user'; // ✅ cek role dari context
 
   useEffect(() => {
     const fetchDevices = async () => {
-      const token = localStorage.getItem('accessToken');
       try {
-        const res = await fetch(process.env.REACT_APP_API_URL+'/v1/devices', {
-          headers: { Authorization: `Bearer ${token}` },
+        const res = await fetch(process.env.REACT_APP_API_URL + '/v1/devices', {
+          credentials: "include",
         });
         const result = await res.json();
         const devices = result.data.devices.map(device => ({
@@ -42,13 +43,12 @@ const Activation = () => {
   const handleEdit = (id) => setEditingId(id);
 
   const handleStatusChange = async (id, newStatus) => {
-    const token = localStorage.getItem('accessToken');
     try {
-      await fetch(process.env.REACT_APP_API_URL+`/v1/devices/${id}/status`, {
+      await fetch(process.env.REACT_APP_API_URL + `/v1/devices/${id}/status`, {
         method: 'PUT',
+        credentials: "include",
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ status: newStatus }),
       });
@@ -62,11 +62,10 @@ const Activation = () => {
   };
 
   const handleDelete = async (id) => {
-    const token = localStorage.getItem('accessToken');
     try {
       await fetch(`${process.env.REACT_APP_API_URL}/v1/devices/${id}`, {
         method: 'PUT',
-        headers: { Authorization: `Bearer ${token}` },
+        credentials: "include",
       });
       setNotification(`Perangkat ${id} berhasil dihapus`);
       setTimeout(() => setNotification(null), 3000);
@@ -77,22 +76,22 @@ const Activation = () => {
   };
 
   const handleAdd = async () => {
-    const token = localStorage.getItem('accessToken');
     try {
-      const res = await fetch(process.env.REACT_APP_API_URL+'/v1/devices', {
+      const res = await fetch(process.env.REACT_APP_API_URL + '/v1/devices', {
         method: 'POST',
+        credentials: "include",
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
       });
       const result = await res.json();
       if (!res.ok) throw new Error(result.message || 'Gagal menambahkan perangkat');
       setNotification(result.message);
       setTimeout(() => setNotification(null), 3000);
+
       // refresh
-      const updated = await fetch(process.env.REACT_APP_API_URL+'/v1/devices', {
-        headers: { Authorization: `Bearer ${token}` },
+      const updated = await fetch(process.env.REACT_APP_API_URL + '/v1/devices', {
+        credentials: "include",
       });
       const updatedJson = await updated.json();
       setData(updatedJson.data.devices);
@@ -122,7 +121,9 @@ const Activation = () => {
             value={searchTerm}
             onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
           />
-          <button className="add-btn" onClick={handleAdd}>+ Tambah</button>
+          {!isUser && ( // ✅ hanya admin/operator bisa tambah device
+            <button className="add-btn" onClick={handleAdd}>+ Tambah</button>
+          )}
         </div>
         {notification && <div className="notif">{notification}</div>}
 
@@ -153,7 +154,7 @@ const Activation = () => {
                         {statusOptions.map(opt => <option key={opt}>{opt}</option>)}
                       </select>
                     ) : (
-                      <span className={`badge ${item.status}`} onClick={() => handleEdit(item.id)}>
+                      <span className={`badge ${item.status}`} onClick={() => !isUser && handleEdit(item.id)}>
                         {item.status}
                       </span>
                     )}

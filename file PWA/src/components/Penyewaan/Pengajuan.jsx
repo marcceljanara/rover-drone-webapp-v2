@@ -11,21 +11,15 @@ function KelolaPenyewaan() {
   const [showNotification, setShowNotification] = useState(false);
   const navigate = useNavigate();
   const role = localStorage.getItem('role');
-  const token = localStorage.getItem('accessToken');
 
   useEffect(() => {
     const fetchRentals = async () => {
-      if (!token) {
-        setError('Token tidak ditemukan. Silakan login terlebih dahulu.');
-        setLoading(false);
-        return;
-      }
 
       try {
         const response = await fetch(process.env.REACT_APP_API_URL+'/v1/rentals', {
           method: 'GET',
+          credentials: "include",
           headers: {
-            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
             'Accept': 'application/json',
           },
@@ -46,7 +40,7 @@ function KelolaPenyewaan() {
     };
 
     fetchRentals();
-  }, [token]);
+  },[]);
 
   useEffect(() => {
     if (showNotification) {
@@ -56,7 +50,7 @@ function KelolaPenyewaan() {
   }, [showNotification]);
 
   const handleAction = async (id) => {
-    if (!token) return;
+
 
     try {
       const url =
@@ -66,8 +60,8 @@ function KelolaPenyewaan() {
 
       const options = {
         method: 'PUT',
+        credentials: "include",
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: role === 'user' ? JSON.stringify({ rentalStatus: 'cancelled' }) : null,
@@ -99,13 +93,11 @@ function KelolaPenyewaan() {
   };
 
   const handleComplete = async (id) => {
-    if (!token) return;
-  
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/rentals/${id}/status`, {
         method: 'PUT',
+        credentials: "include",
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ rentalStatus: 'completed' }),

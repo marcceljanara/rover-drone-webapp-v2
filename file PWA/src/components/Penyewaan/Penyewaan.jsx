@@ -37,7 +37,6 @@ const Penyewaan = () => {
   const [loading, setLoading] = useState(false);
   const [availableDevices, setAvailableDevices] = useState(null);
   const navigate = useNavigate();
-  const token = localStorage.getItem('accessToken');
 
   useEffect(() => {
     if (showNotification) {
@@ -51,9 +50,7 @@ const Penyewaan = () => {
       try {
         const response = await fetch(process.env.REACT_APP_API_URL+'/v1/devices?scope=available', {
           method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          }});
+          credentials: "include",});
         const data = await response.json();
         setAvailableDevices(data.data.devices.length);
       } catch (error) {
@@ -76,19 +73,13 @@ const Penyewaan = () => {
       return;
     }
 
-    if (!token) {
-      setNotification('Token tidak tersedia. Silakan login terlebih dahulu.');
-      setShowNotification(true);
-      return;
-    }
-
     setLoading(true);
 
     try {
       const response = await fetch(process.env.REACT_APP_API_URL+'/v1/rentals', {
         method: 'POST',
+        credentials: "include",
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },

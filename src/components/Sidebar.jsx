@@ -19,6 +19,8 @@ import {
   UilCommentAlt,
 } from "@iconscout/react-unicons";
 
+import { useAuth } from "../context/AuthContext"; // ✅ ambil dari context
+
 // Menu data
 const menuData = [
   { heading: "Dashboard", icon: UilEstate, link: "/dashboard" },
@@ -36,9 +38,12 @@ const Sidebar = () => {
   const [expanded, setExpanded] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const role = localStorage.getItem("role") || "guest";
 
-  // Menyaring menu berdasarkan role
+  // ✅ ambil user dari AuthContext
+  const { user, isAuthenticated, setUser } = useAuth();
+  const role = user?.role || "guest";
+
+  // ✅ filter menu berdasarkan role
   const filteredMenu = menuData.filter((item) =>
     role === "user"
       ? !["/reports", "/admin", "/pengiriman", "/returns"].includes(item.link)
@@ -48,11 +53,10 @@ const Sidebar = () => {
   // Fungsi resize untuk mengatur expanded berdasarkan device
   useEffect(() => {
     const handleResize = () => {
-      // Gunakan hamburger jika layar ≤ 1024px (termasuk semua iPad)
       setExpanded(window.innerWidth > 1024);
     };
 
-    handleResize(); // Atur saat pertama kali
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -64,6 +68,20 @@ const Sidebar = () => {
     } else {
       navigate("/addresses");
       if (window.innerWidth <= 1024) setExpanded(false);
+    }
+  };
+
+  // ✅ handle logout
+  const handleLogout = async () => {
+    try {
+      await fetch(process.env.REACT_APP_API_URL + "/v1/authentications", {
+        method: "DELETE",
+        credentials: "include",
+      });
+      setUser(null); // reset context
+      window.location.href = "/"; // redirect ke home/login
+    } catch (err) {
+      console.error("Logout gagal:", err);
     }
   };
 
@@ -87,7 +105,7 @@ const Sidebar = () => {
           <img src={Logo} alt="logo" className="logo-img" />
           <div className="logo-text">
             <span className="brand-name">
-              Ro<span>o</span>ne
+              A<span>gro</span>S
             </span>
             <img
               src={IconLokasi}
@@ -98,7 +116,9 @@ const Sidebar = () => {
           </div>
         </div>
 
-        <div className="role-badge">Role: {role}</div>
+        <div className="role-badge">
+          {isAuthenticated ? `Role: ${role}` : "Not logged in"}
+        </div>
 
         {/* Menu */}
         <div className="menu">
@@ -114,12 +134,12 @@ const Sidebar = () => {
             </NavLink>
           ))}
 
-          <div className="menuItem signout-section">
-            <NavLink to="/" className="menuItemLink">
+          {isAuthenticated && (
+            <div className="menuItem signout-section" onClick={handleLogout}>
               <UilSignOutAlt />
               <span>Sign Out</span>
-            </NavLink>
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </>

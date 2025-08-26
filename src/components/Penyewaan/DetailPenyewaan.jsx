@@ -62,7 +62,6 @@ function formatValue(key, value) {
 function DetailPenyewaan() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const accessToken = localStorage.getItem('accessToken');
 
   const [rental, setRental] = useState(null);
   const [error, setError] = useState('');
@@ -74,7 +73,7 @@ function DetailPenyewaan() {
     const fetchRental = async () => {
       try {
         const resp = await fetch(`${process.env.REACT_APP_API_URL}/v1/rentals/${id}`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
+          credentials: "include",
         });
         const json = await resp.json();
         if (!resp.ok) throw new Error(json.message || 'Gagal mengambil detail penyewaan');
@@ -105,7 +104,7 @@ function DetailPenyewaan() {
 
     fetchRental();
     return () => clearInterval(interval);
-  }, [id, accessToken]);
+  }, [id]);
 
   if (error)
     return (

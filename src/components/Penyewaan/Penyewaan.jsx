@@ -39,14 +39,18 @@ const Penyewaan = () => {
   const [ongkir, setOngkir] = useState(0);
   const [setupFee, setSetupFee] = useState(1000000); // contoh tetap 1jt
 
-
   const navigate = useNavigate();
-  const token = localStorage.getItem('accessToken');
 
-  const sensorTotal = useMemo(() => availableSensors.reduce((total, sensor) => (
-    checkboxes[sensor.id] ? total + sensor.cost : total
-  ), 0), [checkboxes, availableSensors]);
+  const sensorTotal = useMemo(
+    () =>
+      availableSensors.reduce(
+        (total, sensor) => (checkboxes[sensor.id] ? total + sensor.cost : total),
+        0
+      ),
+    [checkboxes, availableSensors]
+  );
 
+  // auto-hide notif
   useEffect(() => {
     if (showNotification) {
       const timer = setTimeout(() => setShowNotification(false), 3000);
@@ -54,147 +58,157 @@ const Penyewaan = () => {
     }
   }, [showNotification]);
 
+  // fetch devices & sensors
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const deviceRes = await fetch(process.env.REACT_APP_API_URL+'/v1/devices?scope=available', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const deviceRes = await fetch(
+          process.env.REACT_APP_API_URL + '/v1/devices?scope=available',
+          { credentials: 'include' }
+        );
         const deviceData = await deviceRes.json();
-        setDeviceStatus({ loading: false, value: deviceData.data.devices.length, error: null });
+        setDeviceStatus({
+          loading: false,
+          value: deviceData.data.devices.length,
+          error: null,
+        });
       } catch {
-        setDeviceStatus({ loading: false, value: null, error: 'Gagal memuat perangkat' });
+        setDeviceStatus({
+          loading: false,
+          value: null,
+          error: 'Gagal memuat perangkat',
+        });
       }
 
       try {
-        const sensorRes = await fetch(process.env.REACT_APP_API_URL+'/v1/sensors/available', {
-          headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-        });
+        const sensorRes = await fetch(
+          process.env.REACT_APP_API_URL + '/v1/sensors/available',
+          {
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+          }
+        );
         const sensorData = await sensorRes.json();
         const sensors = sensorData?.data?.sensors || [];
         setAvailableSensors(sensors);
-        const initial = Object.fromEntries(sensors.map(sensor => [sensor.id, false]));
+        const initial = Object.fromEntries(sensors.map((sensor) => [sensor.id, false]));
         setCheckboxes(initial);
       } catch (err) {
         console.error('Gagal memuat sensor:', err);
       }
     };
     fetchData();
-  }, [token]);
+  }, []);
 
+  // fetch alamat user
   useEffect(() => {
-  const fetchAddresses = async () => {
+    const fetchAddresses = async () => {
+      try {
+        const res = await fetch(process.env.REACT_APP_API_URL + '/v1/users/addresses', {
+          credentials: 'include',
+        });
+        const data = await res.json();
+        if (res.ok) setUserAddresses(data?.data?.addresses || []);
+        else throw new Error(data.message || 'Gagal memuat alamat');
+      } catch (err) {
+        alert(err.message);
+      }
+    };
+    fetchAddresses();
+  }, []);
+
+  const handleCheckboxChange = (id) =>
+    setCheckboxes((prev) => ({ ...prev, [id]: !prev[id] }));
+
+  const handlePilih = (dur) => setDuration(dur);
+
+  const handleIconClick = () => setShowLokasiForm((prev) => !prev);
+
+  const handleSewa = async () => {
+    if (![6, 12, 24, 36].includes(duration)) {
+      setNotification('Durasi sewa tidak valid.');
+      setShowNotification(true);
+      return;
+    }
+
+    if (!selectedAddressId || !selectedSubdistrict) {
+      setNotification('Silakan pilih alamat pengiriman terlebih dahulu.');
+      setShowNotification(true);
+      return;
+    }
+
+    const selectedSensors = Object.entries(checkboxes)
+      .filter(([_, checked]) => checked)
+      .map(([id]) => id);
+
+    setLoading(true);
     try {
-      const res = await fetch(process.env.REACT_APP_API_URL+"/v1/users/addresses", {
-        headers: { Authorization: `Bearer ${token}` }
+      const response = await fetch(process.env.REACT_APP_API_URL + '/v1/rentals', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          interval: duration,
+          shippingAddressId: selectedAddressId,
+          subdistrictName: selectedSubdistrict,
+          sensors: selectedSensors,
+        }),
       });
-      const data = await res.json();
-      if (res.ok) setUserAddresses(data?.data?.addresses || []);
-      else throw new Error(data.message || "Gagal memuat alamat");
-    } catch (err) {
-      alert(err.message);
+
+      const data = await response.json();
+      setNotification(
+        data?.message || (response.ok ? 'Berhasil menyewa perangkat!' : 'Gagal menyewa.')
+      );
+      if (response.ok) setTimeout(() => navigate(-1), 2000);
+    } catch (error) {
+      setNotification(error.message || 'Terjadi kesalahan saat menyewa.');
+    } finally {
+      setLoading(false);
+      setShowNotification(true);
     }
   };
-  fetchAddresses();
-}, [token]);
-
-
-  const handleCheckboxChange = (id) => setCheckboxes(prev => ({ ...prev, [id]: !prev[id] }));
-  const handlePilih = (dur) => setDuration(dur);
-  const handleIconClick = () => setShowLokasiForm(prev => !prev);
-
-const handleSewa = async () => {
-  if (![6, 12, 24, 36].includes(duration)) {
-    setNotification('Durasi sewa tidak valid.');
-    setShowNotification(true);
-    return;
-  }
-
-  if (!token) {
-    setNotification('Token tidak tersedia. Silakan login terlebih dahulu.');
-    setShowNotification(true);
-    return;
-  }
-
-  if (!selectedAddressId || !selectedSubdistrict) {
-    setNotification('Silakan pilih alamat pengiriman terlebih dahulu.');
-    setShowNotification(true);
-    return;
-  }
-
-  const selectedSensors = Object.entries(checkboxes)
-    .filter(([_, checked]) => checked)
-    .map(([id]) => id);
-
-  setLoading(true);
-  try {
-    const response = await fetch(process.env.REACT_APP_API_URL+'/v1/rentals', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        interval: duration,
-        shippingAddressId: selectedAddressId,
-        subdistrictName: selectedSubdistrict,
-        sensors: selectedSensors,
-      }),
-    });
-
-    const data = await response.json();
-    setNotification(data?.message || (response.ok ? 'Berhasil menyewa perangkat!' : 'Gagal menyewa.'));
-    if (response.ok) setTimeout(() => navigate(-1), 2000);
-  } catch (error) {
-    setNotification(error.message || 'Terjadi kesalahan saat menyewa.');
-  } finally {
-    setLoading(false);
-    setShowNotification(true);
-  }
-};
-
 
   const handleAddressSelect = async (e) => {
-  const id = e.target.value;
-  setSelectedAddressId(id);
+    const id = e.target.value;
+    setSelectedAddressId(id);
 
-  const address = userAddresses.find(a => a.id === id);
-  if (!address || !address.kelurahan) return;
+    const address = userAddresses.find((a) => a.id === id);
+    if (!address || !address.kelurahan) return;
 
-  setSelectedSubdistrict(address.kelurahan);
+    setSelectedSubdistrict(address.kelurahan);
 
-  // 👉 URL‑encode kelurahan
-  const url =
-    process.env.REACT_APP_API_URL+"/v1/shipping-cost" +
-    "?subdistrictName=" +
-    encodeURIComponent(address.kelurahan);
+    // encode kelurahan utk query
+    const url =
+      process.env.REACT_APP_API_URL +
+      '/v1/shipping-cost?subdistrictName=' +
+      encodeURIComponent(address.kelurahan);
 
-  try {
-    const res = await fetch(url, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    try {
+      const res = await fetch(url, { method: 'GET', credentials: 'include' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Gagal mengambil ongkir');
 
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message || "Gagal mengambil ongkir");
-
-    const shippingCost = data.data.shippingInfo.shippingCost;
-    setOngkir(shippingCost);
-  } catch (err) {
-    alert(err.message);
-    setOngkir(0);
-  }
-};
-
+      const shippingCost = data.data.shippingInfo.shippingCost;
+      setOngkir(shippingCost);
+    } catch (err) {
+      alert(err.message);
+      setOngkir(0);
+    }
+  };
 
   return (
     <div className="penyewaan-container">
-      <button className="back-button" onClick={() => navigate(-1)}>⬅ Kembali</button>
+      <button className="back-button" onClick={() => navigate(-1)}>
+        ⬅ Kembali
+      </button>
 
       <h1>“SAATNYA LAHAN ANDA DIAWASI OLEH TEKNOLOGI MASA DEPAN!” 🚀</h1>
-      <h2>“BOSAN RUGI? CAPEK KERJA MANUAL? BANGKITKAN PRODUKTIVITAS DENGAN DRONE ROVER KAMI!”</h2>
+      <h2>
+        “BOSAN RUGI? CAPEK KERJA MANUAL? BANGKITKAN PRODUKTIVITAS DENGAN DRONE ROVER
+        KAMI!”
+      </h2>
       <p>Lupakan kerja manual dan hasil yang tak optimal. Kini hadir DRONE ROVER CANGGIH!</p>
 
       <div className="image-container">
@@ -235,9 +249,11 @@ const handleSewa = async () => {
       <div className="lokasi-checkbox-row">
         <div className="checkbox-container">
           {availableSensors.length === 0 ? (
-            <p><i>Memuat sensor...</i></p>
+            <p>
+              <i>Memuat sensor...</i>
+            </p>
           ) : (
-            availableSensors.map(sensor => (
+            availableSensors.map((sensor) => (
               <label key={sensor.id}>
                 <input
                   type="checkbox"
@@ -257,20 +273,23 @@ const handleSewa = async () => {
         />
       </div>
 
-
-
-
       <div className="form-container">
         <div className="table-responsive">
           <table className="rental-table">
             <thead>
               <tr>
-                <th>Durasi</th><th>Harga Total</th><th>Harga/Hari</th><th>Diskon (%)</th><th>Diskon (Rp)</th><th>Aksi</th>
+                <th>Durasi</th>
+                <th>Harga Total</th>
+                <th>Harga/Hari</th>
+                <th>Diskon (%)</th>
+                <th>Diskon (Rp)</th>
+                <th>Aksi</th>
               </tr>
             </thead>
             <tbody>
               {[6, 12, 24, 36].map((dur) => {
-                const { finalCost, rentalDays, discount, discountPercentage } = calculateRentalCost(dur, sensorTotal);
+                const { finalCost, rentalDays, discount, discountPercentage } =
+                  calculateRentalCost(dur, sensorTotal);
                 const daily = (finalCost / rentalDays).toFixed(2);
                 return (
                   <tr key={dur}>
@@ -280,7 +299,12 @@ const handleSewa = async () => {
                     <td>{discountPercentage}%</td>
                     <td>Rp{discount.toLocaleString('id-ID')}</td>
                     <td>
-                      <button className={`sewa-button ${duration === dur ? 'selected' : ''}`} onClick={() => handlePilih(dur)}>Pilih</button>
+                      <button
+                        className={`sewa-button ${duration === dur ? 'selected' : ''}`}
+                        onClick={() => handlePilih(dur)}
+                      >
+                        Pilih
+                      </button>
                     </td>
                   </tr>
                 );
@@ -288,10 +312,15 @@ const handleSewa = async () => {
               {duration && (
                 <>
                   <tr className="total-row">
-                    <td colSpan="5"><strong>Subtotal</strong></td>
+                    <td colSpan="5">
+                      <strong>Subtotal</strong>
+                    </td>
                     <td>
                       <strong>
-                        Rp{calculateRentalCost(duration, sensorTotal).finalCost.toLocaleString('id-ID')}
+                        Rp
+                        {calculateRentalCost(duration, sensorTotal).finalCost.toLocaleString(
+                          'id-ID'
+                        )}
                       </strong>
                     </td>
                   </tr>
@@ -304,23 +333,30 @@ const handleSewa = async () => {
                     <td>Rp{setupFee.toLocaleString('id-ID')}</td>
                   </tr>
                   <tr className="total-row">
-                    <td colSpan="5"><strong>Total Keseluruhan</strong></td>
+                    <td colSpan="5">
+                      <strong>Total Keseluruhan</strong>
+                    </td>
                     <td>
                       <strong>
-                        Rp{(
+                        Rp
+                        {(
                           calculateRentalCost(duration, sensorTotal).finalCost +
-                          ongkir + setupFee
+                          ongkir +
+                          setupFee
                         ).toLocaleString('id-ID')}
                       </strong>
                     </td>
                   </tr>
                 </>
               )}
-
             </tbody>
           </table>
         </div>
-        <button className={`sewa-button ${!duration || loading ? 'disabled' : ''}`} disabled={!duration || loading} onClick={handleSewa}>
+        <button
+          className={`sewa-button ${!duration || loading ? 'disabled' : ''}`}
+          disabled={!duration || loading}
+          onClick={handleSewa}
+        >
           {loading ? <span className="spinner" /> : 'Sewa'}
         </button>
       </div>

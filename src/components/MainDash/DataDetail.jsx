@@ -19,7 +19,6 @@ const formatMessage = (text) => {
 
 const DataDetail = () => {
   const { id } = useParams();
-  const accessToken = localStorage.getItem("accessToken");
 
   const [interval, setIntervalValue] = useState("1h"); // untuk chart & download
   const [analysisInterval, setAnalysisInterval] = useState("24h"); // khusus analisis
@@ -32,7 +31,7 @@ const DataDetail = () => {
 
   const fetchSensorChart = () => {
     fetch(`${process.env.REACT_APP_API_URL}/v1/devices/${id}/sensors/intervals?interval=${interval}`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
+      credentials: "include",
     })
       .then(res => res.json())
       .then(result => {
@@ -45,7 +44,7 @@ const DataDetail = () => {
 
   const fetchSensorLimits = () => {
     fetch(`${process.env.REACT_APP_API_URL}/v1/devices/${id}/sensors/limits?limit=5`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
+      credentials: "include",
     })
       .then(res => res.json())
       .then(result => {
@@ -58,7 +57,7 @@ const DataDetail = () => {
     setLoadingAnalysis(true);
     fetch(`${process.env.REACT_APP_API_URL}/v1/chats/${id}/analyze?interval=${analysisInterval}`, {
       method: "GET",
-      headers: { Authorization: `Bearer ${accessToken}` },
+      credentials: "include",
     })
       .then(res => res.json())
       .then(result => {
@@ -77,7 +76,7 @@ const DataDetail = () => {
 
   const handleDownloadCSV = () => {
     fetch(`${process.env.REACT_APP_API_URL}/v1/devices/${id}/sensors/downloads?interval=${interval}`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
+      credentials: "include",
     })
       .then(res => {
         if (!res.ok) throw new Error("Gagal mengunduh file");

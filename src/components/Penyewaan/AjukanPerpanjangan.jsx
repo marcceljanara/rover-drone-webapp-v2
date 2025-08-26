@@ -19,7 +19,6 @@ function hitungBiaya(interval) {
 export default function AjukanPerpanjangan() {
   const { id }      = useParams();       // rentalId
   const navigate    = useNavigate();
-  const token       = localStorage.getItem('accessToken');
 
   const [interval, setInterval]       = useState(null);
   const [loading,  setLoading]        = useState(false);
@@ -36,18 +35,13 @@ export default function AjukanPerpanjangan() {
 
   const handleAjukan = async () => {
     if (!interval) return;
-    if (!token) {
-      setNotif('Silakan login terlebih dahulu.');
-      setShowNotif(true);
-      return;
-    }
 
     setLoading(true);
     try {
       const res = await fetch(process.env.REACT_APP_API_URL+'/v1/extensions', {
         method : 'POST',
+        credentials: "include",
         headers: {
-          Authorization : `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ rentalId: id, interval }),

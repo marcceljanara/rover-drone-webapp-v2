@@ -20,11 +20,10 @@ const Reports = () => {
   const navigate = useNavigate();
 
   const fetchReports = async () => {
-    const accessToken = localStorage.getItem('accessToken');
     try {
       const response = await fetch(process.env.REACT_APP_API_URL+'/v1/reports', {
         method: 'GET',
-        headers: { Authorization: `Bearer ${accessToken}` },
+        credentials: "include",
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || 'Gagal memuat data laporan');
@@ -48,12 +47,11 @@ const Reports = () => {
   }, []);
 
   const handleAdd = async () => {
-    const accessToken = localStorage.getItem('accessToken');
     try {
       const response = await fetch(process.env.REACT_APP_API_URL+'/v1/reports', {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          credentials: "include",
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ startDate, endDate }),
@@ -78,13 +76,10 @@ const Reports = () => {
   };
 
   const handleDelete = async () => {
-    const accessToken = localStorage.getItem('accessToken');
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/reports/${deleteId}`, {
         method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+        credentials: "include",
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || 'Gagal menghapus laporan');

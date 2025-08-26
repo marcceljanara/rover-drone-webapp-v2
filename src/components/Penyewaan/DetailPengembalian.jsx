@@ -9,7 +9,6 @@ const API_ADDRESSES = process.env.REACT_APP_API_URL+"/v1/users/addresses";
 export default function DetailReturnsUser() {
   const { id } = useParams();
   const navigate     = useNavigate();
-  const token        = localStorage.getItem("accessToken");
 
   const [data,       setData]          = useState(null);
   const [error,      setError]         = useState("");
@@ -26,7 +25,7 @@ export default function DetailReturnsUser() {
     try {
       setError("");
       const res  = await fetch(`${API_RETURNS}/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        credentials: "include",
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.message || "Gagal memuat detail");
@@ -35,14 +34,14 @@ export default function DetailReturnsUser() {
       setError(e.message);
       setData(null);
     }
-  }, [id, token]);
+  }, [id]);
 
   /* ---------- fetch addresses when addrMode opened ---------- */
   const fetchAddresses = useCallback(async () => {
     try {
       setAddrError(""); setAddrLoad(true);
       const res  = await fetch(API_ADDRESSES, {
-        headers: { Authorization: `Bearer ${token}` },
+        credentials: "include",
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.message || "Gagal memuat daftar alamat");
@@ -52,7 +51,7 @@ export default function DetailReturnsUser() {
     } finally {
       setAddrLoad(false);
     }
-  }, [token]);
+  }, []);
 
   useEffect(() => { fetchDetail(); }, [fetchDetail]);
 
@@ -68,8 +67,8 @@ export default function DetailReturnsUser() {
       if (!selectedId) return alert("Pilih alamat terlebih dahulu");
       const res  = await fetch(`${API_RETURNS}/${id}/address`, {
         method : "PATCH",
+        credentials: "include",
         headers: {
-          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ newAddressId: selectedId }),

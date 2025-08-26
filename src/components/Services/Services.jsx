@@ -23,8 +23,7 @@ const Services = () => {
           target="_self"
           style={{ textDecoration: "none", color: "black" }}
         >
-          Pemantauan otomatis dengan Drone Rover untuk kesehatan tanaman,
-          kebutuhan pemupukan, dan pengendalian hama.
+          Monitor your rover drone and field data seamlessly in real-time from anywhere.
         </a>
       ),
       link: "/monitoring.html",
@@ -32,15 +31,14 @@ const Services = () => {
     },
     {
       emoji: Glasses,
-      heading: <span style={{ color: "orange" }}>Data Management</span>,
+      heading: <span style={{ color: "orange" }}>AI Agents</span>,
       detail: (
         <a
           href="/data.html"
           target="_self"
           style={{ textDecoration: "none", color: "black" }}
         >
-          Pengelolaan data perkebunan dengan sistem digital untuk transparansi
-          dan akuntabilitas yang lebih baik.
+          AI Agents generate smart farming recommendations from real-time field data.
         </a>
       ),
       link: "/data.html",
@@ -55,8 +53,7 @@ const Services = () => {
           target="_self"
           style={{ textDecoration: "none", color: "black" }}
         >
-          Automatisasi proses pemeliharaan tanaman, seperti pemupukan dan
-          penyemprotan, berdasarkan data real-time.
+          Autonomous rover-drone swarm performs field monitoring and response without manual input.
         </a>
       ),
       link: "/automation.html",
@@ -71,13 +68,11 @@ const Services = () => {
         <span>Our Innovative</span>
         <span>Services</span>
         <span style={{ color: "black" }}>
-          Kami menyediakan solusi teknologi terdepan untuk memantau dan
-          <br />
-          mengelola perkebunan kelapa sawit secara efisien dan transparan.
-          <br />
-          Melalui teknologi drone rover, kami membawa revolusi
-          <br />
-          dalam pengelolaan perkebunan.
+          Assessing plant health in precision agriculture involves multi-layered monitoring <br />
+          using aerial and ground-based data. Drone-based NDVI imaging provides rapid, large-scale <br />
+          detection of vegetation anomalies, while autonomous ground rovers conduct localized <br /> 
+          analysis such as soil moisture measurement and close-up visual inspections—enabling <br />
+          accurate, real-time diagnostics for targeted interventions.
         </span>
         <div className="blur s-blur1" style={{ background: "#ABF1FF94" }}></div>
       </div>

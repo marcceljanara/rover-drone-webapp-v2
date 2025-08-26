@@ -14,11 +14,8 @@ const MainDash = () => {
   useEffect(() => {
     const fetchDevices = async () => {
       try {
-        const token = localStorage.getItem("accessToken");
         const response = await fetch(process.env.REACT_APP_API_URL+"/v1/devices", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          credentials: "include",
         });
         const result = await response.json();
         setDevices(result.data.devices || []);
