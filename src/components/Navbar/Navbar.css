@@ -15,6 +15,8 @@
   --text: #333;
   --orange: #ff5722;
   --bg-overlay: rgba(0, 100, 0, 0.8);
+  --disabled-bg: #e0e0e0;
+  --disabled-text: #999;
 }
 
 /* ========== NAVBAR WRAPPER ========== */
@@ -175,7 +177,8 @@
 /* ========== FORMS ========== */
 .login-form,
 .signup-form,
-.verify-form {
+.verify-form,
+.forgot-password-form {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -191,7 +194,8 @@
 
 .login-form h2,
 .signup-form h2,
-.verify-form h2 {
+.verify-form h2,
+.forgot-password-form h2 {
   text-align: center;
   color: #333;
   margin-bottom: 20px;
@@ -236,7 +240,7 @@ label[for="remember-me"] {
   color: #666;
 }
 
-/* ========== BUTTON: LOGIN ========== */
+/* ========== BUTTON: LOGIN & FORM BUTTONS ========== */
 .login-btn {
   width: 100%;
   padding: 10px;
@@ -247,15 +251,87 @@ label[for="remember-me"] {
   border-radius: 4px;
   cursor: pointer;
   margin-top: 10px;
+  transition: background-color 0.2s ease-in-out;
 }
 
-.login-btn:hover {
+.login-btn:hover:not(:disabled) {
   background-color: #0056b3;
 }
 
+.login-btn:disabled {
+  background-color: var(--disabled-bg);
+  color: var(--disabled-text);
+  cursor: not-allowed;
+}
+
+/* ========== FORGOT PASSWORD SPECIFIC STYLES ========== */
+.forgot-password-form p {
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.forgot-password-form .login-btn:disabled {
+  background-color: var(--disabled-bg);
+  color: var(--disabled-text);
+  cursor: not-allowed;
+  position: relative;
+}
+
+.forgot-password-form .login-btn:disabled:hover {
+  background-color: var(--disabled-bg);
+}
+
+/* ========== FORGOT PASSWORD LINK STYLES ========== */
+.forgot-password-link {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.forgot-password-link a {
+  color: var(--primary);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.forgot-password-link a:hover {
+  text-decoration: underline;
+  color: #0056b3;
+}
+
+/* ========== BACK TO LOGIN LINK ========== */
+.back-to-login {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.back-to-login a {
+  color: var(--primary);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.back-to-login a:hover {
+  text-decoration: underline;
+  color: #0056b3;
+}
+
+/* ========== COOLDOWN TIMER STYLES ========== */
+.cooldown-timer {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--warning);
+}
+
+/* ========== FORM PARAGRAPHS ========== */
 .login-form p,
 .signup-form p,
-.verify-form p {
+.verify-form p,
+.forgot-password-form p {
   text-align: center;
   font-size: 12px;
   color: #777;
@@ -264,14 +340,16 @@ label[for="remember-me"] {
 
 .login-form p a,
 .signup-form p a,
-.verify-form p a {
+.verify-form p a,
+.forgot-password-form p a {
   color: var(--primary);
   text-decoration: none;
 }
 
 .login-form p a:hover,
 .signup-form p a:hover,
-.verify-form p a:hover {
+.verify-form p a:hover,
+.forgot-password-form p a:hover {
   text-decoration: underline;
 }
 
@@ -310,11 +388,16 @@ label[for="remember-me"] {
   padding: 8px 12px;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
 }
 
-.resend-btn[disabled] {
-  background-color: #e0e0e0;
-  color: #999;
+.resend-btn:hover:not(:disabled) {
+  background-color: #e0a800;
+}
+
+.resend-btn:disabled {
+  background-color: var(--disabled-bg);
+  color: var(--disabled-text);
   cursor: not-allowed;
 }
 
@@ -331,10 +414,22 @@ label[for="remember-me"] {
   font-weight: 500;
   z-index: 9999;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  animation: slideIn 0.3s ease-out;
 }
 
 .notification.error {
   background-color: var(--danger);
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 .google-login {
@@ -372,7 +467,7 @@ label[for="remember-me"] {
   display: flex;
   align-items: center;
   text-align: center;
-  color: #666; /* warna teks */
+  color: #666;
   margin: 1rem 0;
   font-size: 14px;
 }
@@ -381,7 +476,7 @@ label[for="remember-me"] {
 .divider::after {
   content: "";
   flex: 1;
-  border-bottom: 1px solid #ccc; /* warna garis */
+  border-bottom: 1px solid #ccc;
 }
 
 .divider:not(:empty)::before {
@@ -391,8 +486,6 @@ label[for="remember-me"] {
 .divider:not(:empty)::after {
   margin-left: .75em;
 }
-
-
 
 /* ========== RESPONSIVE - TABLET & MOBILE ========== */
 @media screen and (max-width: 768px) {
@@ -475,6 +568,21 @@ label[for="remember-me"] {
     text-align: center;
     border-radius: 25px;
   }
+
+  /* Form adjustments for mobile */
+  .login-form,
+  .signup-form,
+  .verify-form,
+  .forgot-password-form {
+    max-width: 90vw;
+    padding: 20px 25px;
+  }
+
+  .notification {
+    right: 10px;
+    top: 10px;
+    max-width: calc(100vw - 20px);
+  }
 }
 
 /* ========== RESPONSIVE - MOBILE SMALL (<= 480px) ========== */
@@ -503,5 +611,26 @@ label[for="remember-me"] {
   .contact-button {
     margin-top: 20px;
     transform: translateY(-6px);
+  }
+
+  .login-form,
+  .signup-form,
+  .verify-form,
+  .forgot-password-form {
+    max-width: 95vw;
+    padding: 15px 20px;
+  }
+
+  .login-form h2,
+  .signup-form h2,
+  .verify-form h2,
+  .forgot-password-form h2 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+  }
+
+  .notification {
+    font-size: 13px;
+    padding: 10px 15px;
   }
 }

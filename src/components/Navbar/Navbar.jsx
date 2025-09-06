@@ -8,11 +8,13 @@ const Navbar = () => {
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [showSignUpForm, setShowSignUpForm] = useState(false);
   const [showVerify, setShowVerify] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState("");
   const [notificationType, setNotificationType] = useState("success");
   const [registeredEmail, setRegisteredEmail] = useState("");
   const [resendCooldown, setResendCooldown] = useState(0);
+  const [forgotPasswordCooldown, setForgotPasswordCooldown] = useState(0);
 
   // simpan status user login
   const [user, setUser] = useState(null);
@@ -39,6 +41,7 @@ const Navbar = () => {
     } else {
       setShowSignUpForm(false);
       setShowVerify(false);
+      setShowForgotPassword(false);
       setShowLoginForm(true);
       setLoginClicked(true);
     }
@@ -65,6 +68,7 @@ const Navbar = () => {
   const handleSignUpClick = () => {
     setShowLoginForm(false);
     setShowVerify(false);
+    setShowForgotPassword(false);
     setShowSignUpForm(true);
   };
 
@@ -72,10 +76,22 @@ const Navbar = () => {
     setShowSignUpForm(false);
   };
 
+  const handleForgotPasswordClick = () => {
+    setShowLoginForm(false);
+    setShowSignUpForm(false);
+    setShowVerify(false);
+    setShowForgotPassword(true);
+  };
+
+  const closeForgotPasswordForm = () => {
+    setShowForgotPassword(false);
+  };
+
   const closeAllForms = () => {
     setShowLoginForm(false);
     setShowSignUpForm(false);
     setShowVerify(false);
+    setShowForgotPassword(false);
     setLoginClicked(false);
   };
 
@@ -111,12 +127,13 @@ const Navbar = () => {
 
       const data = await response.json();
       setUser(data.data); // backend balikin {id, email, role}
-
+      
       showSuccessNotification(
         `✅ Login berhasil! Selamat datang kembali ${data.data.role}`
       );
       setShowLoginForm(false);
       setLoginClicked(false);
+      window.location.href = "/dashboard";
     } catch (error) {
       console.error("Login Error:", error);
       showSuccessNotification(`❌ ${error.message}`, "error");
@@ -187,6 +204,48 @@ const Navbar = () => {
     }
   };
 
+  const handleForgotPasswordSubmit = async (e) => {
+    e.preventDefault();
+    if (forgotPasswordCooldown > 0) return;
+
+    const email = e.target.email.value;
+
+    try {
+      const response = await fetch(
+        process.env.REACT_APP_API_URL + "/v1/users/forgot-password",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Gagal mengirim email reset password.");
+      }
+
+      showSuccessNotification("✅ " + data.message);
+      
+      // Start 2-minute cooldown
+      setForgotPasswordCooldown(120);
+      const interval = setInterval(() => {
+        setForgotPasswordCooldown((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+    } catch (error) {
+      console.error("Forgot Password Error:", error);
+      showSuccessNotification(error.message || "❌ Gagal mengirim email reset password.", "error");
+    }
+  };
+
   const handleResendOTP = async (e) => {
     e.preventDefault();
     if (resendCooldown > 0) return;
@@ -223,6 +282,12 @@ const Navbar = () => {
       console.error("Resend OTP error:", error);
       showSuccessNotification(error.message, "error");
     }
+  };
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
   return (
@@ -267,7 +332,7 @@ const Navbar = () => {
         </a>
       </div>
 
-      {(showLoginForm || showSignUpForm || showVerify) && (
+      {(showLoginForm || showSignUpForm || showVerify || showForgotPassword) && (
         <div className="login-overlay active" onClick={closeAllForms}></div>
       )}
 
@@ -277,50 +342,55 @@ const Navbar = () => {
         </div>
       )}
 
-{showLoginForm && (
-  <div className="login-form">
-    <button className="close-btn" onClick={closeLoginForm}>
-      &times;
-    </button>
-    <h2>Sign In</h2>
-    <form onSubmit={handleLoginSubmit}>
-      <div className="form-group">
-        <label>Email</label>
-        <input type="email" name="email" required />
-      </div>
-      <div className="form-group">
-        <label>Password</label>
-        <input type="password" name="password" required />
-      </div>
-      <div className="form-group">
-        <input type="checkbox" id="remember-me" name="remember-me" />
-        <label htmlFor="remember-me">Remember me</label>
-      </div>
-      <button type="submit" className="login-btn">
-        Sign In
-      </button>
-    </form>
+      {showLoginForm && (
+        <div className="login-form">
+          <button className="close-btn" onClick={closeLoginForm}>
+            &times;
+          </button>
+          <h2>Sign In</h2>
+          <form onSubmit={handleLoginSubmit}>
+            <div className="form-group">
+              <label>Email</label>
+              <input type="email" name="email" required />
+            </div>
+            <div className="form-group">
+              <label>Password</label>
+              <input type="password" name="password" required />
+            </div>
+            <div className="form-group">
+              <input type="checkbox" id="remember-me" name="remember-me" />
+              <label htmlFor="remember-me">Remember me</label>
+            </div>
+            <button type="submit" className="login-btn">
+              Sign In
+            </button>
+          </form>
 
-    {/* Tombol Google Login */}
-    <div className="divider">Atau</div>
-    <button
-      className="google-btn"
-      onClick={() => {
-        window.location.href =
-          process.env.REACT_APP_API_URL + "/v1/authentications/google";
-      }}
-    >
-      <UilGoogle /> Login dengan Google
-    </button>
+          {/* Tombol Google Login */}
+          <div className="divider">Atau</div>
+          <button
+            className="google-btn"
+            onClick={() => {
+              window.location.href =
+                process.env.REACT_APP_API_URL + "/v1/authentications/google";
+            }}
+          >
+            <UilGoogle /> Login dengan Google
+          </button>
 
-    <p>
-      Don't have an account?{" "}
-      <a href="#" onClick={handleSignUpClick}>
-        Sign up
-      </a>
-    </p>
-  </div>
-)}
+          <p>
+            Don't have an account?{" "}
+            <a href="#" onClick={handleSignUpClick}>
+              Sign up
+            </a>
+          </p>
+          <p>
+            <a href="#" onClick={handleForgotPasswordClick}>
+              Forgot Password?
+            </a>
+          </p>
+        </div>
+      )}
 
       {showSignUpForm && (
         <div className="login-form">
@@ -375,6 +445,38 @@ const Navbar = () => {
           <button onClick={handleResendOTP} disabled={resendCooldown > 0}>
             Kirim Ulang OTP {resendCooldown > 0 ? `(${resendCooldown}s)` : ""}
           </button>
+        </div>
+      )}
+
+      {showForgotPassword && (
+        <div className="login-form">
+          <button className="close-btn" onClick={closeForgotPasswordForm}>
+            &times;
+          </button>
+          <h2>Forgot Password</h2>
+          <p>Masukkan email Anda untuk menerima link reset password.</p>
+          <form onSubmit={handleForgotPasswordSubmit}>
+            <div className="form-group">
+              <label>Email</label>
+              <input type="email" name="email" placeholder="Masukkan email Anda" required />
+            </div>
+            <button 
+              type="submit" 
+              className="login-btn"
+              disabled={forgotPasswordCooldown > 0}
+            >
+              {forgotPasswordCooldown > 0 ? `Kirim Ulang (${formatTime(forgotPasswordCooldown)})` : "Kirim Link Reset"}
+            </button>
+          </form>
+          <p>
+            Ingat password Anda?{" "}
+            <a href="#" onClick={() => {
+              setShowForgotPassword(false);
+              setShowLoginForm(true);
+            }}>
+              Kembali ke Login
+            </a>
+          </p>
         </div>
       )}
     </div>

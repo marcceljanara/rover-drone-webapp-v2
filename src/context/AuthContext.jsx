@@ -1,33 +1,42 @@
 // src/context/AuthContext.js
 import { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
   useEffect(() => {
+    let mounted = true;
+
     const fetchUser = async () => {
       try {
         const res = await axios.get(
-          process.env.REACT_APP_API_URL + "/v1/authentications/me",
+          `${process.env.REACT_APP_API_URL}/v1/authentications/me`,
           { withCredentials: true }
         );
-        setUser(res.data.data.user); // {id, role, fullname, email}
+
+        if (!mounted) return;
+        console.log(res);
+        setUser(res.data.data.user);
       } catch (err) {
+        if (!mounted) return;
         setUser(null);
-        // redirect ke halaman awal kalau token invalid / expired
-        navigate("/", { replace: true });
       } finally {
-        setLoading(false);
+        if (mounted) setLoading(false);
       }
     };
+
     fetchUser();
-  }, [navigate]);
+
+    return () => {
+      mounted = false;
+    };
+
+    
+  }, []);
 
   const isAuthenticated = !!user;
 
