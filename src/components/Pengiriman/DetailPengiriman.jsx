@@ -3,8 +3,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import "./DetailPengiriman.css";
 import { formatTanggalDanWaktuIndonesia } from "../../utils/datetimeIndonesia";
 
-const BASE = process.env.REACT_APP_API_URL;
-
 export default function DetailPengiriman() {
   const { rentalId } = useParams();     // ← param di <Route path="/pengiriman/:rentalId" ... />
   const navigate    = useNavigate();
@@ -27,6 +25,8 @@ export default function DetailPengiriman() {
   // Upload Bukti Pengiriman
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [proofUrl, setProofUrl] = useState("");
+
 
 
   /* ──────────── ambil detail pertama kali ──────────── */
@@ -136,6 +136,30 @@ export default function DetailPengiriman() {
     } catch (e) { alert(e.message); }
   };
 
+  // fungsi fetch image url
+const fetchProofUrl = useCallback(async () => {
+  if (!shipmentId) return;
+  try {
+    const res = await fetch(
+      `${process.env.REACT_APP_API_URL}/v1/shipments/${shipmentId}/delivery-proof`,
+      { credentials: "include" }
+    );
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.message || "Gagal memuat bukti");
+    setProofUrl(json.data.url);  // ← simpan URL hasil API
+  } catch (e) {
+    console.error("fetchProofUrl:", e.message);
+    setProofUrl("");
+  }
+}, [shipmentId]);
+
+// panggil setiap kali shipmentId berubah atau setelah upload berhasil
+useEffect(() => {
+  if (shipmentId) {
+    fetchProofUrl();
+  }
+}, [shipmentId, fetchProofUrl]);
+
   // Upload bukti pengiriman
   const handleUploadProof = async () => {
   if (!selectedFile) {
@@ -161,6 +185,7 @@ export default function DetailPengiriman() {
     alert(json.message || "Upload berhasil");
     setSelectedFile(null);
     fetchDetail();
+    await fetchProofUrl();
   } catch (e) {
     alert(e.message);
   } finally {
@@ -280,15 +305,15 @@ export default function DetailPengiriman() {
                   <tr>
                     <td>Bukti Pengiriman</td>
                     <td>
-                      {data.delivery_proof_url ? (           /* ← cek benar-benar ada */
+                      {proofUrl ? (           /* ← cek benar-benar ada */
                         <>
                           <a
-                            href={`${BASE}${data.delivery_proof_url}`}
+                            href={proofUrl}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
                             <img
-                              src={`${BASE}${data.delivery_proof_url}`}
+                              src={proofUrl}
                               alt="Bukti Pengiriman"
                               style={{
                                 width: "120px",
