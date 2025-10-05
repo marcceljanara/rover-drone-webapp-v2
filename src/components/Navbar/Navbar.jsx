@@ -357,9 +357,9 @@ const Navbar = () => {
               <label>Password</label>
               <input type="password" name="password" required />
             </div>
-            <div className="form-group">
-              <input type="checkbox" id="remember-me" name="remember-me" />
+            <div className="form-group" id="remember-group">
               <label htmlFor="remember-me">Remember me</label>
+              <input type="checkbox" id="remember-me" name="remember-me" />
             </div>
             <button type="submit" className="login-btn">
               Sign In
