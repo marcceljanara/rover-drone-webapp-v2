@@ -6,7 +6,7 @@ import { UilEstate, UilBolt, UilImageShield } from "@iconscout/react-unicons";
 
 // Recent Card Imports
 import img1 from "../imgs/orang1.png";
-import img2 from "../imgs/orang2.png";
+// import img2 from "../imgs/orang2.png";
 
 // Sidebar Data
 export const SidebarData = [
@@ -39,7 +39,8 @@ export const useGithubCommits = () => {
 
         const formattedData = commits.map((commit) => {
           const authorName = commit.commit.author.name;
-          const img = authorName === "Marccel Janara" ? img1 : img2;
+          // const img = authorName === "Marccel Janara" ? img1 : img2;
+          const img = img1
 
           return {
             img,
