@@ -123,6 +123,8 @@ const Navbar = () => {
 
       if (!response.ok) {
         const data = await response.json();
+        console.log(data)
+        console.log(response)
         throw new Error(data.message || "Login gagal.");
       }
 
