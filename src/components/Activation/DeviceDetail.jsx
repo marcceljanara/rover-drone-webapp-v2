@@ -131,8 +131,8 @@ const DeviceDetail = () => {
     fetchDailyData();
   }, [id]);
 
-  if (loading) return <div className="loading-message">🔄 Memuat data perangkat...</div>;
-  if (error) return <div className="error-message">❌ {error}</div>;
+  if (loading) return <div className="loading-message">Memuat data perangkat...</div>;
+  if (error) return <div className="error-message">{error}</div>;
 
   return (
     <div className="device-detail-container">
@@ -176,7 +176,7 @@ const DeviceDetail = () => {
 
       <div className="daily-data">
         <h3>Penggunaan Hari Ini</h3>
-        <button onClick={fetchDailyData} className="refresh-daily-button">🔄 Refresh</button>
+        <button onClick={fetchDailyData} className="refresh-daily-button">Refresh</button>
         {loadingDaily ? (
           <p>Memuat data jam pemakaian...</p>
         ) : (
@@ -193,7 +193,7 @@ const DeviceDetail = () => {
 
       {showPopup && (
         <div className={`notification-popup ${popupType}`}>
-          <div className="popup-icon">{popupType === 'error' ? '⚠️' : '✅'}</div>
+          <div className="popup-icon">{popupType === 'error' ? '!' : 'OK'}</div>
           <div className="popup-content">
             <strong>{popupType === 'error' ? 'Gagal' : 'Berhasil'}:</strong>
             <span>{popupMessage.replace('Error: ', '')}</span>
