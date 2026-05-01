@@ -60,7 +60,7 @@ h2 {
 /* === TABEL === */
 .table-wrapper {
   width: 100%;
-  overflow-x: hidden;
+  overflow-x: auto;
   background-color: transparent;
   border-radius: 0;
   box-shadow: none;
@@ -91,32 +91,41 @@ h2 {
 
 /* === RESPONSIVE TABLE === */
 @media screen and (max-width: 768px) {
+  .table-wrapper {
+    overflow-x: visible;
+  }
+
   .responsive-table thead {
     display: none;
   }
 
   .responsive-table,
   .responsive-table tbody,
-  .responsive-table tr,
-  .responsive-table td {
+  .responsive-table tr {
     display: block;
     width: 100%;
   }
 
   .responsive-table tr {
-    margin-bottom: 15px;
-    border-bottom: 2px solid #ccc;
-    background-color: #f0fff0;
-    border-radius: 10px;
-    padding: 12px 0;
+    margin-bottom: 1rem;
+    border: 1px solid #b8ddb8;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.12);
   }
 
   .responsive-table td {
-    text-align: left;
-    padding-left: 50%;
-    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     border: none;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #e8f5e9;
+    padding: 0.7rem 1rem;
+    text-align: right;
+    font-size: 0.9rem;
+    word-break: break-word;
+    gap: 0.5rem;
     background-color: transparent;
   }
 
@@ -126,11 +135,13 @@ h2 {
 
   .responsive-table td::before {
     content: attr(data-label);
-    position: absolute;
-    left: 15px;
-    top: 12px;
-    font-weight: bold;
-    color: #93eb96;
+    font-weight: 700;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #2e7d32;
+    flex-shrink: 0;
+    text-align: left;
   }
 }
 
@@ -161,65 +172,172 @@ h2 {
 /* === MODAL === */
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.5);
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999;
+  z-index: 1000;
+  animation: modalFadeIn 0.2s ease-out forwards;
 }
 
 .modal {
-  background: white;
-  padding: 30px 20px;
-  border-radius: 12px;
-  max-width: 400px;
+  background: #ffffff;
+  border-radius: 16px;
   width: 90%;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
-  text-align: center;
+  max-width: 440px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  animation: modalSlideUp 0.3s ease-out forwards;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.modal-header h3 {
+  font-size: 20px;
+  margin: 0;
+  color: #111827;
+  font-weight: 700;
+}
+
+.modal-close-btn {
+  background: transparent;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.modal-close-btn:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 15px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #f9fafb;
+  color: #111827;
+  transition: all 0.2s;
+}
+
+.form-group input:focus {
+  border-color: #4CAF50;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.15);
+  outline: none;
 }
 
 .modal-actions {
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
-  gap: 15px;
-}
-
-.modal-actions .delete-btn {
-  margin-right: 90px; /* Geser tombol Hapus */
-}
-
-.modal-actions .cancel-btn {
-  margin-left: 40px;  /* Geser tombol Batal */
+  gap: 12px;
+  padding: 16px 24px;
+  background-color: #f9fafb;
+  border-top: 1px solid #f0f0f0;
 }
 
 .delete-btn,
-.cancel-btn {
+.cancel-btn,
+.add-btn {
   padding: 10px 20px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: 600;
   font-size: 14px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  min-width: 100px;
 }
 
 .delete-btn {
-  background-color: crimson;
+  background-color: #ef4444;
   color: white;
 }
 
+.delete-btn:hover {
+  background-color: #dc2626;
+  box-shadow: 0 4px 6px rgba(239, 68, 68, 0.2);
+}
+
 .cancel-btn {
-  background-color: gray;
+  background-color: #ffffff;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.cancel-btn:hover {
+  background-color: #f3f4f6;
+}
+
+.add-btn {
+  background-color: #4CAF50;
   color: white;
+}
+
+.add-btn:hover {
+  background-color: #388e3c;
+  box-shadow: 0 4px 6px rgba(76, 175, 80, 0.2);
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalSlideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* === CLICKABLE ID === */
 .clickable-id {
-  color: #007bff;
+  color: #4CAF50;
   cursor: pointer;
   font-weight: bold;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.clickable-id:hover {
+  color: #2e7d32;
+  text-decoration: underline;
 }
