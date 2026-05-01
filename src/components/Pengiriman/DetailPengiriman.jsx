@@ -27,7 +27,10 @@ export default function DetailPengiriman() {
   const [uploading, setUploading] = useState(false);
   const [proofUrl, setProofUrl] = useState("");
 
-
+  // Popup Notification State
+  const [popup, setPopup] = useState({ show: false, message: "", type: "success" });
+  const showPopup = (msg, type = "success") => setPopup({ show: true, message: msg, type });
+  const closePopup = () => setPopup({ show: false, message: "", type: "success" });
 
   /* ──────────── ambil detail pertama kali ──────────── */
   const fetchDetail = useCallback(async () => {
@@ -71,10 +74,10 @@ export default function DetailPengiriman() {
       );
       const json = await res.json();
       if (!res.ok) throw new Error(json.message || "Gagal memperbarui");
-      alert(json.message || "Info kurir/resi diperbarui");
+      showPopup(json.message || "Info kurir/resi diperbarui", "success");
       setEditMode(false);
       fetchDetail();
-    } catch (e) { alert(e.message); }
+    } catch (e) { showPopup(e.message, "error"); }
   };
 
   const handleStatusSave = async () => {
@@ -90,10 +93,10 @@ export default function DetailPengiriman() {
       );
       const json = await res.json();
       if (!res.ok) throw new Error(json.message || "Gagal memperbarui status");
-      alert(json.message || "Status berhasil diperbarui");
+      showPopup(json.message || "Status berhasil diperbarui", "success");
       setStatusMode(false);
       fetchDetail();
-    } catch (e) { alert(e.message); }
+    } catch (e) { showPopup(e.message, "error"); }
   };
 
   /* ───── konfirmasi tanggal KIRIM aktual ───── */
@@ -111,9 +114,9 @@ export default function DetailPengiriman() {
       );
       const json = await res.json();
       if (!res.ok) throw new Error(json.message || "Gagal konfirmasi kirim");
-      alert(json.message);
+      showPopup(json.message, "success");
       fetchDetail();
-    } catch (e) { alert(e.message); }
+    } catch (e) { showPopup(e.message, "error"); }
   };
 
   /* ───── konfirmasi tanggal SAMPAI aktual ───── */
@@ -131,9 +134,9 @@ export default function DetailPengiriman() {
       );
       const json = await res.json();
       if (!res.ok) throw new Error(json.message || "Gagal konfirmasi sampai");
-      alert(json.message);
+      showPopup(json.message, "success");
       fetchDetail();
-    } catch (e) { alert(e.message); }
+    } catch (e) { showPopup(e.message, "error"); }
   };
 
   // fungsi fetch image url
@@ -163,7 +166,7 @@ useEffect(() => {
   // Upload bukti pengiriman
   const handleUploadProof = async () => {
   if (!selectedFile) {
-    alert("Pilih file gambar terlebih dahulu");
+    showPopup("Pilih file gambar terlebih dahulu", "error");
     return;
   }
 
@@ -182,12 +185,12 @@ useEffect(() => {
     );
     const json = await res.json();
     if (!res.ok) throw new Error(json.message || "Gagal upload bukti pengiriman");
-    alert(json.message || "Upload berhasil");
+    showPopup(json.message || "Upload berhasil", "success");
     setSelectedFile(null);
     fetchDetail();
     await fetchProofUrl();
   } catch (e) {
-    alert(e.message);
+    showPopup(e.message, "error");
   } finally {
     setUploading(false);
   }
@@ -197,6 +200,13 @@ useEffect(() => {
   /* ──────────── tampilan ──────────── */
   return (
     <div className="ship-detail-container">
+      <button onClick={() => navigate(-1)} className="ship-back-btn-top">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Kembali
+      </button>
       <h2 className="ship-detail-title">Detail Pengiriman</h2>
 
       {error ? (
@@ -376,7 +386,18 @@ useEffect(() => {
         </>
       )}
 
-      <button onClick={()=>navigate(-1)} className="ship-back-btn">Kembali</button>
+      {/* Pop-up Notification */}
+      {popup.show && (
+        <div className="ship-popup-overlay" onClick={closePopup}>
+          <div className={`ship-popup ${popup.type}`} onClick={(e) => e.stopPropagation()}>
+            <h4>
+              {popup.type === "success" ? "Berhasil" : popup.type === "error" ? "Gagal" : "Informasi"}
+            </h4>
+            <p>{popup.message}</p>
+            <button onClick={closePopup}>Tutup</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
