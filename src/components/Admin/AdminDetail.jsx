@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { UilTimes } from '@iconscout/react-unicons';
 import { formatTanggalDanWaktuIndonesia } from '../../utils/datetimeIndonesia'; // perbaikan: fungsi ini tersedia
 import './AdminDetail.css';
 
@@ -119,52 +120,73 @@ const AdminDetail = () => {
       </div>
 
       {showModal && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h3>Ubah Kata Sandi</h3>
-
-            <label>Password Baru:</label>
-            <div className="password-input-wrapper">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-              />
-              <i
-                className={`fa ${showPassword ? 'fa-eye-slash' : 'fa-eye'} eye-icon`}
-                onClick={() => setShowPassword(!showPassword)}
-              />
+        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Ubah Kata Sandi</h3>
+              <button className="modal-close-btn" onClick={() => setShowModal(false)}>
+                <UilTimes size="22" />
+              </button>
             </div>
 
-            <label>Konfirmasi Password:</label>
-            <div className="password-input-wrapper">
-              <input
-                type={showConfPassword ? 'text' : 'password'}
-                value={confNewPassword}
-                onChange={(e) => setConfNewPassword(e.target.value)}
-              />
-              <i
-                className={`fa ${showConfPassword ? 'fa-eye-slash' : 'fa-eye'} eye-icon`}
-                onClick={() => setShowConfPassword(!showConfPassword)}
-              />
+            <div className="modal-body">
+              <label>Password Baru:</label>
+              <div className="password-input-wrapper">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="Masukkan password baru"
+                />
+                <i
+                  className={`fa ${showPassword ? 'fa-eye-slash' : 'fa-eye'} eye-icon`}
+                  onClick={() => setShowPassword(!showPassword)}
+                />
+              </div>
+
+              <label>Konfirmasi Password:</label>
+              <div className="password-input-wrapper">
+                <input
+                  type={showConfPassword ? 'text' : 'password'}
+                  value={confNewPassword}
+                  onChange={(e) => setConfNewPassword(e.target.value)}
+                  placeholder="Ulangi password baru"
+                />
+                <i
+                  className={`fa ${showConfPassword ? 'fa-eye-slash' : 'fa-eye'} eye-icon`}
+                  onClick={() => setShowConfPassword(!showConfPassword)}
+                />
+              </div>
             </div>
 
             <div className="modal-actions">
-              <button className="add-btn" onClick={handlePasswordUpdate}>Simpan</button>
               <button className="cancel-btn" onClick={() => setShowModal(false)}>Batal</button>
+              <button className="add-btn" onClick={handlePasswordUpdate}>Simpan Perubahan</button>
             </div>
           </div>
         </div>
       )}
 
       {showDeleteModal && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h3>Konfirmasi Hapus Akun</h3>
-            <p>Apakah kamu yakin ingin menghapus akun ini? Tindakan ini tidak bisa dibatalkan.</p>
+        <div className="modal-overlay" onClick={() => setShowDeleteModal(false)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Konfirmasi Hapus Akun</h3>
+              <button className="modal-close-btn" onClick={() => setShowDeleteModal(false)}>
+                <UilTimes size="22" />
+              </button>
+            </div>
+            
+            <div className="modal-body">
+              <p style={{ color: '#4a5568', lineHeight: '1.6', margin: '0' }}>
+                Apakah kamu yakin ingin menghapus akun ini? <br />
+                <strong style={{ color: '#e53e3e' }}>Tindakan ini tidak bisa dibatalkan.</strong>
+              </p>
+            </div>
+
             <div className="modal-actions">
-              <button className="delete-btn" onClick={handleDeleteUser}>Ya, Hapus</button>
               <button className="cancel-btn" onClick={() => setShowDeleteModal(false)}>Batal</button>
+              <button className="delete-btn" onClick={handleDeleteUser}>Ya, Hapus Akun</button>
             </div>
           </div>
         </div>

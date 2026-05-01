@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Pagination from '../Pagination/Pagination';
 import './Admin.css';
 
 const Admin = () => {
@@ -93,7 +94,7 @@ const Admin = () => {
     setTimeout(() => setNotification(null), 3000);
   };
 
-  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+  const totalPages = Math.max(1, Math.ceil(filteredUsers.length / itemsPerPage));
   const paginatedUsers = filteredUsers.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
@@ -146,26 +147,14 @@ const Admin = () => {
         </table>
       </div>
 
-      <div className="footer">
-        <span>
-          Menampilkan {paginatedUsers.length} pengguna dari total {filteredUsers.length}
-        </span>
-        <div className="pagination">
-          <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-          >
-            ←
-          </button>
-          <span className="page-number">Halaman {currentPage}</span>
-          <button
-            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-            disabled={currentPage === totalPages}
-          >
-            →
-          </button>
-        </div>
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+        totalItems={filteredUsers.length}
+        pageSize={itemsPerPage}
+        itemLabel="pengguna"
+      />
 
       {/* === MODAL TAMBAH PENGGUNA === */}
       {showAddModal && (
