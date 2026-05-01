@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 const CACHE_NAME = 'rover2-cache-v1';
 
 const STATIC_ASSETS = [
@@ -12,11 +13,6 @@ const STATIC_ASSETS = [
   '/robots.txt',
   '/service-worker.js'
 ];
-
-// ✅ Logging ringan untuk debugging
-self.addEventListener('install', () => console.log('[SW] Installed'));
-self.addEventListener('activate', () => console.log('[SW] Activated'));
-self.addEventListener('fetch', (event) => console.log('[SW] Fetch:', event.request.url));
 
 // ✅ Install: cache semua static files
 self.addEventListener('install', (event) => {
@@ -35,7 +31,6 @@ self.addEventListener('activate', (event) => {
       Promise.all(
         keys.map((key) => {
           if (key !== CACHE_NAME) {
-            console.log('[SW] Deleting old cache:', key);
             return caches.delete(key);
           }
         })

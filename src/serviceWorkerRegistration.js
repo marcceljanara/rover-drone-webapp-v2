@@ -21,9 +21,6 @@ export function register(config) {
       if (isLocalhost) {
         // This is running on localhost. Let's check if a service worker still exists or not.
         checkValidServiceWorker(swUrl, config);
-        navigator.serviceWorker.ready.then(() => {
-          console.log('This web app is being served cache-first by a service worker.');
-        });
       } else {
         // Not localhost. Just register service worker
         registerValidSW(swUrl, config);
@@ -45,13 +42,11 @@ function registerValidSW(swUrl, config) {
           if (installingWorker.state === 'installed') {
             if (navigator.serviceWorker.controller) {
               // New content is available; please refresh.
-              console.log('New content is available and will be used when all tabs are closed.');
               if (config && config.onUpdate) {
                 config.onUpdate(registration);
               }
             } else {
               // Content is cached for offline use.
-              console.log('Content is cached for offline use.');
               if (config && config.onSuccess) {
                 config.onSuccess(registration);
               }
@@ -60,8 +55,8 @@ function registerValidSW(swUrl, config) {
         };
       };
     })
-    .catch((error) => {
-      console.error('Error during service worker registration:', error);
+    .catch(() => {
+      console.error('Gagal mendaftarkan service worker.');
     });
 }
 
@@ -87,7 +82,7 @@ function checkValidServiceWorker(swUrl, config) {
       }
     })
     .catch(() => {
-      console.log('No internet connection found. App is running in offline mode.');
+      console.error('Service worker berjalan dalam mode offline.');
     });
 }
 
@@ -97,8 +92,8 @@ export function unregister() {
       .then((registration) => {
         registration.unregister();
       })
-      .catch((error) => {
-        console.error(error.message);
+      .catch(() => {
+        console.error('Gagal membatalkan registrasi service worker.');
       });
   }
 }

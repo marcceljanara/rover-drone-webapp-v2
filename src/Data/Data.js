@@ -51,8 +51,8 @@ export const useGithubCommits = () => {
         });
 
         setUpdatesData(formattedData);
-      } catch (error) {
-        console.error('Gagal mengambil data dari GitHub:', error);
+      } catch {
+        console.error('Gagal mengambil data pembaruan.');
       }
     };
 
@@ -83,11 +83,11 @@ export const CardsDataComponent = () => {
           setHumidityData(lastTenData.map(item => item.humidity));
           setTimestamps(lastTenData.map(item => item.timestamp));
         } else {
-          console.error("No data returned from API");
+          console.error("Data sensor tidak tersedia.");
         }
       })
-      .catch(error => {
-        console.error('Error fetching data:', error);
+      .catch(() => {
+        console.error('Gagal mengambil data sensor.');
       });
   };
 

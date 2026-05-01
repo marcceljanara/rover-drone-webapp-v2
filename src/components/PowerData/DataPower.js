@@ -21,11 +21,11 @@ export const CardsDataComponent = () => {
           setbatteryCurrentData(lastTenData.map(item => item.batteryCurrent));
           setTimestamps(lastTenData.map(item => item.timestamp));
         } else {
-          console.error("No data returned from API");
+          console.error("Data daya tidak tersedia.");
         }
       })
-      .catch(error => {
-        console.error('Error fetching data:', error);
+      .catch(() => {
+        console.error('Gagal mengambil data daya.');
       });
   };
 
