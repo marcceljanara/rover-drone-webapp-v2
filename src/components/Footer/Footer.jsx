@@ -1,23 +1,30 @@
 import React from "react";
 import "./Footer.css";
-import Wave from "../../imgs/wave.png";
 import Insta from "@iconscout/react-unicons/icons/uil-instagram";
 import Facebook from "@iconscout/react-unicons/icons/uil-facebook";
-import Gitub from "@iconscout/react-unicons/icons/uil-github";
+import Github from "@iconscout/react-unicons/icons/uil-github";
 
 const Footer = () => {
   return (
-    <div className="footer">
-      <img src={Wave} alt="Wave Background" className="footer-wave" />
-      <div className="f-content">
-        <span>Team Nexus</span>
-        <div className="f-icons">
-          <Insta color="white" size={"3rem"} />
-          <Facebook color="white" size={"3rem"} />
-          <Gitub color="white" size={"3rem"} />
+    <footer className="site-footer">
+      <div className="site-footer-content">
+        <div>
+          <span>AgroSwarm</span>
+          <p>Autonomous rover-drone monitoring for precision agriculture.</p>
+        </div>
+        <div className="site-footer-icons" aria-label="Social media">
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <Insta size="1.35rem" />
+          </a>
+          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+            <Facebook size="1.35rem" />
+          </a>
+          <a href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+            <Github size="1.35rem" />
+          </a>
         </div>
       </div>
-    </div>
+    </footer>
   );
 };
 
