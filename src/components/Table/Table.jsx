@@ -20,7 +20,7 @@ export default function BasicTable() {
         const selectedData = data.slice(-4).reverse();
         setRows(selectedData);
       })
-      .catch((error) => console.error("Error fetching data:", error));
+      .catch(() => console.error("Gagal mengambil data tabel."));
   };
 
   useEffect(() => {

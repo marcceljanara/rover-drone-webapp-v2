@@ -39,7 +39,7 @@ const DataDetail = () => {
         setSensorData(sensors);
         setTimestamps(sensors.map(item => item.timestamp));
       })
-      .catch(err => console.error(err));
+      .catch(() => console.error("Gagal mengambil data sensor perangkat."));
   };
 
   const fetchSensorLimits = () => {
@@ -50,7 +50,7 @@ const DataDetail = () => {
       .then(result => {
         setLimitsData(result.data?.sensors || []);
       })
-      .catch(err => console.error(err));
+      .catch(() => console.error("Gagal mengambil batas data sensor."));
   };
 
   const fetchAnalysis = () => {
@@ -67,10 +67,9 @@ const DataDetail = () => {
         } catch {
           parsed = [result.data];
         }
-        console.log(result.data)
         setAnalysis(parsed);
       })
-      .catch(err => console.error("Gagal ambil analisis LLM:", err))
+      .catch(() => console.error("Gagal mengambil analisis LLM."))
       .finally(() => setLoadingAnalysis(false));
   };
 
@@ -91,8 +90,8 @@ const DataDetail = () => {
         link.click();
         link.parentNode.removeChild(link);
       })
-      .catch(err => {
-        console.error("Download failed:", err);
+      .catch(() => {
+        console.error("Gagal mengunduh data sensor.");
         alert("Terjadi kesalahan saat mengunduh file.");
       });
   };

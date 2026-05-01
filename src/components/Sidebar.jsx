@@ -80,8 +80,8 @@ const Sidebar = () => {
       });
       setUser(null); // reset context
       window.location.href = "/"; // redirect ke home/login
-    } catch (err) {
-      console.error("Logout gagal:", err);
+    } catch {
+      console.error("Logout gagal.");
     }
   };
 

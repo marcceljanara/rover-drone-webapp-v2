@@ -22,7 +22,7 @@ export default function BasicTable() {
 
         setRows(selectedData);
       })
-      .catch((error) => console.error("Error fetching data:", error));
+      .catch(() => console.error("Gagal mengambil data daya."));
   };
 
   useEffect(() => {

@@ -19,8 +19,8 @@ const MainDash = () => {
         });
         const result = await response.json();
         setDevices(result.data.devices || []);
-      } catch (error) {
-        console.error("Error fetching devices:", error);
+      } catch {
+        console.error("Gagal mengambil data perangkat.");
       }
     };
 

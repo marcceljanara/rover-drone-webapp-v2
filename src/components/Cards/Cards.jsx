@@ -6,7 +6,6 @@ import Card from "../Card/Card";
 
 const Cards = () => {
   const { cardsData } = CardsDataComponent();
-  console.log("cardsData:", cardsData); // Tambahkan logging untuk melihat data
 
   return (
     <div className="Cards">
