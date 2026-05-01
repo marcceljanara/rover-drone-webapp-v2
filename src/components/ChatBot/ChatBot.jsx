@@ -60,8 +60,8 @@ const ChatBot = () => {
         setInput((prev) => (prev ? prev + ' ' + text : text));
       };
 
-      recognition.onerror = (event) => {
-        console.error('Speech recognition error:', event.error);
+      recognition.onerror = () => {
+        console.error('Gagal menjalankan pengenalan suara.');
         setIsRecording(false);
       };
 
@@ -112,8 +112,8 @@ const ChatBot = () => {
       };
 
       setMessages([...newMessages, assistantReply]);
-    } catch (err) {
-      console.error('Gagal memuat jawaban chatbot:', err);
+    } catch {
+      console.error('Gagal memuat jawaban chatbot.');
       setMessages([
         ...newMessages,
         {

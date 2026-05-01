@@ -93,8 +93,8 @@ const Penyewaan = () => {
         setAvailableSensors(sensors);
         const initial = Object.fromEntries(sensors.map((sensor) => [sensor.id, false]));
         setCheckboxes(initial);
-      } catch (err) {
-        console.error('Gagal memuat sensor:', err);
+      } catch {
+        console.error('Gagal memuat sensor.');
       }
     };
     fetchData();

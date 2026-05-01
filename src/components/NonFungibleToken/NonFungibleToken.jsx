@@ -15,8 +15,8 @@ const NonFungibleToken = () => {
         setNftData(lastSixData);
         setIsLoading(false); // Set isLoading ke false setelah data dimuat
       })
-      .catch(error => {
-        console.error('Error fetching data:', error);
+      .catch(() => {
+        console.error('Gagal mengambil data NFT.');
         setIsLoading(false); // Set isLoading ke false jika ada error
       });
   }, []);

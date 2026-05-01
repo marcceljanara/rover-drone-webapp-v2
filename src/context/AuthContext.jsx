@@ -19,9 +19,8 @@ export const AuthProvider = ({ children }) => {
         );
 
         if (!mounted) return;
-        console.log(res);
         setUser(res.data.data.user);
-      } catch (err) {
+      } catch {
         if (!mounted) return;
         setUser(null);
       } finally {

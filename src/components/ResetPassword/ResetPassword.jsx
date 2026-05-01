@@ -95,7 +95,7 @@ const ResetPassword = () => {
           // ignore
           return;
         }
-        console.error('Token validation error:', err);
+        console.error('Validasi token reset password gagal.');
         if (!mountedRef.current) return;
         setStep('error');
         setMessage(err.message || 'Gagal memvalidasi token reset password.');
@@ -163,7 +163,7 @@ const ResetPassword = () => {
         throw new Error(data.message || 'Gagal mereset password.');
       }
     } catch (err) {
-      console.error('Reset password error:', err);
+      console.error('Reset password gagal.');
       setStep('error');
       setMessage(err.message || 'Terjadi kesalahan saat mereset password.');
     } finally {

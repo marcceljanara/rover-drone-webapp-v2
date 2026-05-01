@@ -147,8 +147,8 @@ const fetchProofUrl = useCallback(async () => {
     const json = await res.json();
     if (!res.ok) throw new Error(json.message || "Gagal memuat bukti");
     setProofUrl(json.data.url);  // ← simpan URL hasil API
-  } catch (e) {
-    console.error("fetchProofUrl:", e.message);
+  } catch {
+    console.error("Gagal mengambil URL bukti pengiriman.");
     setProofUrl("");
   }
 }, [shipmentId]);

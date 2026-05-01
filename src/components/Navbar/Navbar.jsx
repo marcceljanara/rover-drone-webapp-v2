@@ -54,8 +54,8 @@ const Navbar = () => {
         method: "POST",
         credentials: "include",
       });
-    } catch (e) {
-      console.error("Logout error:", e);
+    } catch {
+      console.error("Logout gagal.");
     }
     setUser(null);
     showSuccessNotification("🔒 Anda telah berhasil keluar.");
@@ -123,8 +123,6 @@ const Navbar = () => {
 
       if (!response.ok) {
         const data = await response.json();
-        console.log(data)
-        console.log(response)
         throw new Error(data.message || "Login gagal.");
       }
 
@@ -138,7 +136,7 @@ const Navbar = () => {
       setLoginClicked(false);
       window.location.href = "/dashboard";
     } catch (error) {
-      console.error("Login Error:", error);
+      console.error("Login gagal.");
       showSuccessNotification(`❌ ${error.message}`, "error");
     }
   };
@@ -172,7 +170,7 @@ const Navbar = () => {
         "✅ Sign Up berhasil! Silakan verifikasi email Anda."
       );
     } catch (error) {
-      console.error("Sign Up Error:", error);
+      console.error("Pendaftaran pengguna gagal.");
       showSuccessNotification(error.message || "❌ Pendaftaran gagal.", "error");
     }
   };
@@ -198,8 +196,8 @@ const Navbar = () => {
       } else {
         showSuccessNotification("❌ OTP salah atau kadaluarsa.", "error");
       }
-    } catch (error) {
-      console.error("Error verifikasi OTP:", error);
+    } catch {
+      console.error("Verifikasi OTP gagal.");
       showSuccessNotification(
         "❌ Terjadi kesalahan jaringan saat verifikasi.",
         "error"
@@ -244,7 +242,7 @@ const Navbar = () => {
       }, 1000);
 
     } catch (error) {
-      console.error("Forgot Password Error:", error);
+      console.error("Permintaan reset password gagal.");
       showSuccessNotification(error.message || "❌ Gagal mengirim email reset password.", "error");
     }
   };
@@ -282,7 +280,7 @@ const Navbar = () => {
         });
       }, 1000);
     } catch (error) {
-      console.error("Resend OTP error:", error);
+      console.error("Pengiriman ulang OTP gagal.");
       showSuccessNotification(error.message, "error");
     }
   };
