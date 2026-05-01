@@ -53,7 +53,7 @@ export default function BasicTable() {
         component={Paper}
         style={{ boxShadow: "0px 13px 20px 0px #80808029" }}
       >
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell>Timestamp</TableCell>
@@ -70,14 +70,14 @@ export default function BasicTable() {
                 key={index}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
-                <TableCell component="th" scope="row">
+                <TableCell component="th" scope="row" data-label="Timestamp">
                   {formatTimestamp(row.timestamp)}
                 </TableCell>
-                <TableCell align="left">{row.latitude}</TableCell>
-                <TableCell align="left">{row.longitude}</TableCell>
-                <TableCell align="left">{row.lux}</TableCell>
-                <TableCell align="left">{row.temperature}°C</TableCell>
-                <TableCell align="left">{row.humidity}%</TableCell>
+                <TableCell align="left" data-label="Latitude">{row.latitude}</TableCell>
+                <TableCell align="left" data-label="Longitude">{row.longitude}</TableCell>
+                <TableCell align="left" data-label="Lux">{row.lux}</TableCell>
+                <TableCell align="left" data-label="Temperature">{row.temperature}°C</TableCell>
+                <TableCell align="left" data-label="Humidity">{row.humidity}%</TableCell>
               </TableRow>
             ))}
           </TableBody>

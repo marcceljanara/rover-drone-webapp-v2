@@ -8,90 +8,60 @@ import { motion } from "framer-motion";
 
 const Services = () => {
   const transition = {
-    duration: 1,
+    duration: 0.6,
     type: "spring",
   };
 
   const cardData = [
     {
       emoji: HeartEmoji,
-      heading: <span style={{ color: "orange" }}>Monitoring</span>,
-
-      detail: (
-        <a
-          href="/monitoring.html"
-          target="_self"
-          style={{ textDecoration: "none", color: "black" }}
-        >
-          Monitor your rover drone and field data seamlessly in real-time from anywhere.
-        </a>
-      ),
+      heading: "Monitoring",
+      detail: "Pantau rover-drone, sensor lahan, dan status operasi secara real-time dari satu dashboard.",
       link: "/monitoring.html",
-      color: "#FF6347",
+      color: "#167a3f",
     },
     {
       emoji: Glasses,
-      heading: <span style={{ color: "orange" }}>AI Agents</span>,
-      detail: (
-        <a
-          href="/data.html"
-          target="_self"
-          style={{ textDecoration: "none", color: "black" }}
-        >
-          AI Agents generate smart farming recommendations from real-time field data.
-        </a>
-      ),
+      heading: "AI Agents",
+      detail: "Ubah data lapangan menjadi rekomendasi agronomi yang cepat, relevan, dan mudah dieksekusi.",
       link: "/data.html",
-      color: "#4682B4",
+      color: "#2563eb",
     },
     {
       emoji: Humble,
-      heading: <span style={{ color: "orange" }}>Automation</span>,
-      detail: (
-        <a
-          href="/automation.html"
-          target="_self"
-          style={{ textDecoration: "none", color: "black" }}
-        >
-          Autonomous rover-drone swarm performs field monitoring and response without manual input.
-        </a>
-      ),
+      heading: "Automation",
+      detail: "Koordinasikan drone dan rover untuk monitoring lahan tanpa kontrol manual terus-menerus.",
       link: "/automation.html",
-      color: "rgba(252, 166, 31, 0.45)",
+      color: "#f2a51a",
     },
   ];
 
   return (
-    <div className="services" id="services">
-      {/* Left side */}
+    <section className="services" id="services" aria-labelledby="services-title">
       <div className="awesome">
-        <span>Our Innovative</span>
-        <span>Services</span>
-        <span style={{ color: "black" }}>
-          Assessing plant health in precision agriculture involves multi-layered monitoring <br />
-          using aerial and ground-based data. Drone-based NDVI imaging provides rapid, large-scale <br />
-          detection of vegetation anomalies, while autonomous ground rovers conduct localized <br /> 
-          analysis such as soil moisture measurement and close-up visual inspections—enabling <br />
-          accurate, real-time diagnostics for targeted interventions.
-        </span>
-        <div className="blur s-blur1" style={{ background: "#ABF1FF94" }}></div>
+        <p className="eyebrow">Capabilities</p>
+        <h2 id="services-title">Our Innovative Services</h2>
+        <p>
+          AgroSwarm menggabungkan pemantauan udara, inspeksi darat, dan analisis AI untuk
+          membantu tim lapangan mendeteksi anomali tanaman, memprioritaskan tindakan,
+          dan menjaga operasional tetap efisien.
+        </p>
       </div>
 
-      {/* Right side cards */}
       <div className="cards">
         {cardData.map((card, i) => (
           <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 30 }}
+            key={card.heading}
+            initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={transition}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ ...transition, delay: i * 0.08 }}
           >
-            <Card {...card} index={i} />
+            <Card {...card} />
           </motion.div>
         ))}
-        <div className="blur s-blur2" style={{ background: "var(--purple)" }}></div>
       </div>
-    </div>
+    </section>
   );
 };
 
