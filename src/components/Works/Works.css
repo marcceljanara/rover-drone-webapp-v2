@@ -1,182 +1,101 @@
 .works {
-  padding: 0 3rem; /* Padding kiri dan kanan */
-  display: flex; /* Menggunakan flexbox untuk tata letak */
-  height: 90vh; /* Tinggi default */
-  margin-top: -3rem; /* Margin atas */
-  align-items: center; /* Pusatkan elemen secara vertikal */
-  justify-content: space-between; /* Menyebar elemen ke kiri dan kanan */
+  width: min(1180px, calc(100% - 2rem));
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+  margin: 0 auto;
+  padding: clamp(3rem, 7vw, 6rem) 0;
 }
 
-/* Left side */
-.awesome {
-  display: flex; /* Menggunakan flexbox untuk elemen awesome */
-  flex-direction: column; /* Susun elemen dalam kolom */
-  position: relative; /* Posisi relatif untuk elemen */
-}
-
-.awesome > :nth-child(1) {
-  color: var(--black); /* Warna untuk elemen pertama */
-  font-size: 2.5rem; /* Ukuran font untuk elemen pertama */
-  font-weight: bold; /* Menebalkan teks */
-}
-
-.awesome > :nth-child(2) {
-  color: var(--orange); /* Warna untuk elemen kedua */
-  font-size: 2.5rem; /* Ukuran font untuk elemen kedua */
-  font-weight: bold; /* Menebalkan teks */
-}
-
-.awesome > :nth-child(3) {
-  color: var(--gray); /* Warna untuk elemen ketiga */
-  font-size: 14px; /* Ukuran font untuk elemen ketiga */
-  margin-top: 1rem; /* Margin atas untuk elemen ketiga */
-}
-
-.s-button {
-  width: 8rem; /* Lebar tombol */
-  height: 2rem; /* Tinggi tombol */
-  margin-top: 4rem; /* Margin atas untuk tombol */
-}
-
-/* Right side */
+.w-left,
 .w-right {
-  flex: 1; /* Mengisi ruang yang tersedia di sebelah kanan */
-  display: flex; /* Menggunakan flexbox untuk elemen kanan */
-  justify-content: center; /* Pusatkan elemen secara horizontal */
-  align-items: center; /* Pusatkan elemen secara vertikal */
-  position: relative; /* Posisi relatif untuk elemen kanan */
-  margin-left: 20%; /* Geser elemen kanan ke kiri */
+  min-width: 0;
 }
 
-.w-mainCircle {
-  position: relative; /* Posisi relatif untuk lingkaran utama */
-  width: 18rem; /* Lebar lingkaran utama */
-  height: 18rem; /* Tinggi lingkaran utama */
-  border-radius: 100%; /* Membuat lingkaran */
-  box-shadow: var(--smboxShadow); /* Bayangan untuk lingkaran utama */
-  background: white; /* Latar belakang putih */
-  z-index: 2; /* Z-index untuk menempatkan di atas */
+.works .awesome {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
 }
 
-.w-mainCircle > * {
-  position: absolute; /* Posisi absolut untuk elemen dalam lingkaran */
+.works .awesome h2 {
+  max-width: 38rem;
+  margin: 0;
+  color: var(--color-text);
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  font-weight: 900;
+  line-height: 1.08;
+  text-wrap: balance;
 }
 
-.w-mainCircle > :nth-child(1) {
-  top: -3rem; /* Posisi untuk elemen pertama */
-  left: 6rem; /* Posisi untuk elemen pertama */
+.works .awesome p:not(.eyebrow) {
+  max-width: 42rem;
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 1rem;
+  line-height: 1.75;
 }
 
-.w-mainCircle > :nth-child(2) {
-  left: -3rem; /* Posisi untuk elemen kedua */
-  top: 5rem; /* Posisi untuk elemen kedua */
+.w-right {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
 }
 
-.w-mainCircle > :nth-child(3) {
-  left: 6rem; /* Posisi untuk elemen ketiga */
-  top: 5rem; /* Posisi untuk elemen ketiga */
+.partner-card {
+  min-height: 8.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: var(--shadow-sm);
 }
 
-.w-mainCircle > :nth-child(4) {
-  left: 15rem; /* Posisi untuk elemen keempat */
-  top: 5rem; /* Posisi untuk elemen keempat */
+.partner-card:first-child {
+  grid-column: span 2;
 }
 
-.w-mainCircle > :nth-child(5) {
-  left: 6rem; /* Posisi untuk elemen kelima */
-  top: 13rem; /* Posisi untuk elemen kelima */
+.partner-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
 }
 
-.w-secCircle {
-  width: 6rem; /* Lebar lingkaran sekunder */
-  height: 6rem; /* Tinggi lingkaran sekunder */
-  position: absolute; /* Posisi absolut untuk lingkaran sekunder */
-  border-radius: 100%; /* Membuat lingkaran */
-  border: 5px solid #ebebeb; /* Border untuk lingkaran sekunder */
-  display: flex; /* Menggunakan flexbox untuk pusatkan konten */
-  align-items: center; /* Pusatkan konten secara vertikal */
-  justify-content: center; /* Pusatkan konten secara horizontal */
-  background: white; /* Latar belakang putih */
-  box-shadow: var(--smboxShadow); /* Bayangan untuk lingkaran sekunder */
+.partner-card img {
+  max-width: 8rem;
+  max-height: 3.4rem;
+  object-fit: contain;
 }
 
-.w-secCircle > img {
-  transform: scale(0.6); /* Skala gambar dalam lingkaran sekunder */
+.partner-card span {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-align: center;
 }
 
-.w-backCircle {
-  position: absolute; /* Posisi absolut untuk lingkaran belakang */
-  height: 13rem; /* Tinggi lingkaran belakang */
-  width: 13rem; /* Lebar lingkaran belakang */
-  border-radius: 100%; /* Membuat lingkaran */
-  z-index: 1; /* Z-index untuk menempatkan di bawah */
-}
-
-.blueCircle {
-  background: #34b819; /* Warna untuk lingkaran biru */
-  left: 10%; /* Posisikan di tengah */
-  top: -2rem; /* Posisi atas untuk lingkaran biru */
-}
-
-.yellowCircle {
-  background: #f5c32c; /* Warna untuk lingkaran kuning */
-  left: 10%; /* Posisikan di tengah */
-  top: 7rem; /* Posisi atas untuk lingkaran kuning */
-}
-
-/* Responsive adjustments */
-@media screen and (max-width: 480px) {
+@media (max-width: 900px) {
   .works {
-    flex-direction: column; /* Susun elemen dalam kolom pada layar kecil */
-    height: 55rem; /* Tinggi tetap untuk layar kecil */
-    padding: 0; /* Hapus padding pada layar kecil */
-    gap: 5rem; /* Jarak antar elemen lebih kecil */
-    margin-top: 0rem; /* Hapus margin atas pada layar kecil */
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .works {
+    width: min(100% - 1rem, 1180px);
   }
 
   .w-right {
-    display: flex; /* Tampilkan elemen kanan */
-    align-items: flex-start; /* Pusatkan elemen secara vertikal */
-    justify-content: start; /* Pusatkan elemen secara horizontal */
-    transform: scale(0.7); /* Skala elemen kanan */
-    margin-left: 0; /* Hapus margin kiri pada layar kecil */
+    grid-template-columns: 1fr;
   }
 
-  .w-mainCircle {
-    position: static; /* Ubah posisi menjadi statis pada layar kecil */
+  .partner-card:first-child {
+    grid-column: auto;
   }
-
-  .w-backCircle {
-    left: 8rem !important; /* Posisi kiri untuk lingkaran belakang */
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .works {
-    flex-direction: column;
-    padding: 0 1rem;
-    gap: 4rem;
-    height: auto;
-    margin-top: 4rem;
-  }
-
-  .awesome {
-    align-items: center;
-    text-align: center;
-  }
-
-  .w-right {
-    transform: scale(0.85);
-    margin-left: 0;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .w-backCircle {
-    left: 6rem !important;
-  }
-}
-
-body {
-  overflow-x: hidden;
 }
