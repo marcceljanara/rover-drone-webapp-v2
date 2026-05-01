@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 /* eslint-disable no-restricted-globals */
 const CACHE_NAME = 'rover2-cache-v1';
 
