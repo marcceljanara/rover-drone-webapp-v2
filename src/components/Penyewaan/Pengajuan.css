@@ -5,7 +5,8 @@
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   width: 100%;
@@ -121,10 +122,25 @@ html, body {
   text-transform: capitalize;
 }
 
-.status-active    { background: #17a2b8; color: white; }
-.status-pending   { background: #ffc107; color: black; }
-.status-cancelled { background: #dc3545; color: white; }
-.status-completed { background: #28a745; color: white; }
+.status-active {
+  background: #17a2b8;
+  color: white;
+}
+
+.status-pending {
+  background: #ffc107;
+  color: black;
+}
+
+.status-cancelled {
+  background: #dc3545;
+  color: white;
+}
+
+.status-completed {
+  background: #28a745;
+  color: white;
+}
 
 /* ========== AKSI BUTTON ========== */
 .action-wrapper {
@@ -213,64 +229,20 @@ html, body {
 
 /* ========== RESPONSIVE TABLE (≤768px) ========== */
 @media (max-width: 768px) {
-  html, body {
-    overflow-y: auto !important; /* Aktifkan scroll vertikal di mobile */
+
+  html,
+  body {
+    overflow-y: auto !important;
   }
 
   .container {
     overflow-y: auto !important;
     height: auto;
+    padding: 1rem;
   }
 
-  .data-table {
-    display: block;
-  }
-
-  .data-table thead {
-    display: none;
-  }
-
-  .data-table tbody tr {
-    display: block;
-    margin-bottom: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 0.75rem;
-    background-color: transparent !important;
-  }
-
-  .data-table td {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 0.75rem 0;
-    border: none;
-    border-bottom: 1px solid #ddd;
-    background: transparent !important;
-    font-size: 0.95rem;
-  }
-
-  .data-table td::before {
-    content: attr(data-label);
-    font-weight: bold;
-    color: #333;
-    flex-basis: 45%;
-    padding-right: 1rem;
-    text-align: left;
-  }
-
-  .data-table td:last-child {
-    border-bottom: none;
-  }
-
-  .action-wrapper {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .action-btn {
-    width: 100%;
-    max-width: 100%;
+  .page-title {
+    font-size: 1.4rem;
   }
 
   .search-add-bar {
@@ -281,5 +253,88 @@ html, body {
   .search-add-bar input,
   .add-btn {
     width: 100%;
+    box-sizing: border-box;
+  }
+
+  .table-wrapper {
+    border: none;
+    padding: 0;
+    border-radius: 0;
+    overflow-x: visible;
+    background: transparent !important;
+  }
+
+  .data-table {
+    min-width: 0;
+    display: block;
+  }
+
+  .data-table thead {
+    display: none;
+  }
+
+  .data-table tbody tr {
+    display: block;
+    margin-bottom: 1rem;
+    border: 1px solid #c8e6c9;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: #fff !important;
+    box-shadow: 0 2px 8px rgba(40, 167, 69, 0.1);
+    animation: penyewaanCardIn 0.2s ease-out;
+  }
+
+  .data-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.7rem 1rem;
+    border: none;
+    border-bottom: 1px solid #e8f5e9;
+    background: transparent !important;
+    font-size: 0.9rem;
+    word-break: break-word;
+    gap: 0.5rem;
+    text-align: right;
+  }
+
+  .data-table td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #2e7d32;
+    flex-shrink: 0;
+    text-align: left;
+  }
+
+  .data-table td:last-child {
+    border-bottom: none;
+  }
+
+  .action-wrapper {
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .action-btn {
+    width: 100%;
+    max-width: 100%;
+    padding: 0.55rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  @keyframes penyewaanCardIn {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }

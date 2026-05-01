@@ -116,7 +116,7 @@ function DetailPenyewaan() {
       </div>
     );
 
-  if (!rental) return <div className="rental-detail-container">Memuat detail penyewaan…</div>;
+  if (!rental) return <div className="rental-detail-container">Memuat detail penyewaan...</div>;
 
   return (
     <div className="rental-detail-container">

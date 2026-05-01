@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext'; // 🔑 ambil dari context
+import Pagination from '../Pagination/Pagination';
 import './Penyewaan.css';
+import TableEmptyState from '../TableEmptyState/TableEmptyState';
 import './Pengajuan.css';
 
 function KelolaPenyewaan() {
@@ -82,8 +84,8 @@ function KelolaPenyewaan() {
         isAdmin
           ? prev.filter((item) => item.id !== id)
           : prev.map((item) =>
-              item.id === id ? { ...item, rental_status: 'cancelled' } : item
-            )
+            item.id === id ? { ...item, rental_status: 'cancelled' } : item
+          )
       );
     } catch (err) {
       setNotification(err.message);
@@ -123,7 +125,7 @@ function KelolaPenyewaan() {
     item.id.toString().toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const totalPages = Math.max(1, Math.ceil(filteredData.length / itemsPerPage));
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
@@ -165,7 +167,14 @@ function KelolaPenyewaan() {
                 </tr>
               </thead>
               <tbody>
-                {currentItems.map((item) => (
+                {currentItems.length === 0 ? (
+                  <TableEmptyState
+                    colSpan={allColumns.length}
+                    icon="📋"
+                    title="Tidak ada data penyewaan"
+                    subtitle="Tidak ada data yang cocok dengan pencarian."
+                  />
+                ) : currentItems.map((item) => (
                   <tr key={item.id}>
                     {allColumns.map((col) => {
                       const key = col.key;
@@ -238,18 +247,14 @@ function KelolaPenyewaan() {
             </table>
           </div>
 
-          <div className="pagination-controls">
-            <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1}>
-              ←
-            </button>
-            <span>Halaman {currentPage} dari {totalPages}</span>
-            <button
-              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-              disabled={currentPage === totalPages}
-            >
-              →
-            </button>
-          </div>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            totalItems={filteredData.length}
+            pageSize={itemsPerPage}
+            itemLabel="penyewaan"
+          />
         </>
       )}
 

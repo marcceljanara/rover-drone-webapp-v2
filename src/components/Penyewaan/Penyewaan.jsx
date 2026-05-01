@@ -24,6 +24,18 @@ const calculateRentalCost = (interval, sensorTotal = 0) => {
   };
 };
 
+const formatSensorName = (id) => {
+  const map = {
+    NDVI: "Kamera Multispektral (NDVI)",
+    RGB: "Kamera Resolusi Tinggi (RGB)",
+    THERMAL: "Sensor Suhu Thermal",
+    LIDAR: "Pemetaan 3D (LiDAR)",
+    SOIL: "Sensor Kelembaban Tanah",
+    WEATHER: "Stasiun Cuaca Mini",
+  };
+  return map[id?.toUpperCase()] || id?.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+};
+
 const Penyewaan = () => {
   const [duration, setDuration] = useState(null);
   const [notification, setNotification] = useState('');
@@ -204,12 +216,10 @@ const Penyewaan = () => {
         ⬅ Kembali
       </button>
 
-      <h1>“SAATNYA LAHAN ANDA DIAWASI OLEH TEKNOLOGI MASA DEPAN!” 🚀</h1>
-      <h2>
-        “BOSAN RUGI? CAPEK KERJA MANUAL? BANGKITKAN PRODUKTIVITAS DENGAN DRONE ROVER
-        KAMI!”
-      </h2>
-      <p>Lupakan kerja manual dan hasil yang tak optimal. Kini hadir DRONE ROVER CANGGIH!</p>
+      <h1>Revolusi Pemantauan Lahan dengan Drone Rover</h1>
+      <p className="subtitle">
+        Tingkatkan efisiensi dan produktivitas pertanian Anda melalui otomatisasi cerdas. Hemat waktu, kurangi kerugian, dan pantau lahan Anda secara presisi dengan teknologi drone dan rover terdepan.
+      </p>
 
       <div className="image-container">
         <img src={roverImage} alt="Drone Rover" className="rover-image" />
@@ -224,27 +234,7 @@ const Penyewaan = () => {
         </span>
       </div>
 
-      {showLokasiForm && (
-        <div className="lokasi-box-container">
-          <div className="lokasi-section">
-            <label>Pilih Alamat</label>
-            <select value={selectedAddressId} onChange={handleAddressSelect}>
-              <option value="">-- Pilih Alamat --</option>
-              {userAddresses.map((addr) => (
-                <option key={addr.id} value={addr.id}>
-                  {addr.alamat_lengkap}, {addr.kelurahan}, {addr.kecamatan}
-                </option>
-              ))}
-            </select>
-          </div>
 
-          {ongkir > 0 && (
-            <div className="ongkir-info">
-              Estimasi Ongkir: <strong>Rp{ongkir.toLocaleString('id-ID')}</strong>
-            </div>
-          )}
-        </div>
-      )}
 
       <div className="lokasi-checkbox-row">
         <div className="checkbox-container">
@@ -254,23 +244,50 @@ const Penyewaan = () => {
             </p>
           ) : (
             availableSensors.map((sensor) => (
-              <label key={sensor.id}>
+              <label key={sensor.id} className="sensor-label">
                 <input
                   type="checkbox"
                   checked={checkboxes[sensor.id] || false}
                   onChange={() => handleCheckboxChange(sensor.id)}
                 />
-                {sensor.id} (Rp{sensor.cost.toLocaleString('id-ID')})
+                <span className="sensor-name">{formatSensorName(sensor.id)}</span>
+                <span className="sensor-price">(Rp{sensor.cost.toLocaleString('id-ID')})</span>
               </label>
             ))
           )}
         </div>
-        <img
-          src={lokasiIcon}
-          alt="Lokasi"
-          className={`lokasi-icon ${showLokasiForm ? 'active' : ''}`}
-          onClick={handleIconClick}
-        />
+        <div className="lokasi-action-wrapper">
+          <div className="lokasi-action" onClick={handleIconClick}>
+            <img
+              src={lokasiIcon}
+              alt="Lokasi"
+              className={`lokasi-icon ${showLokasiForm ? 'active' : ''}`}
+            />
+            <span className="lokasi-text">Pilih Lokasi Pengiriman</span>
+          </div>
+
+          {showLokasiForm && (
+            <div className="lokasi-box-container">
+              <div className="lokasi-section">
+                <label>Pilih Alamat</label>
+                <select value={selectedAddressId} onChange={handleAddressSelect}>
+                  <option value="">-- Pilih Alamat --</option>
+                  {userAddresses.map((addr) => (
+                    <option key={addr.id} value={addr.id}>
+                      {addr.alamat_lengkap}, {addr.kelurahan}, {addr.kecamatan}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {ongkir > 0 && (
+                <div className="ongkir-info">
+                  Estimasi Ongkir: <strong>Rp{ongkir.toLocaleString('id-ID')}</strong>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="form-container">
@@ -293,12 +310,12 @@ const Penyewaan = () => {
                 const daily = (finalCost / rentalDays).toFixed(2);
                 return (
                   <tr key={dur}>
-                    <td>{dur} Bulan</td>
-                    <td>Rp{finalCost.toLocaleString('id-ID')}</td>
-                    <td>Rp{Number(daily).toLocaleString('id-ID')}</td>
-                    <td>{discountPercentage}%</td>
-                    <td>Rp{discount.toLocaleString('id-ID')}</td>
-                    <td>
+                    <td data-label="Durasi">{dur} Bulan</td>
+                    <td data-label="Harga Total">Rp{finalCost.toLocaleString('id-ID')}</td>
+                    <td data-label="Harga/Hari">Rp{Number(daily).toLocaleString('id-ID')}</td>
+                    <td data-label="Diskon (%)">{discountPercentage}%</td>
+                    <td data-label="Diskon (Rp)">Rp{discount.toLocaleString('id-ID')}</td>
+                    <td data-label="Aksi">
                       <button
                         className={`sewa-button ${duration === dur ? 'selected' : ''}`}
                         onClick={() => handlePilih(dur)}

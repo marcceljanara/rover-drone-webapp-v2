@@ -47,7 +47,8 @@ p, li {
 /* ========== IMAGE ========== */
 .image-container {
   text-align: center;
-  margin: 20px 0;
+  margin: 30px auto;
+  max-width: 600px;
 }
 
 .rover-image {
@@ -55,6 +56,20 @@ p, li {
   height: auto;
   display: block;
   margin: 0 auto;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.rover-image:hover {
+  transform: scale(1.02);
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: #444;
+  max-width: 800px;
+  margin: 0 auto 20px;
 }
 
 /* ========== DEVICE STATUS ========== */
@@ -92,17 +107,52 @@ p, li {
   min-width: 150px;
 }
 
-.checkbox-container label {
-  font-weight: bold;
+.checkbox-container .sensor-label {
+  font-weight: normal;
   color: #333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkbox-container .sensor-name {
+  font-weight: 600;
+  color: #00796b;
+}
+
+.checkbox-container .sensor-price {
+  color: #666;
+  font-size: 0.9em;
+}
+
+.lokasi-action {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  background: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.lokasi-action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
 }
 
 .lokasi-icon {
-  width: 40px;
+  width: 32px;
   height: auto;
-  margin-top: 5px;
-  cursor: pointer;
   transition: transform 0.3s ease;
+}
+
+.lokasi-text {
+  font-weight: 600;
+  color: #00796b;
+  font-size: 15px;
 }
 
 .lokasi-icon.active {
@@ -200,6 +250,11 @@ p, li {
   text-align: center;
 }
 
+.lokasi-action-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
 /* ========== LOCATION BOX ========== */
 .lokasi-box-container {
   background: #fff;
@@ -209,10 +264,10 @@ p, li {
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
   animation: fadeIn 0.3s ease-in-out;
   position: absolute;
-  top: 520px;
-  right: 20px;
+  top: calc(100% + 10px);
+  right: 0;
   width: 300px;
-  z-index: 10;
+  z-index: 100;
 }
 
 .drag-handle {
@@ -293,6 +348,21 @@ p, li {
     text-align: center;
   }
 
+  .lokasi-box-container {
+    top: calc(100% + 10px);
+    right: 50%;
+    transform: translateX(50%);
+    width: 90vw;
+    max-width: 350px;
+  }
+}
+
+/* ===== RENTAL TABLE: CARD LAYOUT (≤768px) ===== */
+@media (max-width: 768px) {
+  .table-responsive {
+    overflow-x: visible;
+  }
+
   .rental-table,
   .rental-table thead,
   .rental-table tbody,
@@ -307,19 +377,28 @@ p, li {
   }
 
   .rental-table tr {
-    margin-bottom: 20px;
-    padding: 10px;
-    background: none; /* HAPUS warna abu responsive */
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    margin-bottom: 1rem;
+    border: 1px solid #b2dfdb;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 121, 107, 0.12);
+    animation: rentalCardIn 0.2s ease-out;
   }
 
   .rental-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     position: relative;
-    padding-left: 50%;
-    text-align: left;
+    padding: 0.7rem 1rem;
+    text-align: right;
     border: none;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #e0f2f1;
+    font-size: 0.9rem;
+    gap: 0.5rem;
+    word-break: break-word;
+    background: transparent;
   }
 
   .rental-table td:last-child {
@@ -327,29 +406,19 @@ p, li {
   }
 
   .rental-table td::before {
-    position: absolute;
-    top: 10px;
-    left: 15px;
-    width: 45%;
-    font-weight: bold;
-    font-size: 14px;
-    color: #333;
-    white-space: nowrap;
+    content: attr(data-label);
+    font-weight: 700;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #00796b;
+    flex-shrink: 0;
+    text-align: left;
   }
 
-  .rental-table td:nth-of-type(1)::before { content: "Durasi"; }
-  .rental-table td:nth-of-type(2)::before { content: "Harga Total"; }
-  .rental-table td:nth-of-type(3)::before { content: "Harga/Hari"; }
-  .rental-table td:nth-of-type(4)::before { content: "Diskon (%)"; }
-  .rental-table td:nth-of-type(5)::before { content: "Diskon (Rp)"; }
-  .rental-table td:nth-of-type(6)::before { content: "Aksi"; }
-
-  .lokasi-box-container {
-    top: 45%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90vw;
-    margin-top: 10px;
+  @keyframes rentalCardIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 }
 
