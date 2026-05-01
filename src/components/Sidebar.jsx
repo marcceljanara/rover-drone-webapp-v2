@@ -36,6 +36,7 @@ const menuData = [
 
 const Sidebar = () => {
   const [expanded, setExpanded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -53,7 +54,9 @@ const Sidebar = () => {
   // Fungsi resize untuk mengatur expanded berdasarkan device
   useEffect(() => {
     const handleResize = () => {
-      setExpanded(window.innerWidth > 1024);
+      const mobile = window.innerWidth <= 1024;
+      setIsMobile(mobile);
+      setExpanded(!mobile);
     };
 
     handleResize();
@@ -63,11 +66,11 @@ const Sidebar = () => {
 
   // Fungsi klik icon lokasi
   const handleIconLokasiClick = () => {
-    if (location.pathname === "/addresses" && window.innerWidth <= 1024) {
+    if (location.pathname === "/addresses" && isMobile) {
       setExpanded(false);
     } else {
       navigate("/addresses");
-      if (window.innerWidth <= 1024) setExpanded(false);
+      if (isMobile) setExpanded(false);
     }
   };
 
@@ -87,19 +90,30 @@ const Sidebar = () => {
 
   return (
     <>
-      {/* Tombol hamburger */}
-      <div className="bars" onClick={() => setExpanded((prev) => !prev)}>
+      <button
+        className="bars"
+        type="button"
+        aria-label={expanded ? "Tutup menu navigasi" : "Buka menu navigasi"}
+        aria-expanded={expanded}
+        aria-controls="primary-sidebar"
+        onClick={() => setExpanded((prev) => !prev)}
+      >
         <UilBars />
-      </div>
+      </button>
 
-      {/* Sidebar */}
-      <div
+      {isMobile && expanded && (
+        <button
+          className="sidebar-backdrop"
+          type="button"
+          aria-label="Tutup menu navigasi"
+          onClick={() => setExpanded(false)}
+        />
+      )}
+
+      <nav
+        id="primary-sidebar"
         className={`sidebar ${expanded ? "open" : "closed"}`}
-        style={{
-          left: expanded ? "0" : "-100%",
-          position: window.innerWidth <= 1024 ? "fixed" : "relative",
-          zIndex: 100,
-        }}
+        aria-label="Navigasi utama"
       >
         <div className="logo">
           <img src={Logo} alt="logo" className="logo-img" />
@@ -107,12 +121,14 @@ const Sidebar = () => {
             <span className="brand-name">
               A<span>gro</span>S
             </span>
-            <img
-              src={IconLokasi}
-              className={`icon-lokasi ${location.pathname === "/addresses" ? "active" : ""}`}
-              alt="lokasi"
+            <button
+              type="button"
+              className={`location-button ${location.pathname === "/addresses" ? "active" : ""}`}
               onClick={handleIconLokasiClick}
-            />
+              aria-label="Buka alamat lokasi"
+            >
+              <img src={IconLokasi} className="icon-lokasi" alt="" />
+            </button>
           </div>
         </div>
 
@@ -126,8 +142,8 @@ const Sidebar = () => {
             <NavLink
               key={link}
               to={link}
-              className={({ isActive }) => `menuItem ${isActive ? "active" : ""}`}
-              onClick={() => window.innerWidth <= 1024 && setExpanded(false)}
+              className={({ isActive }) => `menuItem ${isActive ? "menuItemActive" : ""}`}
+              onClick={() => isMobile && setExpanded(false)}
             >
               <Icon />
               <span>{heading}</span>
@@ -135,13 +151,13 @@ const Sidebar = () => {
           ))}
 
           {isAuthenticated && (
-            <div className="menuItem signout-section" onClick={handleLogout}>
+            <button className="menuItem signout-section" type="button" onClick={handleLogout}>
               <UilSignOutAlt />
               <span>Sign Out</span>
-            </div>
+            </button>
           )}
         </div>
-      </div>
+      </nav>
     </>
   );
 };

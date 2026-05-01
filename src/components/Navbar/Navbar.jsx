@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState, useEffect } from "react";
-import { UilGoogle } from "@iconscout/react-unicons";
+import React, { useEffect, useState } from "react";
+import { UilBars, UilGoogle, UilTimes, UilEye, UilEyeSlash } from "@iconscout/react-unicons";
 import "./Navbar.css";
 import { Link } from "react-scroll";
 
@@ -16,54 +16,69 @@ const Navbar = () => {
   const [registeredEmail, setRegisteredEmail] = useState("");
   const [resendCooldown, setResendCooldown] = useState(0);
   const [forgotPasswordCooldown, setForgotPasswordCooldown] = useState(0);
-
-  // simpan status user login
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // cek apakah sudah login dari cookie
   useEffect(() => {
-    fetch(process.env.REACT_APP_API_URL + "/v1/authentications/me", {
+    fetch(`${process.env.REACT_APP_API_URL}/v1/authentications/me`, {
       method: "GET",
-      credentials: "include", // penting untuk kirim cookie
+      credentials: "include",
     })
       .then(async (res) => {
         if (!res.ok) throw new Error("Not logged in");
         const data = await res.json();
-        setUser(data.data); // backend balikin {id, email, role}
+        setUser(data.data);
       })
       .catch(() => {
         setUser(null);
       });
   }, []);
 
+  const showAppNotification = (message, type = "success") => {
+    setNotificationMessage(message);
+    setNotificationType(type);
+    setShowNotification(true);
+    setTimeout(() => setShowNotification(false), 3000);
+  };
+
+  const closeAllForms = () => {
+    setShowLoginForm(false);
+    setShowSignUpForm(false);
+    setShowVerify(false);
+    setShowForgotPassword(false);
+    setLoginClicked(false);
+    setShowPassword(false);
+    setShowConfirmPassword(false);
+  };
+
   const handleLoginClick = () => {
+    setIsMenuOpen(false);
     if (user) {
       handleLogout();
-    } else {
-      setShowSignUpForm(false);
-      setShowVerify(false);
-      setShowForgotPassword(false);
-      setShowLoginForm(true);
-      setLoginClicked(true);
+      return;
     }
+
+    setShowSignUpForm(false);
+    setShowVerify(false);
+    setShowForgotPassword(false);
+    setShowLoginForm(true);
+    setLoginClicked(true);
   };
 
   const handleLogout = async () => {
     try {
-      await fetch(process.env.REACT_APP_API_URL + "/v1/authentications/logout", {
+      await fetch(`${process.env.REACT_APP_API_URL}/v1/authentications/logout`, {
         method: "POST",
         credentials: "include",
       });
     } catch {
       console.error("Logout gagal.");
     }
-    setUser(null);
-    showSuccessNotification("🔒 Anda telah berhasil keluar.");
-  };
 
-  const closeLoginForm = () => {
-    setShowLoginForm(false);
-    setLoginClicked(false);
+    setUser(null);
+    showAppNotification("Anda telah berhasil keluar.");
   };
 
   const handleSignUpClick = () => {
@@ -73,36 +88,11 @@ const Navbar = () => {
     setShowSignUpForm(true);
   };
 
-  const closeSignUpForm = () => {
-    setShowSignUpForm(false);
-  };
-
   const handleForgotPasswordClick = () => {
     setShowLoginForm(false);
     setShowSignUpForm(false);
     setShowVerify(false);
     setShowForgotPassword(true);
-  };
-
-  const closeForgotPasswordForm = () => {
-    setShowForgotPassword(false);
-  };
-
-  const closeAllForms = () => {
-    setShowLoginForm(false);
-    setShowSignUpForm(false);
-    setShowVerify(false);
-    setShowForgotPassword(false);
-    setLoginClicked(false);
-  };
-
-  const showSuccessNotification = (message, type = "success") => {
-    setNotificationMessage(message);
-    setNotificationType(type);
-    setShowNotification(true);
-    setTimeout(() => {
-      setShowNotification(false);
-    }, 3000);
   };
 
   const handleLoginSubmit = async (e) => {
@@ -111,15 +101,12 @@ const Navbar = () => {
     const password = e.target.password.value;
 
     try {
-      const response = await fetch(
-        process.env.REACT_APP_API_URL + "/v1/authentications",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-          credentials: "include", // penting untuk simpan cookie
-        }
-      );
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/authentications`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+        credentials: "include",
+      });
 
       if (!response.ok) {
         const data = await response.json();
@@ -127,17 +114,14 @@ const Navbar = () => {
       }
 
       const data = await response.json();
-      setUser(data.data); // backend balikin {id, email, role}
-      
-      showSuccessNotification(
-        `✅ Login berhasil! Selamat datang kembali ${data.data.role}`
-      );
+      setUser(data.data);
+      showAppNotification(`Login berhasil. Selamat datang kembali ${data.data.role}.`);
       setShowLoginForm(false);
       setLoginClicked(false);
       window.location.href = "/dashboard";
     } catch (error) {
       console.error("Login gagal.");
-      showSuccessNotification(`❌ ${error.message}`, "error");
+      showAppNotification(error.message, "error");
     }
   };
 
@@ -147,16 +131,19 @@ const Navbar = () => {
     const username = e.target.username.value;
     const email = e.target["email-signup"].value;
     const password = e.target["password-signup"].value;
+    const confirmPassword = e.target["confirm-password-signup"].value;
+
+    if (password !== confirmPassword) {
+      showAppNotification("Password dan konfirmasi password tidak cocok.", "error");
+      return;
+    }
 
     try {
-      const response = await fetch(
-        process.env.REACT_APP_API_URL + "/v1/users/register",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ fullname, username, email, password }),
-        }
-      );
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/users/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fullname, username, email, password }),
+      });
 
       if (!response.ok) {
         const data = await response.json();
@@ -166,12 +153,10 @@ const Navbar = () => {
       setShowSignUpForm(false);
       setShowVerify(true);
       setRegisteredEmail(email);
-      showSuccessNotification(
-        "✅ Sign Up berhasil! Silakan verifikasi email Anda."
-      );
+      showAppNotification("Sign Up berhasil. Silakan verifikasi email Anda.");
     } catch (error) {
       console.error("Pendaftaran pengguna gagal.");
-      showSuccessNotification(error.message || "❌ Pendaftaran gagal.", "error");
+      showAppNotification(error.message || "Pendaftaran gagal.", "error");
     }
   };
 
@@ -180,28 +165,22 @@ const Navbar = () => {
     const otp = e.target.otp.value;
 
     try {
-      const response = await fetch(
-        process.env.REACT_APP_API_URL + "/v1/users/verify-otp",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: registeredEmail, otp }),
-        }
-      );
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/users/verify-otp`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: registeredEmail, otp }),
+      });
 
       if (response.status === 200) {
-        showSuccessNotification("✅ OTP berhasil diverifikasi!");
+        showAppNotification("OTP berhasil diverifikasi.");
         setShowVerify(false);
         setShowLoginForm(true);
       } else {
-        showSuccessNotification("❌ OTP salah atau kadaluarsa.", "error");
+        showAppNotification("OTP salah atau kadaluarsa.", "error");
       }
     } catch {
       console.error("Verifikasi OTP gagal.");
-      showSuccessNotification(
-        "❌ Terjadi kesalahan jaringan saat verifikasi.",
-        "error"
-      );
+      showAppNotification("Terjadi kesalahan jaringan saat verifikasi.", "error");
     }
   };
 
@@ -212,25 +191,18 @@ const Navbar = () => {
     const email = e.target.email.value;
 
     try {
-      const response = await fetch(
-        process.env.REACT_APP_API_URL + "/v1/users/forgot-password",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email }),
-        }
-      );
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/users/forgot-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
 
       const data = await response.json();
+      if (!response.ok) throw new Error(data.message || "Gagal mengirim email reset password.");
 
-      if (!response.ok) {
-        throw new Error(data.message || "Gagal mengirim email reset password.");
-      }
-
-      showSuccessNotification("✅ " + data.message);
-      
-      // Start 2-minute cooldown
+      showAppNotification(data.message);
       setForgotPasswordCooldown(120);
+
       const interval = setInterval(() => {
         setForgotPasswordCooldown((prev) => {
           if (prev <= 1) {
@@ -240,10 +212,9 @@ const Navbar = () => {
           return prev - 1;
         });
       }, 1000);
-
     } catch (error) {
       console.error("Permintaan reset password gagal.");
-      showSuccessNotification(error.message || "❌ Gagal mengirim email reset password.", "error");
+      showAppNotification(error.message || "Gagal mengirim email reset password.", "error");
     }
   };
 
@@ -252,14 +223,11 @@ const Navbar = () => {
     if (resendCooldown > 0) return;
 
     try {
-      const response = await fetch(
-        process.env.REACT_APP_API_URL + "/v1/users/resend-otp",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: registeredEmail }),
-        }
-      );
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/users/resend-otp`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: registeredEmail }),
+      });
 
       if (!response.ok) {
         const data = await response.json();
@@ -267,7 +235,7 @@ const Navbar = () => {
       }
 
       const data = await response.json();
-      showSuccessNotification("✅ " + data.message);
+      showAppNotification(data.message);
       setResendCooldown(60);
 
       const interval = setInterval(() => {
@@ -281,99 +249,114 @@ const Navbar = () => {
       }, 1000);
     } catch (error) {
       console.error("Pengiriman ulang OTP gagal.");
-      showSuccessNotification(error.message, "error");
+      showAppNotification(error.message, "error");
     }
   };
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
+  const closeMenu = () => setIsMenuOpen(false);
+
   return (
-    <div className="n-wrapper" id="Navbar">
-      <div className="n-left">
-        <div className="n-name">AgroSwarm</div>
-      </div>
-      <div className="n-right">
-        <div className="n-list">
-          <ul>
-            <li>
-              <Link activeClass="active" to="Navbar" spy={true} smooth={true}>
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link to="services" spy={true} smooth={true}>
-                Services
-              </Link>
-            </li>
-            <li>
-              <Link to="works" spy={true} smooth={true}>
-                Experience
-              </Link>
-            </li>
-            <li>
-              <button
-                className={`button n-button ${loginClicked ? "clicked" : ""}`}
-                onClick={handleLoginClick}
-              >
-                {user ? "Log Out" : "Login"}
-              </button>
-            </li>
-          </ul>
+    <>
+      <header className="n-wrapper" id="Navbar">
+        <div className="n-left">
+          <a className="n-name" href="#Navbar" onClick={closeMenu}>AgroSwarm</a>
         </div>
-        <a
-          href="https://wa.me/6282178452180"
-          target="_blank"
-          rel="noopener noreferrer"
+
+        <button
+          className="hamburger"
+          type="button"
+          aria-label={isMenuOpen ? "Tutup menu" : "Buka menu"}
+          aria-expanded={isMenuOpen}
+          onClick={() => setIsMenuOpen((open) => !open)}
         >
-          <button className="button n-button contact-button">kontak</button>
-        </a>
-      </div>
+          {isMenuOpen ? <UilTimes /> : <UilBars />}
+        </button>
+
+        <nav className={`n-right ${isMenuOpen ? "open" : ""}`} aria-label="Navigasi landing page">
+          <div className="n-list">
+            <ul>
+              <li>
+                <Link activeClass="active" to="Navbar" spy smooth onClick={closeMenu}>Home</Link>
+              </li>
+              <li>
+                <Link to="services" spy smooth onClick={closeMenu}>Services</Link>
+              </li>
+              <li>
+                <Link to="works" spy smooth onClick={closeMenu}>Experience</Link>
+              </li>
+            </ul>
+          </div>
+          <div className="nav-actions">
+            <button className={`button n-button ${loginClicked ? "clicked" : ""}`} type="button" onClick={handleLoginClick}>
+              {user ? "Log Out" : "Login"}
+            </button>
+            <a href="https://wa.me/6282178452180" target="_blank" rel="noopener noreferrer" className="contact-link" onClick={closeMenu}>
+              Kontak
+            </a>
+          </div>
+        </nav>
+      </header>
 
       {(showLoginForm || showSignUpForm || showVerify || showForgotPassword) && (
-        <div className="login-overlay active" onClick={closeAllForms}></div>
+        <button className="login-overlay active" type="button" aria-label="Tutup dialog" onClick={closeAllForms} />
       )}
 
       {showNotification && (
-        <div className={`notification ${notificationType}`}>
+        <div className={`notification ${notificationType}`} role="status" aria-live="polite">
           {notificationMessage}
         </div>
       )}
 
       {showLoginForm && (
-        <div className="login-form">
-          <button className="close-btn" onClick={closeLoginForm}>
-            &times;
+        <div className="login-form" role="dialog" aria-modal="true" aria-labelledby="login-title">
+          <button className="close-btn" type="button" aria-label="Tutup sign in" onClick={closeAllForms}>
+            <UilTimes size="18" />
           </button>
-          <h2>Sign In</h2>
+          <h2 id="login-title">Sign In</h2>
           <form onSubmit={handleLoginSubmit}>
             <div className="form-group">
-              <label>Email</label>
-              <input type="email" name="email" required />
+              <label htmlFor="login-email">Email</label>
+              <input id="login-email" type="email" name="email" autoComplete="email" required />
             </div>
             <div className="form-group">
-              <label>Password</label>
-              <input type="password" name="password" required />
+              <label htmlFor="login-password">Password</label>
+              <div className="password-field-wrapper">
+                <input
+                  id="login-password"
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  autoComplete="current-password"
+                  required
+                />
+                <button
+                  type="button"
+                  className="password-toggle-btn"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Sembunyikan password" : "Tampilkan password"}
+                >
+                  {showPassword ? <UilEyeSlash size="18" /> : <UilEye size="18" />}
+                </button>
+              </div>
             </div>
-            <div className="form-group" id="remember-group">
-              <label htmlFor="remember-me">Remember me</label>
+            <div className="remember-group">
               <input type="checkbox" id="remember-me" name="remember-me" />
+              <label htmlFor="remember-me">Remember me</label>
             </div>
-            <button type="submit" className="login-btn">
-              Sign In
-            </button>
+            <button type="submit" className="login-btn">Sign In</button>
           </form>
 
-          {/* Tombol Google Login */}
           <div className="divider">Atau</div>
           <button
             className="google-btn"
+            type="button"
             onClick={() => {
-              window.location.href =
-                process.env.REACT_APP_API_URL + "/v1/authentications/google";
+              window.location.href = `${process.env.REACT_APP_API_URL}/v1/authentications/google`;
             }}
           >
             <UilGoogle /> Login dengan Google
@@ -381,106 +364,130 @@ const Navbar = () => {
 
           <p>
             Don't have an account?{" "}
-            <a href="#" onClick={handleSignUpClick}>
-              Sign up
-            </a>
+            <button type="button" className="text-link" onClick={handleSignUpClick}>Sign up</button>
           </p>
           <p>
-            <a href="#" onClick={handleForgotPasswordClick}>
-              Forgot Password?
-            </a>
+            <button type="button" className="text-link" onClick={handleForgotPasswordClick}>Forgot Password?</button>
           </p>
         </div>
       )}
 
       {showSignUpForm && (
-        <div className="login-form">
-          <button className="close-btn" onClick={closeSignUpForm}>
-            &times;
+        <div className="login-form" role="dialog" aria-modal="true" aria-labelledby="signup-title">
+          <button className="close-btn" type="button" aria-label="Tutup sign up" onClick={closeAllForms}>
+            <UilTimes size="18" />
           </button>
-          <h2>Sign Up</h2>
+          <h2 id="signup-title">Sign Up</h2>
           <form onSubmit={handleSignUpSubmit}>
             <div className="form-group">
-              <label>Full Name</label>
-              <input type="text" name="fullname" required />
+              <label htmlFor="signup-fullname">Full Name</label>
+              <input id="signup-fullname" type="text" name="fullname" autoComplete="name" required />
             </div>
             <div className="form-group">
-              <label>Username</label>
-              <input type="text" name="username" required />
+              <label htmlFor="signup-username">Username</label>
+              <input id="signup-username" type="text" name="username" autoComplete="username" required />
             </div>
             <div className="form-group">
-              <label>Email</label>
-              <input type="email" name="email-signup" required />
+              <label htmlFor="signup-email">Email</label>
+              <input id="signup-email" type="email" name="email-signup" autoComplete="email" required />
             </div>
             <div className="form-group">
-              <label>Password</label>
-              <input type="password" name="password-signup" required />
+              <label htmlFor="signup-password">Password</label>
+              <div className="password-field-wrapper">
+                <input
+                  id="signup-password"
+                  type={showPassword ? "text" : "password"}
+                  name="password-signup"
+                  autoComplete="new-password"
+                  required
+                />
+                <button
+                  type="button"
+                  className="password-toggle-btn"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Sembunyikan password" : "Tampilkan password"}
+                >
+                  {showPassword ? <UilEyeSlash size="18" /> : <UilEye size="18" />}
+                </button>
+              </div>
             </div>
-            <button type="submit" className="login-btn">
-              Register
-            </button>
+            <div className="form-group">
+              <label htmlFor="signup-confirm-password">Konfirmasi Password</label>
+              <div className="password-field-wrapper">
+                <input
+                  id="signup-confirm-password"
+                  type={showConfirmPassword ? "text" : "password"}
+                  name="confirm-password-signup"
+                  autoComplete="new-password"
+                  required
+                />
+                <button
+                  type="button"
+                  className="password-toggle-btn"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  aria-label={showConfirmPassword ? "Sembunyikan konfirmasi password" : "Tampilkan konfirmasi password"}
+                >
+                  {showConfirmPassword ? <UilEyeSlash size="18" /> : <UilEye size="18" />}
+                </button>
+              </div>
+            </div>
+            <button type="submit" className="login-btn">Register</button>
           </form>
         </div>
       )}
 
       {showVerify && (
-        <div className="login-form">
-          <button className="close-btn" onClick={() => setShowVerify(false)}>
-            &times;
+        <div className="login-form" role="dialog" aria-modal="true" aria-labelledby="verify-title">
+          <button className="close-btn" type="button" aria-label="Tutup verifikasi" onClick={closeAllForms}>
+            <UilTimes size="18" />
           </button>
-          <h2>Verifikasi Email</h2>
+          <h2 id="verify-title">Verifikasi Email</h2>
           <p>Masukkan kode OTP yang dikirim ke email Anda.</p>
           <form onSubmit={handleVerifySubmit}>
             <div className="form-group">
-              <input
-                type="text"
-                name="otp"
-                placeholder="Masukkan OTP"
-                required
-              />
+              <label htmlFor="verify-otp">Kode OTP</label>
+              <input id="verify-otp" type="text" name="otp" placeholder="Masukkan OTP" inputMode="numeric" required />
             </div>
-            <button type="submit" className="login-btn">
-              Verifikasi
-            </button>
+            <button type="submit" className="login-btn">Verifikasi</button>
           </form>
-          <button onClick={handleResendOTP} disabled={resendCooldown > 0}>
+          <button className="resend-btn" type="button" onClick={handleResendOTP} disabled={resendCooldown > 0}>
             Kirim Ulang OTP {resendCooldown > 0 ? `(${resendCooldown}s)` : ""}
           </button>
         </div>
       )}
 
       {showForgotPassword && (
-        <div className="login-form">
-          <button className="close-btn" onClick={closeForgotPasswordForm}>
-            &times;
+        <div className="login-form" role="dialog" aria-modal="true" aria-labelledby="forgot-title">
+          <button className="close-btn" type="button" aria-label="Tutup forgot password" onClick={closeAllForms}>
+            <UilTimes size="18" />
           </button>
-          <h2>Forgot Password</h2>
+          <h2 id="forgot-title">Forgot Password</h2>
           <p>Masukkan email Anda untuk menerima link reset password.</p>
           <form onSubmit={handleForgotPasswordSubmit}>
             <div className="form-group">
-              <label>Email</label>
-              <input type="email" name="email" placeholder="Masukkan email Anda" required />
+              <label htmlFor="forgot-email">Email</label>
+              <input id="forgot-email" type="email" name="email" placeholder="Masukkan email Anda" autoComplete="email" required />
             </div>
-            <button 
-              type="submit" 
-              className="login-btn"
-              disabled={forgotPasswordCooldown > 0}
-            >
+            <button type="submit" className="login-btn" disabled={forgotPasswordCooldown > 0}>
               {forgotPasswordCooldown > 0 ? `Kirim Ulang (${formatTime(forgotPasswordCooldown)})` : "Kirim Link Reset"}
             </button>
           </form>
           <p>
             Ingat password Anda?{" "}
-            <a href="#" onClick={() => {
-              setShowForgotPassword(false);
-              setShowLoginForm(true);
-            }}>
+            <button
+              type="button"
+              className="text-link"
+              onClick={() => {
+                setShowForgotPassword(false);
+                setShowLoginForm(true);
+              }}
+            >
               Kembali ke Login
-            </a>
+            </button>
           </p>
         </div>
       )}
-    </div>
+    </>
   );
 };
 
