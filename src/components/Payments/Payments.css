@@ -92,6 +92,7 @@ h2 {
   font-weight: bold;
   transition: color 0.2s ease;
 }
+
 .clickable-id:hover {
   text-decoration: underline;
   color: #2e7d32;
@@ -108,13 +109,16 @@ h2 {
   cursor: pointer;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
+
 .edit-btn:hover:not(:disabled) {
   background-color: #2e7d32;
 }
+
 .edit-btn:disabled {
   background-color: #aaa;
   cursor: not-allowed;
 }
+
 .edit-btn.glow {
   box-shadow: 0 0 10px 3px rgba(76, 175, 80, 0.6);
 }
@@ -127,7 +131,7 @@ h2 {
   color: #1b5e20;
   border-left: 6px solid #4CAF50;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
 /* Footer */
@@ -146,6 +150,7 @@ h2 {
   align-items: center;
   gap: 14px;
 }
+
 .page-number {
   font-weight: bold;
 }
@@ -162,12 +167,13 @@ h2 {
 }
 
 .modal {
-  background: #f0fff0; /* ✅ Sama seperti body */
+  background: #f0fff0;
+  /* ✅ Sama seperti body */
   padding: 30px;
   border-radius: 12px;
   width: 90%;
   max-width: 440px;
-  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
 .modal h3 {
@@ -216,39 +222,71 @@ h2 {
 
 /* Responsive Table for Mobile */
 @media screen and (max-width: 768px) {
-  .data-table,
-  .data-table thead,
-  .data-table tbody,
-  .data-table th,
-  .data-table td,
-  .data-table tr {
-    display: block;
+  .table-responsive {
+    overflow-x: visible;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
   }
 
-  .data-table th {
+  .data-table {
+    min-width: 0;
+    display: block;
+    width: 100%;
+  }
+
+  .data-table thead {
     display: none;
   }
 
+  .data-table tbody {
+    display: block;
+    width: 100%;
+  }
+
   .data-table tr {
-    margin-bottom: 18px;
-    border-bottom: 2px solid #ddd;
+    display: block;
+    margin-bottom: 1rem;
+    border: 1px solid #d0e8d0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.1);
   }
 
   .data-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.7rem 1rem;
+    border: none;
+    border-bottom: 1px solid #e8f5e9;
     text-align: right;
-    padding-left: 50%;
-    position: relative;
+    font-size: 0.9rem;
+    white-space: normal;
+    word-break: break-word;
+    gap: 0.5rem;
+  }
+
+  .data-table td:last-child {
+    border-bottom: none;
   }
 
   .data-table td::before {
     content: attr(data-label);
-    position: absolute;
-    left: 12px;
-    width: 45%;
-    white-space: nowrap;
-    font-weight: bold;
+    font-weight: 700;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #555;
+    flex-shrink: 0;
     text-align: left;
-    color: #333;
+  }
+
+  .edit-btn {
+    width: 100%;
+    padding: 10px;
+    font-size: 0.95rem;
   }
 
   .modal {
