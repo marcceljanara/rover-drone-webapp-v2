@@ -188,31 +188,33 @@ const DataDetail = () => {
       </div>
 
       <h3>Latest Sensor Data</h3>
-      <table className="sensor-table">
-        <thead>
-          <tr>
-            <th>Timestamp</th>
-            <th>Temperature (°C)</th>
-            <th>Humidity (%)</th>
-            <th>Light (lx)</th>
-          </tr>
-        </thead>
-        <tbody>
-          {limitsData.map((item, idx) => (
-            <tr key={idx}>
-              <td>{item.timestamp}</td>
-              <td>{item.temperature}</td>
-              <td>{item.humidity}</td>
-              <td>{item.light_intensity}</td>
+      <div className="sensor-table-container">
+        <table className="sensor-table">
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Temperature (°C)</th>
+              <th>Humidity (%)</th>
+              <th>Light (lx)</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {limitsData.map((item, idx) => (
+              <tr key={idx}>
+                <td data-label="Timestamp">{item.timestamp}</td>
+                <td data-label="Temperature (°C)">{item.temperature}</td>
+                <td data-label="Humidity (%)">{item.humidity}</td>
+                <td data-label="Light (lx)">{item.light_intensity}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {/* Analisis dari LLM */}
       <div className="analysis-section">
         <div className="analysis-header">
-          <h3>🤖 AI Analysis</h3>
+          <h3>AI Analysis</h3>
           <div className="analysis-controls">
             <select
               value={analysisInterval}
@@ -224,7 +226,7 @@ const DataDetail = () => {
               ))}
             </select>
             <button className="analyze-btn" onClick={fetchAnalysis}>
-              🔎 Analisis
+              Analisis
             </button>
           </div>
         </div>
@@ -238,7 +240,7 @@ const DataDetail = () => {
           ) : analysis.length > 0 ? (
             <ul className="analysis-list">
               {analysis.map((msg, idx) => (
-                <li key={idx} className="analysis-item">✨ {formatMessage(msg)}</li>
+                <li key={idx} className="analysis-item">{formatMessage(msg)}</li>
               ))}
             </ul>
           ) : (
