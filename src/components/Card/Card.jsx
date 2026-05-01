@@ -1,57 +1,61 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import "./Card.css";
-// import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { motion, AnimateSharedLayout } from "framer-motion";
 import { UilTimes } from "@iconscout/react-unicons";
 import Chart from "react-apexcharts";
 
-// Parent Card
 const Card = (props) => {
   const [expanded, setExpanded] = useState(false);
+
   return (
     <AnimateSharedLayout>
-      {expanded ? (
-        <ExpandedCard param={props} setExpanded={() => setExpanded(false)} />
-      ) : (
-        <CompactCard param={props} setExpanded={() => setExpanded(true)} />
-      )}
+      <CompactCard param={props} setExpanded={() => setExpanded(true)} />
+      {expanded && <ExpandedCard param={props} setExpanded={() => setExpanded(false)} />}
     </AnimateSharedLayout>
   );
 };
 
-// Compact Card
 function CompactCard({ param, setExpanded }) {
   const Png = param.png;
+  const accent = param.color?.accent || param.color?.backGround || "var(--color-primary)";
+  const value = param.value ?? "--";
+
   return (
-    <motion.div
+    <motion.button
+      type="button"
       className="CompactCard"
-      style={{
-        background: param.color.backGround,
-        boxShadow: param.color.boxShadow,
-      }}
-      layoutId="expandableCard"
+      style={{ "--metric-accent": accent }}
+      layoutId={`expandable-card-${param.title}`}
       onClick={setExpanded}
+      aria-label={`Buka grafik ${param.title}`}
     >
+      <div className="metric-icon" aria-hidden="true">
+        {Png ? <Png /> : null}
+      </div>
       <div className="radialBar">
-        {/* <CircularProgressbar value={param.barValue} text={`${param.barValue}%`} /> */}
         <span>{param.title}</span>
+        <strong>{value}{param.satuan}</strong>
       </div>
-      <div className="detail">
-        <Png />
-        <span>{param.value}{param.satuan}</span>
-        <span>Last 1 hour</span>
-      </div>
-    </motion.div>
+      <span className="metric-period">Last 1 hour</span>
+    </motion.button>
   );
 }
 
-// Expanded Card
 function ExpandedCard({ param, setExpanded }) {
-  const sortedData = param.xaxis.map((time, index) => ({
-    x: new Date(time).getTime(), // convert to epoch
-    y: param.series[0].data[index],
-  })).sort((a, b) => a.x - b.x); // sort ascending by time
+  const chartTitleId = `chart-title-${String(param.title || "metric").toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+  const chartData = useMemo(() => {
+    const xaxis = Array.isArray(param.xaxis) ? param.xaxis : [];
+    const series = Array.isArray(param.series?.[0]?.data) ? param.series[0].data : [];
+
+    return xaxis
+      .map((time, index) => ({
+        x: new Date(time).getTime(),
+        y: series[index],
+      }))
+      .filter((point) => Number.isFinite(point.x) && point.y !== undefined)
+      .sort((a, b) => a.x - b.x);
+  }, [param.series, param.xaxis]);
 
   const data = {
     options: {
@@ -60,60 +64,66 @@ function ExpandedCard({ param, setExpanded }) {
         height: "auto",
         zoom: { enabled: false },
         toolbar: { show: false },
+        foreColor: "#60736a",
       },
       fill: {
-        colors: ["#fff"],
+        colors: ["#167a3f"],
+        opacity: 0.18,
         type: "gradient",
       },
-      dataLabels: {
-        enabled: false,
-      },
+      dataLabels: { enabled: false },
       stroke: {
         curve: "smooth",
-        colors: ["white"],
+        colors: ["#167a3f"],
+        width: 3,
       },
       tooltip: {
-        x: {
-          format: "dd/MM/yy HH:mm",
-        },
+        x: { format: "dd/MM/yy HH:mm" },
       },
       grid: {
-        show: true,
-        borderColor: "#ccc",
+        borderColor: "#dce8dc",
+        strokeDashArray: 4,
       },
       xaxis: {
         type: "datetime",
-        labels: {
-          datetimeUTC: false,
-        },
+        labels: { datetimeUTC: false },
       },
     },
     series: [
       {
-        name: param.series[0].name,
-        data: sortedData,
+        name: param.series?.[0]?.name || param.title,
+        data: chartData,
       },
     ],
   };
 
   return (
-    <motion.div
-      className="ExpandedCard"
-      style={{
-        background: param.color.backGround,
-        boxShadow: param.color.boxShadow,
-      }}
-      layoutId="expandableCard"
-    >
-      <div style={{ alignSelf: "flex-end", cursor: "pointer", color: "white" }}>
-        <UilTimes onClick={setExpanded} />
-      </div>
-      <span>{param.title}</span>
-      <div className="chartContainer">
-        <Chart options={data.options} series={data.series} type="area" height="350px" width={"100%"} />
-      </div>
-      <span>Last 24 hours</span>
-    </motion.div>
+    <div className="ExpandedCardOverlay" role="presentation" onClick={setExpanded}>
+      <motion.div
+        className="ExpandedCard"
+        layoutId={`expandable-card-${param.title}`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={chartTitleId}
+        onClick={(event) => event.stopPropagation()}
+      >
+        <button className="close-chart-button" type="button" onClick={setExpanded} aria-label="Tutup grafik">
+          <UilTimes />
+        </button>
+        <div className="expanded-card-header">
+          <p className="eyebrow">Telemetry chart</p>
+          <h2 id={chartTitleId}>{param.title}</h2>
+          <span>Last 24 hours</span>
+        </div>
+        <div className="chartContainer">
+          {chartData.length > 0 ? (
+            <Chart options={data.options} series={data.series} type="area" height={340} width="100%" />
+          ) : (
+            <p className="empty-state">Data grafik belum tersedia.</p>
+          )}
+        </div>
+      </motion.div>
+    </div>
   );
 }
 

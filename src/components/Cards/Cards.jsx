@@ -4,14 +4,15 @@ import { CardsDataComponent } from "../../Data/Data";
 
 import Card from "../Card/Card"; 
 
-const Cards = () => {
+const Cards = ({ cardsData: cardsDataProp }) => {
   const { cardsData } = CardsDataComponent();
+  const displayCards = cardsDataProp || cardsData;
 
   return (
     <div className="Cards">
-      {Array.isArray(cardsData) && cardsData.length > 0 ? (
-        cardsData.map((card, id) => (
-          <div className="parentContainer" key={id}>
+      {Array.isArray(displayCards) && displayCards.length > 0 ? (
+        displayCards.map((card, id) => (
+          <div className="parentContainer" key={`${card.title}-${id}`}>
             <Card
               title={card.title}
               color={card.color}
