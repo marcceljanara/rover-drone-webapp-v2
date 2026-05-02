@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import Pagination from "../Pagination/Pagination";
+import TableEmptyState from "../TableEmptyState/TableEmptyState";
 import "./Returns.css";
 
 const API = process.env.REACT_APP_API_URL+"/v1/returns";
@@ -52,7 +54,7 @@ export default function Returns() {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredReturns.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredReturns.length / itemsPerPage);
+  const totalPages = Math.max(1, Math.ceil(filteredReturns.length / itemsPerPage));
 
   return (
     <div className="ret-container">
@@ -109,31 +111,24 @@ export default function Returns() {
                 </tr>
               ))
             ) : (
-              <tr>
-                <td colSpan="7" className="ret-empty">Tidak ada data</td>
-              </tr>
+              <TableEmptyState
+                colSpan={7}
+                icon="📦"
+                title="Tidak ada data pengembalian"
+                subtitle="Belum ada pengembalian yang tercatat."
+              />
             )}
           </tbody>
         </table>
 
-        {/* Pagination SELALU tampil, tapi hanya aktif jika data > 5 */}
-        <div className="ret-pagination">
-          <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1 || filteredReturns.length <= itemsPerPage}
-          >
-            ←
-          </button>
-          <span className="page-number">
-            Halaman {String(currentPage).padStart(2, "0")}
-          </span>
-          <button
-            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-            disabled={currentPage === totalPages || filteredReturns.length <= itemsPerPage}
-          >
-            →
-          </button>
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          totalItems={filteredReturns.length}
+          pageSize={itemsPerPage}
+          itemLabel="pengembalian"
+        />
       </div>
     </div>
   );

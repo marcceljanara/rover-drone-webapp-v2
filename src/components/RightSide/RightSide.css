@@ -1,142 +1,28 @@
 .RightSide {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  width: 95%;
-  padding-top: 2rem;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 2rem;
+  gap: var(--space-4);
 }
 
-/* Section inside RightSide */
-.section {
+.RightSide .section {
   width: 100%;
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: var(--shadow-sm);
 }
 
-.section-title {
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 10px;
-  color: #333;
+.RightSide .section-title {
+  margin: 0 0 var(--space-4);
+  color: var(--color-text);
+  font-size: 1rem;
+  font-weight: 900;
 }
 
-/* Parent container harus pakai flex juga agar order: 2 bisa berfungsi */
-.dashboard-layout {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 2rem;
-}
-
-/* Konten utama (misal konten kiri) */
-.main-content {
-  flex: 1;
-  min-width: 300px;
-}
-
-/* RightSide default (di kanan) */
-.RightSide {
-  flex: 0 0 300px;
-}
-
-/* ============ RESPONSIVE BREAKPOINTS ============ */
-
-/* 1200px ke bawah */
-@media screen and (max-width: 1200px) {
-  .RightSide {
-    margin-top: 3rem;
-  }
-}
-
-/* 1024px ke bawah */
-@media screen and (max-width: 1024px) {
-  .RightSide {
-    padding: 1.5rem;
-    align-items: center;
-  }
-
-  .section {
-    width: 90%;
-  }
-
-  .section-title {
-    font-size: 18px;
-    text-align: center;
-  }
-}
-
-/* 768px ke bawah (turunkan RightSide ke bawah konten utama) */
-@media screen and (max-width: 768px) {
-  .dashboard-layout {
-    flex-direction: column;
-  }
-
-  .RightSide {
-    order: 2;
-    width: 100%;
-    padding-top: 1rem;
-    align-items: center;
-    margin-top: 2rem;
-  }
-
-  .RightSide > .section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .section {
-    width: 95%;
-  }
-
-  .section-title {
-    font-size: 17px;
-    text-align: center;
-  }
-}
-
-/* 600px ke bawah */
-@media screen and (max-width: 600px) {
-  .section-title {
-    font-size: 16px;
-  }
-
-  .section {
-    width: 100%;
-    padding: 0 1rem;
-  }
-}
-
-/* 480px ke bawah */
-@media screen and (max-width: 480px) {
-  .RightSide {
-    padding-top: 0.5rem;
-    gap: 1rem;
-  }
-
-  .section-title {
-    font-size: 15px;
-  }
-}
-
-/* 375px ke bawah */
-@media screen and (max-width: 375px) {
-  .section-title {
-    font-size: 14px;
-  }
-
-  .RightSide {
-    padding: 0.5rem;
-  }
-}
-
-/* 320px ke bawah */
-@media screen and (max-width: 320px) {
-  .section-title {
-    font-size: 13px;
-  }
-
-  .section {
-    padding: 0;
+@media (max-width: 1180px) {
+  .RightSide .section {
+    max-width: 100%;
   }
 }

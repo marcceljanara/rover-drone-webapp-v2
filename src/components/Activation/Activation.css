@@ -104,11 +104,27 @@
 
 /* ========== RESPONSIVE TABLE TANPA SCROLL HORIZONTAL ========== */
 @media (max-width: 768px) {
+  .activation-container {
+    padding: 1rem;
+  }
+
+  .activation-box {
+    max-width: 100%;
+  }
+
+  .search-add {
+    flex-direction: column;
+    align-items: stretch;
+    margin: 1rem 0;
+  }
+
+  .add-btn {
+    width: 100%;
+  }
+
   .activation-table,
   .activation-table thead,
   .activation-table tbody,
-  .activation-table th,
-  .activation-table td,
   .activation-table tr {
     display: block;
     width: 100%;
@@ -119,42 +135,70 @@
   }
 
   .activation-table tr {
-    margin-bottom: 1.2rem;
-    background-color: #f5fff5;
+    margin-bottom: 1rem;
+    background-color: #fff;
     border: 1px solid #cddccd;
-    border-radius: 8px;
-    padding: 1rem;
+    border-radius: 12px;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(44, 85, 44, 0.08);
+    animation: cardIn 0.3s ease-out;
   }
 
   .activation-table td {
-    position: relative;
-    padding: 1rem 1rem 1rem 55%;
-    font-size: 14px;
-    border-bottom: 1px solid #eee;
-    vertical-align: top;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    font-size: 0.9rem;
+    border-bottom: 1px solid #f0f7f0;
+    text-align: right;
+    min-height: 3.2rem;
     box-sizing: border-box;
+  }
+
+  .activation-table td:last-child {
+    border-bottom: none;
   }
 
   .activation-table td::before {
     content: attr(data-label);
-    position: absolute;
-    left: 1rem;
-    top: 1rem;
-    font-weight: bold;
-    color: #166a16;
-    white-space: nowrap;
-    font-size: 13px;
-  }
-
-  .edit-btn,
-  .delete-btn {
-    width: 100%;
-    font-size: 13px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #2c552c;
+    flex-shrink: 0;
+    text-align: left;
   }
 
   .action-col {
-    flex-direction: row;
+    display: flex !important;
     justify-content: space-between;
+    align-items: center;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 8px;
+    flex: 1;
+    justify-content: flex-end;
+    max-width: 65%;
+  }
+
+  .action-buttons .delete-btn,
+  .action-buttons .edit-btn {
+    flex: 1;
+    width: auto;
+    margin: 0;
+    padding: 0.5rem 0.4rem;
+    font-size: 0.8rem;
+    min-width: 0;
+  }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 }
 
@@ -175,6 +219,10 @@
 
 /* ========== AKSI BUTTON ========== */
 .action-col {
+  display: table-cell; /* Kembali ke default td */
+}
+
+.action-buttons {
   display: flex;
   flex-direction: column;
   gap: 6px;

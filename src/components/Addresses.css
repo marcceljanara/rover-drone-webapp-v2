@@ -1,16 +1,63 @@
-/* src/components/Addresses/Addresses.css */
+/* src/components/Addresses.css */
 
-/* ======= Container Utama ======= */
+/* ======= Container ======= */
 .addresses-page {
-  padding: 60px 20px 20px;
-  max-width: 800px;
-  margin: 40px auto;
-  background: none;
-  border-radius: 1rem;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  color: #000;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
   position: relative;
-  font-family: Arial, sans-serif;
+}
+
+/* ======= Toast Notification ======= */
+.addr-notification {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.25rem;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.1rem;
+  border-radius: var(--radius-md, 10px);
+  font-size: 0.9rem;
+  font-weight: 700;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  max-width: min(28rem, calc(100vw - 2.5rem));
+  animation: slideInRight 0.3s ease;
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.addr-notification--success {
+  background: #166534;
+  color: #fff;
+}
+
+.addr-notification--error {
+  background: #991b1b;
+  color: #fff;
+}
+
+.addr-notification span {
+  flex: 1;
+}
+
+.addr-notif-close {
+  background: transparent;
+  border: none;
+  color: inherit;
+  opacity: 0.75;
+  cursor: pointer;
+  display: inline-flex;
+  padding: 0;
+  min-height: auto;
+}
+
+.addr-notif-close:hover {
+  opacity: 1;
 }
 
 /* ======= Header ======= */
@@ -18,208 +65,580 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
 }
 
-.addresses-header h2 {
-  margin: 0;
-  font-size: 24px;
-  color: #00796b;
-}
-
-/* ======= Tombol Alamat Baru ======= */
-.add-address-btn {
-  padding: 3px 9px;
-  background-color: #00796b;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+.addresses-header__title {
   display: flex;
   align-items: center;
-  gap: 1px;
-  font-size: 14px;
-  transition: background-color 0.3s ease;
-    margin-left: 40px; /* ubah nilai sesuai kebutuhan */
-
+  gap: 0.75rem;
+  color: var(--color-primary, #166534);
 }
+
+.addresses-header__title h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--color-text, #111);
+}
+
+.addresses-header__title p {
+  margin: 0.15rem 0 0;
+  font-size: 0.85rem;
+  color: var(--color-muted, #6b7280);
+}
+
+.add-address-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.65rem 1.1rem;
+  background: var(--color-primary, #166534);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md, 10px);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s, transform 0.15s;
+}
+
 .add-address-btn:hover {
-  background-color: #004d40;
+  background: var(--color-primary-dark, #14532d);
+  transform: translateY(-1px);
 }
 
-/* ======= Formulir Alamat ======= */
+/* ======= Form Card ======= */
+.address-form-card {
+  background: var(--color-surface, #fff);
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: var(--radius-xl, 14px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+  margin-bottom: 2rem;
+  overflow: hidden;
+}
+
+.address-form-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.1rem 1.5rem;
+  background: var(--color-surface-soft, #f9fafb);
+  border-bottom: 1px solid var(--color-border, #e5e7eb);
+}
+
+.address-form-card__header h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--color-text, #111);
+}
+
+.form-close-btn {
+  width: 2rem;
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--color-muted, #6b7280);
+  cursor: pointer;
+  border-radius: var(--radius-md, 10px);
+  transition: background 0.15s;
+}
+
+.form-close-btn:hover {
+  background: var(--color-border, #e5e7eb);
+}
+
 .address-form {
-  background: #ffffff;
-  border-radius: 1rem;
-  padding: 20px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-  margin-bottom: 30px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 1.5rem;
 }
 
 .form-row {
   display: flex;
   flex-direction: column;
-  margin-bottom: 16px;
+  gap: 0.35rem;
+  margin-bottom: 1.1rem;
 }
+
+.form-row--full {
+  grid-column: 1 / -1;
+}
+
 .form-row label {
-  font-weight: bold;
-  color: #00796b;
-  margin-bottom: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-text, #111);
 }
-.form-row input[type="text"],
-.form-row input[type="number"],
-.form-row input[type="tel"],
-.form-row input[type="checkbox"] {
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 14px;
+
+.form-row input,
+.form-row select,
+.form-row textarea {
+  padding: 0.6rem 0.85rem;
+  border: 1px solid var(--color-border, #d1d5db);
+  border-radius: var(--radius-md, 10px);
+  font-size: 0.9rem;
+  color: var(--color-text, #111);
+  background: var(--color-surface, #fff);
   outline: none;
-}
-.form-row input:focus {
-  border-color: #00796b;
+  transition: border-color 0.2s;
+  font-family: inherit;
+  resize: vertical;
 }
 
-/* Baris checkbox khusus */
-.form-row.checkbox {
-  flex-direction: row;
+.form-row input:focus,
+.form-row select:focus,
+.form-row textarea:focus {
+  border-color: var(--color-primary, #166534);
+  box-shadow: 0 0 0 3px rgba(22, 101, 52, 0.1);
+}
+
+.form-row select:disabled {
+  background: var(--color-surface-soft, #f3f4f6);
+  color: var(--color-muted, #9ca3af);
+  cursor: not-allowed;
+}
+
+/* Checkbox row */
+.checkbox-row {
+  display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--color-text, #111);
+  font-weight: 600;
 }
 
-/* Tombol simpan dan batal */
+.checkbox-row input[type="checkbox"] {
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: var(--color-primary, #166534);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Form Actions */
 .form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
-  margin-top: 10px;
+  gap: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-border, #e5e7eb);
+  margin-top: 0.5rem;
 }
 
-.cancel-btn,
-.save-btn {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  display: flex;
+.btn-primary {
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 0.4rem;
+  padding: 0.65rem 1.25rem;
+  background: var(--color-primary, #166534);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md, 10px);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
 }
 
-.cancel-btn {
-  background-color: #ccc;
-  color: #333;
-}
-.cancel-btn:hover {
-  background-color: #bbb;
+.btn-primary:hover:not(:disabled) {
+  background: var(--color-primary-dark, #14532d);
 }
 
-.save-btn {
-  background-color: #00796b;
-  color: white;
-}
-.save-btn:hover {
-  background-color: #004d40;
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
-/* ======= Daftar Alamat ======= */
+.btn-secondary {
+  padding: 0.65rem 1.1rem;
+  background: var(--color-surface-soft, #f3f4f6);
+  color: var(--color-text, #374151);
+  border: 1px solid var(--color-border, #d1d5db);
+  border-radius: var(--radius-md, 10px);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-secondary:hover {
+  background: var(--color-border, #e5e7eb);
+}
+
+.btn-danger {
+  padding: 0.65rem 1.1rem;
+  background: #dc2626;
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md, 10px);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-danger:hover {
+  background: #b91c1c;
+}
+
+/* ======= Skeleton Loading ======= */
+.addr-skeleton-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.addr-skeleton-card {
+  height: 8rem;
+  border-radius: var(--radius-xl, 14px);
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ======= Empty State ======= */
+.addr-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 2rem;
+  background: var(--color-surface, #fff);
+  border: 2px dashed var(--color-border, #d1d5db);
+  border-radius: var(--radius-xl, 14px);
+  gap: 0.75rem;
+}
+
+.addr-empty-icon {
+  color: var(--color-primary, #166634);
+  opacity: 0.35;
+}
+
+.addr-empty-state h3 {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--color-text, #111);
+}
+
+.addr-empty-state p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--color-muted, #6b7280);
+  max-width: 28rem;
+  line-height: 1.6;
+}
+
+.addr-empty-state .btn-primary {
+  margin-top: 0.5rem;
+}
+
+/* ======= Address List ======= */
 .address-list {
   list-style: none;
   padding: 0;
   margin: 0;
   display: grid;
-  gap: 16px;
+  gap: 1rem;
 }
 
 .address-item {
-  background-color: #f6fff9;
-  border: 1px solid #b2dba1;
-  border-radius: 10px;
-  padding: 16px;
-  transition: background-color 0.2s ease;
-}
-.address-item.default {
-  border: 2px solid #00796b;
+  background: var(--color-surface, #fff);
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: var(--radius-xl, 14px);
+  padding: 1.25rem 1.35rem;
+  transition: box-shadow 0.2s;
 }
 
-.address-item h3 {
-  margin: 0 0 8px;
-  font-size: 16px;
-  color: #00796b;
+.address-item:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.address-item--default {
+  border-color: var(--color-primary, #166534);
+  border-width: 2px;
+}
+
+.address-item__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.address-item__name {
   display: flex;
   align-items: center;
-  gap: 8px;
-}
-.address-item p {
-  margin: 4px 0;
-  font-size: 14px;
-  color: #333;
+  gap: 0.5rem;
+  font-size: 1rem;
+  flex-wrap: wrap;
 }
 
-/* Lencana Default */
-.badge {
-  background-color: #00796b;
-  color: white;
-  font-size: 11px;
-  padding: 2px 6px;
-  border-radius: 4px;
+.badge-default {
+  background: var(--color-primary, #166534);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
   text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
-/* Tambahkan di bagian input style */
-.form-row select {
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 14px;
-  outline: none;
-  background: #fff;
-}
-.form-row select:focus {
-  border-color: #00796b;
+.address-item__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
 }
 
-/* tombol detail di tiap item */
-.detail-btn{
-  background: none;
+.icon-btn {
+  width: 2rem;
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: none;
+  border-radius: var(--radius-md, 8px);
   cursor: pointer;
-  margin-left: 8px;
+  transition: background 0.15s, color 0.15s;
 }
 
-/* modal detail */
-.detail-modal{
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,.4);
-  display:flex; justify-content:center; align-items:center;
-  z-index: 1000;
-}
-.detail-content{
-  background:#fff; border-radius:10px; padding:24px; max-width:420px; width:90%;
-  box-shadow:0 4px 12px rgba(0,0,0,.15);
-  position:relative;
-}
-.close-detail{
-  position:absolute; top:10px; right:10px; border:none; background:none; cursor:pointer;
+.icon-btn--view {
+  background: #eff6ff;
+  color: #1d4ed8;
 }
 
-.default-btn{
-  background:#00796b;color:#fff;border:none;border-radius:4px;
-  padding:2px 8px;margin-left:8px;cursor:pointer;font-size:12px;
+.icon-btn--view:hover {
+  background: #dbeafe;
 }
 
+.icon-btn--edit {
+  background: #fefce8;
+  color: #ca8a04;
+}
 
+.icon-btn--edit:hover {
+  background: #fef08a;
+}
 
+.icon-btn--delete {
+  background: #fef2f2;
+  color: #dc2626;
+}
 
-/* Responsif */
-@media (max-width: 600px) {
+.icon-btn--delete:hover {
+  background: #fee2e2;
+}
+
+.address-item__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-bottom: 0.85rem;
+}
+
+.address-item__street {
+  font-weight: 600;
+  color: var(--color-text, #111);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.address-item__region {
+  color: var(--color-muted, #6b7280);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.address-item__phone {
+  color: var(--color-muted, #6b7280);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.btn-set-default {
+  display: inline-block;
+  padding: 0.4rem 0.9rem;
+  background: transparent;
+  border: 1px solid var(--color-primary, #166534);
+  color: var(--color-primary, #166534);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.btn-set-default:hover {
+  background: var(--color-primary, #166534);
+  color: #fff;
+}
+
+/* ======= Modal ======= */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1500;
+  padding: 1rem;
+  backdrop-filter: blur(2px);
+}
+
+.modal-box {
+  background: var(--color-surface, #fff);
+  border-radius: var(--radius-xl, 14px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  width: min(100%, 28rem);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: fadeInScale 0.2s ease;
+}
+
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.modal-box--confirm {
+  width: min(100%, 22rem);
+}
+
+.modal-box__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.35rem;
+  border-bottom: 1px solid var(--color-border, #e5e7eb);
+}
+
+.modal-box__header h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.modal-close-btn {
+  width: 2rem;
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface-soft, #f3f4f6);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  color: var(--color-muted, #6b7280);
+  transition: background 0.15s;
+}
+
+.modal-close-btn:hover {
+  background: var(--color-border, #e5e7eb);
+}
+
+.modal-box__body {
+  padding: 1.25rem 1.35rem;
+}
+
+.modal-box__body p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--color-muted, #374151);
+  line-height: 1.6;
+}
+
+.modal-box__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  padding: 1rem 1.35rem;
+  border-top: 1px solid var(--color-border, #e5e7eb);
+}
+
+/* Detail list */
+.detail-list {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.45rem 1rem;
+  margin: 0.75rem 0 0;
+  font-size: 0.9rem;
+}
+
+.detail-list dt {
+  font-weight: 700;
+  color: var(--color-text, #111);
+  white-space: nowrap;
+}
+
+.detail-list dd {
+  color: var(--color-muted, #374151);
+  margin: 0;
+}
+
+.badge-default {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+}
+
+/* ======= Responsive ======= */
+@media (max-width: 640px) {
   .addresses-page {
-    padding: 30px 16px 16px;
+    padding: 1.25rem 1rem 3rem;
   }
-  .form-actions {
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .addresses-header {
     flex-direction: column;
-    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .add-address-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .address-form {
+    padding: 1.1rem;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    justify-content: center;
   }
 }

@@ -25,7 +25,7 @@ const Home = () => {
   return (
     <div className="home-wrapper">
       <Navbar />
-      <div className="home-content">
+      <main className="home-content">
         <div id="intro">
           <Intro />
         </div>
@@ -36,7 +36,7 @@ const Home = () => {
           <Works />
         </div>
         <Footer />
-      </div>
+      </main>
     </div>
   );
 };

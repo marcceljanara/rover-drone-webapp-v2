@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Pagination from '../Pagination/Pagination';
+import TableEmptyState from '../TableEmptyState/TableEmptyState';
 import './Payments.css';
 
 const itemsPerPage = 5;
@@ -22,7 +24,7 @@ const Payments = () => {
 
   const fetchPayments = async () => {
     try {
-      const response = await fetch(process.env.REACT_APP_API_URL+'/v1/payments', {
+      const response = await fetch(process.env.REACT_APP_API_URL + '/v1/payments', {
         method: 'GET',
         credentials: "include",
       });
@@ -93,7 +95,7 @@ const Payments = () => {
     );
   });
 
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const totalPages = Math.max(1, Math.ceil(filteredData.length / itemsPerPage));
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentData = filteredData.slice(startIndex, startIndex + itemsPerPage);
 
@@ -128,9 +130,12 @@ const Payments = () => {
           </thead>
           <tbody>
             {currentData.length === 0 ? (
-              <tr>
-                <td colSpan="5" style={{ textAlign: 'center' }}>Data tidak ditemukan</td>
-              </tr>
+              <TableEmptyState
+                colSpan={5}
+                icon="💳"
+                title="Tidak ada data pembayaran"
+                subtitle="Belum ada transaksi yang ditemukan."
+              />
             ) : (
               currentData.map((item) => (
                 <tr key={item.id}>
@@ -172,17 +177,14 @@ const Payments = () => {
         </table>
       </div>
 
-      <div className="footer">
-        <span className="page-number">Halaman {currentPage} dari {totalPages}</span>
-        <div className="pagination">
-          <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1}>
-            ←
-          </button>
-          <button onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages}>
-            →
-          </button>
-        </div>
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+        totalItems={filteredData.length}
+        pageSize={itemsPerPage}
+        itemLabel="pembayaran"
+      />
 
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>

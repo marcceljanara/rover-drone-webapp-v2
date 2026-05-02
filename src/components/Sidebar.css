@@ -1,252 +1,198 @@
-:root {
-  --primary: #0f172a;
-  --secondary: #334155;
-  --bg-light: #f1f5f9;
-  --bg-dark: #ffffff;
-  --black: #111827;
-  --fontColor: #333;
-  --activeItem: #e2e8f0;
-}
-
-/* === Sidebar === */
 .sidebar {
+  min-height: calc(100dvh - (var(--space-5) * 2));
   display: flex;
   flex-direction: column;
-  padding-top: 3rem;
-  background-color: transparent;
-  transition: all 300ms ease;
-  height: 100vh;
-  overflow-y: visible !important;
-  overflow-x: hidden; /* ✅ HILANGKAN scroll horizontal pada sidebar */
-  position: relative;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: var(--space-5);
 }
 
-/* === Hamburger Button === */
-.bars {
+.bars,
+.sidebar-backdrop {
   display: none;
 }
 
-/* === Logo === */
 .logo {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  font-size: 22px;
-  font-weight: bold;
-  height: 5rem;
+  gap: var(--space-3);
+  padding: 0 var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--color-border);
 }
 
-.logo > img {
+.logo-img {
   width: 3rem;
-  height: 4rem;
+  height: 3rem;
+  object-fit: contain;
+  flex: 0 0 auto;
 }
 
 .logo-text {
+  min-width: 0;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: space-between;
+  gap: var(--space-2);
+  flex: 1;
 }
 
-.logo-text > span > span {
-  color: var(--primary);
+.brand-name {
+  color: var(--color-text);
+  font-size: 1.15rem;
+  font-weight: 900;
+  letter-spacing: 0;
+  white-space: nowrap;
 }
 
-/* === Lokasi Icon === */
+.brand-name span {
+  color: var(--color-primary);
+}
+
+.location-button {
+  width: 2.25rem;
+  height: 2.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-muted);
+}
+
+.location-button:hover,
+.location-button.active {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
 .icon-lokasi {
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-  padding: 4px;
-  border-radius: 6px;
-  transition: all 0.3s ease;
+  width: 1.25rem;
+  height: 1.25rem;
+  object-fit: contain;
 }
 
-.icon-lokasi.active {
-  background-color: #f9fafb;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
-}
-
-/* === Role Badge === */
 .role-badge {
-  margin: 1rem auto;
-  padding: 0.5rem 1rem;
-  background-color: #e0f2fe;
-  color: var(--black);
-  font-weight: 600;
-  border-radius: 12px;
-  font-size: 13px;
-  text-align: center;
   width: fit-content;
-  max-width: 90%;
+  max-width: 100%;
+  margin: 0 var(--space-2);
+  padding: 0.45rem 0.7rem;
+  border: 1px solid #c7ead1;
+  border-radius: 999px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+  font-size: 0.78rem;
+  font-weight: 800;
 }
 
-/* === Menu Items === */
 .menu {
-  margin-top: 2rem;
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: var(--space-1);
+  padding-top: var(--space-2);
 }
 
 .menuItem {
+  width: 100%;
+  min-height: 2.75rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-left: 2rem;
-  height: 2.5rem;
-  border-radius: 0.7rem;
-  font-size: 14px;
-  color: var(--fontColor);
+  gap: var(--space-3);
+  padding: 0.7rem 0.8rem;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-muted);
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: left;
   text-decoration: none;
-  transition: all 300ms ease;
+}
+
+.menuItem svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex: 0 0 auto;
 }
 
 .menuItem:hover {
-  cursor: pointer;
+  background: var(--color-surface-soft);
+  color: var(--color-primary);
 }
 
-.active {
-  background: var(--activeItem);
-  margin-left: 0;
+.menuItemActive {
+  background: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+  box-shadow: inset 3px 0 0 var(--color-primary);
 }
 
-.active::before {
-  content: "";
-  width: 8px;
-  height: 100%;
-  background: var(--primary);
-  margin-right: calc(1rem - 8px);
-}
-
-/* === Sign Out === */
 .signout-section {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  align-self: flex-start;
+  margin-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-4);
+  color: var(--color-danger);
 }
 
-.menuItemLink {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  color: var(--fontColor);
-  text-decoration: none;
+.signout-section:hover {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
 }
 
-/* === RESPONSIVE untuk semua iPad dan bawahnya (max 1024px) === */
-@media screen and (max-width: 1024px) {
+@media (max-width: 1024px) {
   .bars {
-    display: flex;
+    width: 2.75rem;
+    height: 2.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     position: fixed;
-    top: 1rem;
-    left: 1rem;
-    background: var(--bg-light);
-    padding: 10px;
-    border-radius: 10px;
+    top: var(--space-4);
+    left: var(--space-4);
+    z-index: 120;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: #ffffff;
+    color: var(--color-text);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
     z-index: 100;
-    cursor: pointer;
+    background: rgba(16, 35, 28, 0.36);
   }
 
   .sidebar {
+    width: min(19.5rem, calc(100vw - 2rem));
+    min-height: 100dvh;
+    max-height: 100dvh;
+    overflow-y: auto;
     position: fixed;
     top: 0;
     left: 0;
-    width: 70%;
-    max-width: 320px;
-    background: var(--bg-light);
-    z-index: 99;
-    transform: translateX(-100%);
-    overflow-x: hidden; /* ✅ pastikan scroll horizontal hilang di responsive */
+    z-index: 110;
+    border-radius: 0 var(--radius-xl) var(--radius-xl) 0;
+    border-left: 0;
+    transform: translateX(-105%);
   }
 
   .sidebar.open {
-    transform: translateX(0%);
+    transform: translateX(0);
   }
 
-  .menuItem span,
-  .menuItemLink span {
-    display: inline;
-  }
-
-  .logo {
-    justify-content: center;
-  }
-
-  .signout-section {
-    margin-left: 2rem;
+  .sidebar.closed {
+    transform: translateX(-105%);
   }
 }
 
-/* === Ultra Small Devices (Mobile) === */
-@media screen and (max-width: 480px) {
+@media (max-width: 380px) {
   .sidebar {
-    width: 80%;
-  }
-
-  .menuItem,
-  .menuItemLink span {
-    font-size: 13px;
-  }
-
-  .logo {
-    flex-direction: column;
-  }
-}
-
-/* === FULL PAGE SCROLL SAAT RESPONSIVE === */
-html,
-body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  scroll-behavior: smooth;
-  overflow-x: hidden; /* ✅ hilangkan scroll horizontal halaman penuh */
-  overflow-y: auto;
-}
-
-/* === SIDEBAR TANPA SCROLL VERTIKAL DI DESKTOP UNTUK SEMUA MENU === */
-
-/* Sidebar: biarkan tinggi mengikuti isi, tidak ada scroll vertikal di desktop */
-.sidebar {
-  overflow-y: visible !important;
-  height: auto !important;        /* <--- ini yang benar */
-  min-height: 100vh;
-  max-height: none !important;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-}
-
-.sidebar .menu {
-  max-height: none !important;
-  overflow-y: visible !important;
-  overflow-x: visible !important;
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-}
-
-/* Hapus scroll vertikal pada body/html juga */
-html, body {
-  overflow-y: hidden !important;
-  height: 100% !important;
-}
-
-/* Aktifkan scroll vertikal HANYA di mobile/tablet */
-@media screen and (max-width: 1024px) {
-  html, body {
-    overflow-y: auto !important;
-  }
-  .sidebar {
-    overflow-y: auto !important;
-    height: 100vh !important;
-    max-height: 100vh !important;
-  }
-  .sidebar .menu {
-    max-height: calc(100vh - 10rem) !important;
-    overflow-y: auto !important;
+    width: calc(100vw - 1rem);
   }
 }

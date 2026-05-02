@@ -3,17 +3,86 @@ import axios from 'axios';
 import './ChatBot.css';
 import { UilCommentAlt, UilTrashAlt, UilMicrophone } from '@iconscout/react-unicons';
 
-const formatMessage = (text) => {
-  const cleanedText = text.replace(/###\s?/g, '').trim();
+const formatInlineText = (text) =>
+  text.split(/(\*\*.*?\*\*)/g).map((part, index) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return <strong key={index}>{part.slice(2, -2)}</strong>;
+    }
 
-  return cleanedText.split('\n').map((line, i) => (
-    <p
-      key={i}
-      dangerouslySetInnerHTML={{
-        __html: line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'),
-      }}
-    />
-  ));
+    return part;
+  });
+
+const formatMessage = (text) => {
+  const lines = String(text || '')
+    .replace(/\r\n/g, '\n')
+    .split('\n')
+    .map((line) => line.trim());
+
+  const elements = [];
+  let index = 0;
+
+  while (index < lines.length) {
+    const line = lines[index];
+
+    if (!line) {
+      index += 1;
+      continue;
+    }
+
+    const heading = line.match(/^#{1,6}\s+(.+)/);
+    if (heading) {
+      elements.push(
+        <h4 key={`heading-${index}`} className="message-heading">
+          {formatInlineText(heading[1])}
+        </h4>
+      );
+      index += 1;
+      continue;
+    }
+
+    const bulletItems = [];
+    while (index < lines.length) {
+      const bullet = lines[index].match(/^[-*]\s+(.+)/);
+      if (!bullet) break;
+      bulletItems.push(bullet[1]);
+      index += 1;
+    }
+
+    if (bulletItems.length) {
+      elements.push(
+        <ul key={`bullet-${index}`} className="message-list">
+          {bulletItems.map((item, itemIndex) => (
+            <li key={itemIndex}>{formatInlineText(item)}</li>
+          ))}
+        </ul>
+      );
+      continue;
+    }
+
+    const orderedItems = [];
+    while (index < lines.length) {
+      const ordered = lines[index].match(/^\d+\.\s+(.+)/);
+      if (!ordered) break;
+      orderedItems.push(ordered[1]);
+      index += 1;
+    }
+
+    if (orderedItems.length) {
+      elements.push(
+        <ol key={`ordered-${index}`} className="message-list">
+          {orderedItems.map((item, itemIndex) => (
+            <li key={itemIndex}>{formatInlineText(item)}</li>
+          ))}
+        </ol>
+      );
+      continue;
+    }
+
+    elements.push(<p key={`paragraph-${index}`}>{formatInlineText(line)}</p>);
+    index += 1;
+  }
+
+  return elements.length ? elements : <p>{formatInlineText(text)}</p>;
 };
 
 const ChatBot = () => {
@@ -35,6 +104,7 @@ const ChatBot = () => {
 
   // state untuk voice input
   const [isRecording, setIsRecording] = useState(false);
+  const inputRef = useRef(null);
   const recognitionRef = useRef(null);
 
   const messagesEndRef = useRef(null);
@@ -95,6 +165,9 @@ const ChatBot = () => {
     const newMessages = [...messages, { role: 'user', content: input }];
     setMessages(newMessages);
     setInput('');
+    if (inputRef.current) {
+      inputRef.current.style.height = 'auto';
+    }
     setLoading(true);
 
     try {
@@ -137,8 +210,15 @@ const ChatBot = () => {
   return (
     <div className="chatbot-container">
       <div className="chatbot-header">
-        <UilCommentAlt size="20" />
-        <span>Asisten Perkebunan</span>
+        <div className="chatbot-title">
+          <span className="chatbot-title-icon">
+            <UilCommentAlt size="20" />
+          </span>
+          <div>
+            <span>Asisten Perkebunan</span>
+            <small>Analisis data sensor dan kondisi lahan</small>
+          </div>
+        </div>
         <button className="reset-icon" onClick={resetChat} title="Bersihkan Chat">
           <UilTrashAlt size="18" />
         </button>
@@ -146,16 +226,27 @@ const ChatBot = () => {
 
       <div className="chatbot-messages">
         {messages.map((msg, idx) => (
-          <div key={idx} className={`message ${msg.role}`}>
-            {formatMessage(msg.content)}
+          <div key={idx} className={`message-row ${msg.role}`}>
+            <div className="message-avatar">{msg.role === 'user' ? 'U' : 'AI'}</div>
+            <div className={`message ${msg.role}`}>{formatMessage(msg.content)}</div>
           </div>
         ))}
-        {loading && <div className="message assistant">Mengetik...</div>}
+        {loading && (
+          <div className="message-row assistant">
+            <div className="message-avatar">AI</div>
+            <div className="message assistant typing">
+              <span />
+              <span />
+              <span />
+            </div>
+          </div>
+        )}
         <div ref={messagesEndRef} />
       </div>
 
       <form onSubmit={handleSubmit} className="chatbot-input">
         <textarea
+          ref={inputRef}
           placeholder="Ketik pesan atau gunakan mic..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -179,7 +270,7 @@ const ChatBot = () => {
         >
           <UilMicrophone size="20" />
         </button>
-        <button type="submit" disabled={loading}>
+        <button type="submit" disabled={loading || !input.trim()}>
           Kirim
         </button>
       </form>

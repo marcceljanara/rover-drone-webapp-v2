@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext'; // ✅ import context
+import Pagination from '../Pagination/Pagination';
+import TableEmptyState from '../TableEmptyState/TableEmptyState';
 import './Activation.css';
 
 const statusOptions = ['active', 'inactive', 'maintenance', 'error'];
@@ -106,7 +108,7 @@ const Activation = () => {
     item.status.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
   const displayed = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
@@ -140,7 +142,14 @@ const Activation = () => {
               </tr>
             </thead>
             <tbody>
-              {displayed.map(item => (
+              {displayed.length === 0 ? (
+                <TableEmptyState
+                  colSpan={isUser ? 5 : 6}
+                  icon="📡"
+                  title="Tidak ada data perangkat"
+                  subtitle="Tidak ada perangkat yang cocok dengan pencarian."
+                />
+              ) : displayed.map(item => (
                 <tr key={item.id}>
                   <td data-label="ID" className="clickable" onClick={() => navigate(`/devices/${item.id}`)}>{item.id}</td>
                   <td data-label="Rental ID">{item.rentalId}</td>
@@ -163,8 +172,10 @@ const Activation = () => {
                   <td data-label="Aktif Terakhir">{item.lastActive}</td>
                   {!isUser && (
                     <td data-label="Aksi" className="action-col">
+                      <div className="action-buttons">
                       <button className="delete-btn" onClick={() => handleDelete(item.id)}>Hapus</button>
                       <button className="edit-btn" onClick={() => handleEdit(item.id)}>Edit</button>
+                      </div>
                     </td>
                   )}
                 </tr>
@@ -173,13 +184,14 @@ const Activation = () => {
           </table>
         </div>
 
-        <div className="pagination">
-          <span>Halaman {currentPage} dari {totalPages}</span>
-          <div>
-            <button onClick={() => setCurrentPage(p => Math.max(p - 1, 1))} disabled={currentPage === 1}>←</button>
-            <button onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages}>→</button>
-          </div>
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          totalItems={filtered.length}
+          pageSize={itemsPerPage}
+          itemLabel="perangkat"
+        />
       </div>
     </div>
   );

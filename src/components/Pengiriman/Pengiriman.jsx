@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Pagination from "../Pagination/Pagination";
+import TableEmptyState from "../TableEmptyState/TableEmptyState";
 import "./Pengiriman.css";
 
 const API = process.env.REACT_APP_API_URL+"/v1/shipments";
@@ -46,7 +48,7 @@ export default function Shipments() {
     );
   });
 
-  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentData = filtered.slice(startIndex, startIndex + itemsPerPage);
 
@@ -108,23 +110,25 @@ export default function Shipments() {
                 </tr>
               ))
             ) : (
-              <tr>
-                <td colSpan="6" className="ship-empty">Tidak ada data</td>
-              </tr>
+              <TableEmptyState
+                colSpan={6}
+                icon="🚚"
+                title="Tidak ada data pengiriman"
+                subtitle="Belum ada pengiriman yang tercatat."
+              />
             )}
           </tbody>
         </table>
       </div>
 
-      <div className="ship-pagination">
-        <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1}>
-          ←
-        </button>
-        <span>Halaman {currentPage} dari {totalPages || 1}</span>
-        <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages}>
-          →
-        </button>
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+        totalItems={filtered.length}
+        pageSize={itemsPerPage}
+        itemLabel="pengiriman"
+      />
     </div>
   );
 }

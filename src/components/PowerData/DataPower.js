@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { UilSun, UilTemperature, UilTear } from "@iconscout/react-unicons";
 
 // Component for fetching and updating cards data

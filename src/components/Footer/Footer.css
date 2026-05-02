@@ -1,65 +1,57 @@
-.footer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  margin: 4rem -5rem 0;
-  overflow: hidden;
-}
-
-.footer-wave {
-  width: 120%;
-  margin-left: -17%;
-  transition: margin-top 0.3s ease;
-}
-
-/* Surface Duo khusus: gambar Wave diturunkan */
-@media screen and (max-width: 560px) and (min-width: 520px) {
-  .footer-wave {
-    margin-top: 2rem;
-  }
-
-  .f-content {
-    margin-top: 4rem !important; /* Naikkan teks dan ikon sedikit */
-  }
-
-  .f-content span {
-    margin-top: 6rem !important;
-  }
-}
-
-.f-content {
-  position: absolute;
-  top: 0;
+.site-footer {
   width: 100%;
+  padding: var(--space-7) 0 var(--space-5);
+  background: #10231c;
+  color: #ffffff;
+}
+
+.site-footer-content {
+  width: min(1180px, calc(100% - 2rem));
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+  margin: 0 auto;
+}
+
+.site-footer-content span {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+
+.site-footer-content p {
+  margin: var(--space-2) 0 0;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.6;
+}
+
+.site-footer-icons {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.site-footer-icons a {
+  width: 2.75rem;
+  height: 2.75rem;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-top: 6rem;
-  gap: 4rem;
-  color: white;
-  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  color: #ffffff;
+  text-decoration: none;
 }
 
-.f-content span {
-  font-size: 1.2rem;
-  margin-top: 10rem;
+.site-footer-icons a:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
 }
 
-.f-icons {
-  display: flex;
-  gap: 1.5rem;
-}
-
-/* Responsif untuk ponsel kecil */
-@media screen and (max-width: 500px) {
-  .f-content {
-    transform: scale(0.5);
-    margin-top: 4rem;
-  }
-
-  .f-content span {
-    margin-top: 0;
+@media (max-width: 640px) {
+  .site-footer-content {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }

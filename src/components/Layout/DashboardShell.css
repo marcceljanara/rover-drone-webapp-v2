@@ -1,0 +1,422 @@
+.dashboard-shell {
+  min-height: 100dvh;
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(15rem, 17rem) minmax(0, 1fr);
+  gap: var(--space-5);
+  padding: var(--space-5);
+  background:
+    radial-gradient(circle at top left, rgba(21, 128, 61, 0.12), transparent 34rem),
+    var(--color-app-bg);
+}
+
+.dashboard-main {
+  min-width: 0;
+  width: 100%;
+  align-self: start;
+}
+
+.dashboard-main :is(.container, .activation-container, .payments-container, .reports-container, .admin-container, .returns-container, .pengiriman-container) {
+  max-width: 100%;
+}
+
+.dashboard-main :is(.data-table, .responsive-table, .activation-table, .sensor-table, .rental-table, .rental-detail-table, .ret-table, .ret-detail-table, .ship-table, .ship-detail-table) {
+  width: 100%;
+  min-width: 44rem;
+  display: block;
+  overflow-x: auto;
+  border-collapse: collapse;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  white-space: nowrap;
+}
+
+.dashboard-main :is(.data-table, .responsive-table, .activation-table, .sensor-table, .rental-table, .rental-detail-table, .ret-table, .ret-detail-table, .ship-table, .ship-detail-table) th,
+.dashboard-main :is(.data-table, .responsive-table, .activation-table, .sensor-table, .rental-table, .rental-detail-table, .ret-table, .ret-detail-table, .ship-table, .ship-detail-table) td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+}
+
+.dashboard-main :is(.data-table, .responsive-table, .activation-table, .sensor-table, .rental-table, .rental-detail-table, .ret-table, .ret-detail-table, .ship-table, .ship-detail-table) th {
+  color: var(--color-muted);
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  background: var(--color-surface-soft);
+}
+
+.dashboard-main :is(.data-table, .responsive-table, .activation-table, .sensor-table, .rental-table, .rental-detail-table, .ret-table, .ret-detail-table, .ship-table, .ship-detail-table) tr:hover td {
+  background: rgba(22, 122, 63, 0.04);
+}
+
+.dashboard-main :is(.table-wrapper, .table-container, .table-responsive) {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.dashboard-main :is(form, .address-form, .reset-password-form) {
+  max-width: 100%;
+}
+
+.dashboard-main :is(.notification, .alert, .error) {
+  border-radius: var(--radius-md);
+}
+
+@media (max-width: 1180px) {
+  .dashboard-shell {
+    grid-template-columns: minmax(13rem, 15rem) minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 1024px) {
+  .dashboard-shell {
+    display: block;
+    min-height: 100dvh;
+    padding: 0;
+  }
+
+  .dashboard-main {
+    padding: 5rem var(--space-4) var(--space-5);
+  }
+
+  .dashboard-main {
+    overflow-x: hidden;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-main {
+    padding-inline: var(--space-3);
+  }
+
+}
+
+/* Responsive hardening for legacy table/detail pages. */
+.dashboard-main,
+.dashboard-main * {
+  max-width: 100%;
+}
+
+.dashboard-main > * {
+  min-width: 0;
+}
+
+.dashboard-main :is(
+  .container,
+  .activation-container,
+  .payments-container,
+  .reports-container,
+  .admin-container,
+  .ret-container,
+  .ship-container,
+  .penyewaan-container,
+  .rental-detail-container,
+  .ret-detail-container,
+  .ship-detail-container,
+  .user-detail-container,
+  .detail-container
+) {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  overflow-x: clip !important;
+}
+
+.dashboard-main :is(
+  .table-wrapper,
+  .table-container,
+  .table-responsive,
+  .sensor-table-container,
+  .rental-detail-table-wrapper,
+  .ret-detail-table-wrapper,
+  .ship-detail-table-wrapper,
+  .ret-table-wrapper,
+  .ship-table-wrapper
+) {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-inline: contain;
+}
+
+.dashboard-main :is(
+  .data-table,
+  .responsive-table,
+  .activation-table,
+  .sensor-table,
+  .rental-table,
+  .ret-table,
+  .ship-table
+) {
+  width: 100% !important;
+  min-width: 44rem !important;
+  display: table !important;
+  table-layout: auto !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  white-space: nowrap !important;
+}
+
+.dashboard-main :is(
+  .data-table,
+  .responsive-table,
+  .activation-table,
+  .sensor-table,
+  .rental-table,
+  .ret-table,
+  .ship-table
+) :is(thead, tbody) {
+  display: table-row-group !important;
+}
+
+.dashboard-main :is(
+  .data-table,
+  .responsive-table,
+  .activation-table,
+  .sensor-table,
+  .rental-table,
+  .ret-table,
+  .ship-table
+) thead {
+  display: table-header-group !important;
+}
+
+.dashboard-main :is(
+  .data-table,
+  .responsive-table,
+  .activation-table,
+  .sensor-table,
+  .rental-table,
+  .ret-table,
+  .ship-table
+) tr {
+  display: table-row !important;
+  width: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+.dashboard-main :is(
+  .data-table,
+  .responsive-table,
+  .activation-table,
+  .sensor-table,
+  .rental-table,
+  .ret-table,
+  .ship-table
+) :is(th, td) {
+  display: table-cell !important;
+  width: auto !important;
+  min-width: max-content;
+  padding: 0.85rem 1rem !important;
+  position: static !important;
+  text-align: left !important;
+  vertical-align: middle !important;
+  white-space: nowrap !important;
+}
+
+.dashboard-main :is(
+  .data-table,
+  .responsive-table,
+  .activation-table,
+  .sensor-table,
+  .rental-table,
+  .ret-table,
+  .ship-table
+) td::before {
+  content: none !important;
+}
+
+.dashboard-main :is(
+  .rental-detail-table,
+  .ret-detail-table,
+  .ship-detail-table
+) {
+  width: 100% !important;
+  min-width: 0 !important;
+  display: table !important;
+  table-layout: fixed !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  white-space: normal !important;
+}
+
+.dashboard-main :is(
+  .rental-detail-table,
+  .ret-detail-table,
+  .ship-detail-table
+) td {
+  min-width: 0 !important;
+  overflow-wrap: anywhere !important;
+  word-break: normal !important;
+  white-space: normal !important;
+  vertical-align: top !important;
+}
+
+.dashboard-main :is(
+  .rental-detail-buttons,
+  .ret-detail-actions,
+  .ship-detail-actions,
+  .modal-buttons,
+  .pagination,
+  .ret-pagination,
+  .ship-pagination
+) {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: var(--space-3) !important;
+}
+
+.dashboard-main :is(
+  .rental-detail-buttons,
+  .ret-detail-actions,
+  .ship-detail-actions,
+  .modal-buttons
+) > * {
+  flex: 1 1 10rem;
+  min-width: 0 !important;
+}
+
+.dashboard-main :is(button, .edit-btn, .delete-btn, .sewa-button, .ship-link, .ret-link) {
+  white-space: normal;
+}
+
+.dashboard-main :is(input, select, textarea) {
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+
+@media (max-width: 768px) {
+  .dashboard-main {
+    padding-top: 4.75rem;
+  }
+
+  .dashboard-main :is(
+    .container,
+    .activation-container,
+    .payments-container,
+    .reports-container,
+    .admin-container,
+    .ret-container,
+    .ship-container,
+    .penyewaan-container,
+    .rental-detail-container,
+    .ret-detail-container,
+    .ship-detail-container,
+    .user-detail-container,
+    .detail-container
+  ) {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .dashboard-main :is(
+    .rental-detail-table,
+    .ret-detail-table,
+    .ship-detail-table
+  ),
+  .dashboard-main :is(
+    .rental-detail-table,
+    .ret-detail-table,
+    .ship-detail-table
+  ) tbody,
+  .dashboard-main :is(
+    .rental-detail-table,
+    .ret-detail-table,
+    .ship-detail-table
+  ) tr,
+  .dashboard-main :is(
+    .rental-detail-table,
+    .ret-detail-table,
+    .ship-detail-table
+  ) td {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .dashboard-main :is(
+    .rental-detail-table,
+    .ret-detail-table,
+    .ship-detail-table
+  ) tr {
+    margin-bottom: var(--space-3) !important;
+    padding: var(--space-3) !important;
+    border: 1px solid var(--color-border) !important;
+    border-radius: var(--radius-lg) !important;
+    background: var(--color-surface) !important;
+    box-shadow: var(--shadow-xs);
+  }
+
+  .dashboard-main :is(
+    .rental-detail-table,
+    .ret-detail-table,
+    .ship-detail-table
+  ) td {
+    padding: var(--space-2) 0 !important;
+    border: 0 !important;
+    text-align: left !important;
+  }
+
+  .dashboard-main :is(
+    .rental-detail-table,
+    .ret-detail-table,
+    .ship-detail-table
+  ) td:first-child {
+    color: var(--color-muted) !important;
+    font-size: 0.82rem !important;
+    font-weight: 800 !important;
+  }
+
+  .dashboard-main :is(
+    .rental-detail-table,
+    .ret-detail-table,
+    .ship-detail-table
+  ) td::before {
+    content: none !important;
+  }
+
+  .dashboard-main :is(
+    .data-table,
+    .responsive-table,
+    .activation-table,
+    .sensor-table,
+    .rental-table,
+    .ret-table,
+    .ship-table
+  ) {
+    min-width: 42rem !important;
+    font-size: 0.88rem !important;
+  }
+
+  .dashboard-main :is(.modal, .detail-content) {
+    width: min(100%, calc(100vw - 2rem)) !important;
+    max-height: calc(100dvh - 2rem) !important;
+    overflow-y: auto !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .dashboard-main {
+    padding-left: var(--space-2);
+    padding-right: var(--space-2);
+  }
+
+  .dashboard-main :is(
+    .data-table,
+    .responsive-table,
+    .activation-table,
+    .sensor-table,
+    .rental-table,
+    .ret-table,
+    .ship-table
+  ) {
+    min-width: 38rem !important;
+  }
+}
