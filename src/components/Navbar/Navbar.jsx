@@ -384,12 +384,12 @@ const Navbar = () => {
               <input id="signup-fullname" type="text" name="fullname" autoComplete="name" required />
             </div>
             <div className="form-group">
-              <label htmlFor="signup-username">Username</label>
-              <input id="signup-username" type="text" name="signup-username" autoComplete="nickname" required />
+              <label htmlFor="signup-email">Email</label>
+              <input id="signup-email" type="email" name="email" autoComplete="section-signup username" required />
             </div>
             <div className="form-group">
-              <label htmlFor="signup-email">Email</label>
-              <input id="signup-email" type="email" name="email" autoComplete="username" required />
+              <label htmlFor="signup-username">Username</label>
+              <input id="signup-username" type="text" name="signup-username" autoComplete="off" required />
             </div>
             <div className="form-group">
               <label htmlFor="signup-password">Password</label>
@@ -398,7 +398,7 @@ const Navbar = () => {
                   id="signup-password"
                   type={showPassword ? "text" : "password"}
                   name="password-signup"
-                  autoComplete="new-password"
+                  autoComplete="section-signup new-password"
                   required
                 />
                 <button
@@ -418,7 +418,7 @@ const Navbar = () => {
                   id="signup-confirm-password"
                   type={showConfirmPassword ? "text" : "password"}
                   name="confirm-password-signup"
-                  autoComplete="new-password"
+                  autoComplete="section-signup new-password"
                   required
                 />
                 <button
