@@ -110,6 +110,19 @@ const Navbar = () => {
 
       if (!response.ok) {
         const data = await response.json();
+        const message = data.message || "Login gagal.";
+
+        if (response.status === 403 && message.toLowerCase().includes("verifikasi")) {
+          setRegisteredEmail(email);
+          setShowLoginForm(false);
+          setShowSignUpForm(false);
+          setShowForgotPassword(false);
+          setShowVerify(true);
+          setLoginClicked(true);
+          showAppNotification(message, "error");
+          return;
+        }
+
         throw new Error(data.message || "Login gagal.");
       }
 
