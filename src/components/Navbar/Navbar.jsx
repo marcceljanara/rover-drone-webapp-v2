@@ -128,8 +128,8 @@ const Navbar = () => {
   const handleSignUpSubmit = async (e) => {
     e.preventDefault();
     const fullname = e.target.fullname.value;
-    const username = e.target.username.value;
-    const email = e.target["email-signup"].value;
+    const username = e.target["signup-username"].value;
+    const email = e.target.email.value;
     const password = e.target["password-signup"].value;
     const confirmPassword = e.target["confirm-password-signup"].value;
 
@@ -378,18 +378,18 @@ const Navbar = () => {
             <UilTimes size="18" />
           </button>
           <h2 id="signup-title">Sign Up</h2>
-          <form onSubmit={handleSignUpSubmit}>
+          <form onSubmit={handleSignUpSubmit} autoComplete="on">
             <div className="form-group">
               <label htmlFor="signup-fullname">Full Name</label>
               <input id="signup-fullname" type="text" name="fullname" autoComplete="name" required />
             </div>
             <div className="form-group">
               <label htmlFor="signup-username">Username</label>
-              <input id="signup-username" type="text" name="username" autoComplete="username" required />
+              <input id="signup-username" type="text" name="signup-username" autoComplete="nickname" required />
             </div>
             <div className="form-group">
               <label htmlFor="signup-email">Email</label>
-              <input id="signup-email" type="email" name="email-signup" autoComplete="email" required />
+              <input id="signup-email" type="email" name="email" autoComplete="username" required />
             </div>
             <div className="form-group">
               <label htmlFor="signup-password">Password</label>
