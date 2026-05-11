@@ -45,6 +45,11 @@ body {
   margin-bottom: 1.5rem;
 }
 
+.rental-toolbar {
+  align-items: center;
+  justify-content: space-between;
+}
+
 .search-add-bar input {
   flex: 1;
   min-width: 250px;
@@ -75,6 +80,18 @@ body {
 
 .add-btn:hover {
   background-color: #218838;
+}
+
+.rental-add-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.rental-add-btn svg {
+  flex-shrink: 0;
 }
 
 /* ========== TABEL PENYEWAAN ========== */
@@ -254,6 +271,10 @@ body {
   .add-btn {
     width: 100%;
     box-sizing: border-box;
+  }
+
+  .rental-add-btn {
+    min-height: 44px;
   }
 
   .table-wrapper {

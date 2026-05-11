@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { UilPlus } from '@iconscout/react-unicons';
 import { useAuth } from '../../context/AuthContext'; // 🔑 ambil dari context
 import Pagination from '../Pagination/Pagination';
 import './Penyewaan.css';
@@ -134,9 +135,11 @@ function KelolaPenyewaan() {
     <main className="container" role="main">
       <h2 className="page-title">Kelola Penyewaan Rover Drone</h2>
 
-      <div className="search-add-bar">
+      <div className="search-add-bar rental-toolbar">
         <input
           type="text"
+          className="rental-toolbar__search"
+          aria-label="Cari ID penyewaan"
           placeholder="Cari ID Penyewaan"
           value={searchQuery}
           onChange={(e) => {
@@ -145,8 +148,14 @@ function KelolaPenyewaan() {
           }}
         />
         {user?.role === 'user' && (
-          <button className="add-btn" onClick={() => navigate('/penyewaan/lanjutan')}>
-            + Ajukan Penyewaan Baru
+          <button
+            type="button"
+            className="add-btn rental-add-btn"
+            onClick={() => navigate('/penyewaan/lanjutan')}
+            aria-label="Ajukan penyewaan baru"
+          >
+            <UilPlus size="18" />
+            <span>Ajukan Penyewaan Baru</span>
           </button>
         )}
       </div>

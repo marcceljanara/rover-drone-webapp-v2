@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { UilTimes } from '@iconscout/react-unicons';
 import './Penyewaan.css';
 import roverImage from '../../imgs/rover2.png';
 import lokasiIcon from '../../imgs/Icon-Lokasi.png';
@@ -46,12 +47,27 @@ const Penyewaan = () => {
   const [checkboxes, setCheckboxes] = useState({});
   const [showLokasiForm, setShowLokasiForm] = useState(false);
   const [userAddresses, setUserAddresses] = useState([]);
+  const [addressesLoading, setAddressesLoading] = useState(true);
   const [selectedAddressId, setSelectedAddressId] = useState('');
   const [selectedSubdistrict, setSelectedSubdistrict] = useState('');
   const [ongkir, setOngkir] = useState(0);
   const [setupFee, setSetupFee] = useState(1000000); // contoh tetap 1jt
+  const [popup, setPopup] = useState(null);
 
   const navigate = useNavigate();
+
+  const showAddressRequiredPopup = useCallback(() => {
+    setPopup({
+      title: 'Alamat belum tersedia',
+      message: 'Tambahkan alamat pengiriman terlebih dahulu sebelum mengajukan penyewaan.',
+      actionLabel: 'Tambah Alamat',
+      actionPath: '/addresses',
+    });
+  }, []);
+
+  const showPopup = useCallback((title, message) => {
+    setPopup({ title, message });
+  }, []);
 
   const sensorTotal = useMemo(
     () =>
@@ -120,21 +136,41 @@ const Penyewaan = () => {
           credentials: 'include',
         });
         const data = await res.json();
-        if (res.ok) setUserAddresses(data?.data?.addresses || []);
-        else throw new Error(data.message || 'Gagal memuat alamat');
+        if (!res.ok) throw new Error(data.message || 'Gagal memuat alamat');
+
+        const addresses = data?.data?.addresses || [];
+        setUserAddresses(addresses);
+
+        if (addresses.length === 0) {
+          showAddressRequiredPopup();
+        }
       } catch (err) {
-        alert(err.message);
+        showPopup('Gagal memuat alamat', err.message);
+      } finally {
+        setAddressesLoading(false);
       }
     };
     fetchAddresses();
-  }, []);
+  }, [showAddressRequiredPopup, showPopup]);
 
   const handleCheckboxChange = (id) =>
     setCheckboxes((prev) => ({ ...prev, [id]: !prev[id] }));
 
   const handlePilih = (dur) => setDuration(dur);
 
-  const handleIconClick = () => setShowLokasiForm((prev) => !prev);
+  const handleIconClick = () => {
+    if (addressesLoading) {
+      showPopup('Memuat alamat', 'Daftar alamat sedang dimuat. Coba lagi sebentar.');
+      return;
+    }
+
+    if (userAddresses.length === 0) {
+      showAddressRequiredPopup();
+      return;
+    }
+
+    setShowLokasiForm((prev) => !prev);
+  };
 
   const handleSewa = async () => {
     if (![6, 12, 24, 36].includes(duration)) {
@@ -144,8 +180,12 @@ const Penyewaan = () => {
     }
 
     if (!selectedAddressId || !selectedSubdistrict) {
-      setNotification('Silakan pilih alamat pengiriman terlebih dahulu.');
-      setShowNotification(true);
+      if (!addressesLoading && userAddresses.length === 0) {
+        showAddressRequiredPopup();
+      } else {
+        setNotification('Silakan pilih alamat pengiriman terlebih dahulu.');
+        setShowNotification(true);
+      }
       return;
     }
 
@@ -185,6 +225,8 @@ const Penyewaan = () => {
   const handleAddressSelect = async (e) => {
     const id = e.target.value;
     setSelectedAddressId(id);
+    setSelectedSubdistrict('');
+    setOngkir(0);
 
     const address = userAddresses.find((a) => a.id === id);
     if (!address || !address.kelurahan) return;
@@ -205,7 +247,7 @@ const Penyewaan = () => {
       const shippingCost = data.data.shippingInfo.shippingCost;
       setOngkir(shippingCost);
     } catch (err) {
-      alert(err.message);
+      showPopup('Gagal menghitung ongkir', err.message);
       setOngkir(0);
     }
   };
@@ -379,6 +421,51 @@ const Penyewaan = () => {
       </div>
 
       {showNotification && <div className="notification">{notification}</div>}
+
+      {popup && (
+        <div
+          className="rental-popup-overlay"
+          role="presentation"
+          onClick={() => setPopup(null)}
+        >
+          <div
+            className="rental-popup"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="rental-popup-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="rental-popup-close"
+              onClick={() => setPopup(null)}
+              aria-label="Tutup popup"
+            >
+              <UilTimes size="18" />
+            </button>
+            <h4 id="rental-popup-title">{popup.title}</h4>
+            <p>{popup.message}</p>
+            <div className="rental-popup-actions">
+              {popup.actionPath && (
+                <button
+                  type="button"
+                  className="rental-popup-secondary"
+                  onClick={() => navigate(popup.actionPath)}
+                >
+                  {popup.actionLabel}
+                </button>
+              )}
+              <button
+                type="button"
+                className="rental-popup-primary"
+                onClick={() => setPopup(null)}
+              >
+                Mengerti
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
